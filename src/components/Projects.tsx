@@ -1,40 +1,113 @@
-import React, { useEffect } from 'react';
-import { ArrowUpRight, Github } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { ArrowUpRight, Github, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const projects = [
   {
-    title: 'Cafe POS System',
-    description: 'A comprehensive Point of Sale system for cafes with inventory management, real-time analytics, sales reporting, and multi-outlet support.',
-    year: '2024',
-    status: 'dev',
-    tech: ['NestJS', 'React', 'Prisma', 'TypeScript'],
-    link: 'https://cafe-pos.demo',
-    github: 'https://github.com/ikhsank6',
-    image: null
+    title: 'Naskah Dinas Elektronik (NADINE V3) - Kementerian ESDM',
+    description: 'NADINE V3 is a web-based application for internal correspondence administration within the Ministry of Energy and Mineral Resources.',
+    year: '2025',
+    status: 'live',
+    tech: ['Laravel Octane + Road Runner', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'Pinia', 'Tailwind CSS', 'Element Plus'],
+    link: 'https://ngantor.esdm.go.id/',
+    github: '',
+    images: [
+      '/images/nadinev3_2.png',
+      '/images/nadinev3.png',
+    ]
   },
   {
-    title: 'Digital Correspondence',
-    description: 'Enterprise web application for managing incoming and outgoing official letters with workflow approval, digital signatures, and document tracking.',
+    title: 'LSP BPPTIK',
+    description: 'BNSP\'s supporting institution in implementing competency testing and certification, LSP BPPTIK applies SKKNI-based certification.',
     year: '2023',
     status: 'live',
-    tech: ['Laravel', 'Livewire', 'Tailwind CSS', 'MySQL'],
-    link: 'https://e-surat.demo',
-    github: 'https://github.com/ikhsank6',
-    image: null
+    tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://lspbpptik.komdigi.go.id/',
+    github: '',
+    images: ['/images/lsp_bpptik.png']
   },
   {
-    title: 'Personal Portfolio',
-    description: 'Modern developer portfolio built with Astro and React featuring smooth animations, dark theme, and responsive design inspired by Framer.',
-    year: '2024',
+    title: 'Minerba One Data Indonesia (MODI) - Kementerian ESDM',
+    description: 'Minerba One Data Indonesia (MODI) is a web-based application for mineral and coal companies to apply for Mining Business Permit (WIUP) permits in Indonesia. It is a government project currently operated by the Indonesian Ministry of Energy and Mineral Resources.',
+    year: '2021',
     status: 'live',
-    tech: ['Astro', 'React', 'CSS'],
-    link: 'https://ikhsank6.github.io',
-    github: 'https://github.com/ikhsank6/ikhsank6.github.io',
-    image: null
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS', 'Service ArcGIS'],
+    link: 'https://modi.esdm.go.id/',
+    github: '',
+    images: ['/images/modi.png']
+  },
+  {
+    title: 'ERKAB - Kementerian ESDM',
+    description: 'ERKAB is a web-based application for administering the Work Plan and Budget reporting of mineral and coal companies in Indonesia to the Ministry of Energy and Mineral Resources. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
+    year: '2021',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://erkab.esdm.go.id/',
+    github: '',
+    images: ['/images/erkab.png']
+  },
+  {
+    title: 'Minerba Verification Proccess (MVP) - Kementerian ESDM',
+    description: 'The Minerba Verification Process (MVP) is a web-based application for verifying sales by mineral and coal companies in Indonesia. It is a government project currently operated by the Indonesian Ministry of Energy and Mineral Resources.',
+    year: '2020',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://mvp.esdm.go.id/',
+    github: '',
+    images: ['/images/mvp.png']
+  },
+  {
+    title: 'Miners - Kementerian ESDM',
+    description: 'MINERS is a web-based application for administering reporting by mineral and coal companies in Indonesia to the Ministry of Energy and Mineral Resources. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
+    year: '2019',
+    status: 'not-live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: '',
+    github: '',
+    images: ['/images/noimage.png']
+  },
+  {
+    title: 'MOMS - Kementerian ESDM',
+    description: 'MOMS is a web-based application for managing mineral and coal sales and reporting stock levels held by mineral and coal companies in Indonesia. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
+    year: '2019',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://moms.esdm.go.id/',
+    github: '',
+    images: ['/images/moms.png']
   }
 ];
 
 export default function Projects() {
+  const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const openLightbox = (images: string[], index: number = 0) => {
+    setSelectedImages(images);
+    setCurrentImageIndex(index);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setSelectedImages(null);
+    setCurrentImageIndex(0);
+    document.body.style.overflow = 'auto';
+  };
+
+  const nextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImages) {
+      setCurrentImageIndex((prev) => (prev + 1) % selectedImages.length);
+    }
+  };
+
+  const prevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImages) {
+      setCurrentImageIndex((prev) => (prev - 1 + selectedImages.length) % selectedImages.length);
+    }
+  };
+
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -77,7 +150,10 @@ export default function Projects() {
             <div 
               key={idx} 
               className="project-card animate-on-scroll"
-              style={{ transitionDelay: `${0.1 * idx}s` }}
+              style={{ 
+                transitionDelay: `${0.1 * idx}s`,
+                '--index': idx 
+              } as React.CSSProperties}
             >
               <div className="project-content">
                 <div className="project-meta">
@@ -97,16 +173,18 @@ export default function Projects() {
                 </div>
                 
                 <div className="project-links">
-                  <a 
-                    href={project.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="project-link"
-                  >
-                    View Project
-                    <ArrowUpRight size={14} />
-                  </a>
-                  <a 
+                  {project.link && (
+                    <a 
+                      href={project.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="project-link"
+                    >
+                      View Project
+                      <ArrowUpRight size={14} />
+                    </a>
+                  )}
+                  {/* <a 
                     href={project.github} 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -114,18 +192,163 @@ export default function Projects() {
                   >
                     <Github size={16} />
                     Source
-                  </a>
+                  </a> */}
                 </div>
               </div>
               
-              <div className="project-image">
-                <span className="project-placeholder">
-                  {project.title.split(' ').map(w => w[0]).join('')}
-                </span>
+              <div 
+                className="project-image" 
+                onClick={() => project.images && project.images.length > 0 && openLightbox(project.images)}
+                style={{ cursor: project.images && project.images.length > 0 ? 'zoom-in' : 'default' }}
+              >
+                {project.images && project.images.length > 0 ? (
+                  <>
+                    <img src={project.images[0]} alt={project.title} loading="lazy" />
+                    {project.images.length > 1 && (
+                      <div className="image-count">
+                        +{project.images.length - 1} more
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <span className="project-placeholder">
+                    {project.title.split(' ').map(w => w[0]).join('')}
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
+
+        {/* Lightbox Modal - Rendered via Portal */}
+        {selectedImages && createPortal(
+          <div 
+            onClick={closeLightbox}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.95)',
+              backdropFilter: 'blur(10px)',
+              zIndex: 99999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'zoom-out',
+              padding: '40px',
+            }}
+          >
+            <button 
+              onClick={closeLightbox}
+              style={{
+                position: 'absolute',
+                top: '40px',
+                right: '40px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: 'white',
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 100000,
+              }}
+            >
+              <X size={32} />
+            </button>
+
+            {selectedImages.length > 1 && (
+              <>
+                <button 
+                  onClick={prevImage}
+                  style={{
+                    position: 'absolute',
+                    left: '40px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 100000,
+                  }}
+                >
+                  <ChevronLeft size={36} />
+                </button>
+                <button 
+                  onClick={nextImage}
+                  style={{
+                    position: 'absolute',
+                    right: '40px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 100000,
+                  }}
+                >
+                  <ChevronRight size={36} />
+                </button>
+              </>
+            )}
+
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '90%',
+                maxHeight: '90vh',
+                cursor: 'default',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img 
+                src={selectedImages[currentImageIndex]} 
+                alt="Project Preview" 
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+                }}
+              />
+              {selectedImages.length > 1 && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-40px',
+                  color: 'white',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  background: 'rgba(0,0,0,0.5)',
+                  padding: '4px 12px',
+                  borderRadius: '100px',
+                }}>
+                  {currentImageIndex + 1} / {selectedImages.length}
+                </div>
+              )}
+            </div>
+          </div>,
+          document.body
+        )}
       </div>
     </section>
   );
