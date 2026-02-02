@@ -26,6 +26,17 @@ const projects = [
     github: '',
     images: ['/images/lsp_bpptik.png']
   },
+
+  {
+    title: 'Sistem Akademik - SESKOAL',
+    description: 'SIAK is a web-based application for managing academic administration within the Seskoal.',
+    year: '2021',
+    status: 'live',
+    tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS', 'Integrasi Moodle'],
+    link: 'https://smartcampus-seskoal.id/siak/#/',
+    github: '',
+    images: ['/images/siak_seskoal.png']
+  },
   {
     title: 'Minerba One Data Indonesia (MODI) - Kementerian ESDM',
     description: 'Minerba One Data Indonesia (MODI) is a web-based application for mineral and coal companies to apply for Mining Business Permit (WIUP) permits in Indonesia. It is a government project currently operated by the Indonesian Ministry of Energy and Mineral Resources.',
@@ -45,6 +56,16 @@ const projects = [
     link: 'https://erkab.esdm.go.id/',
     github: '',
     images: ['/images/erkab.png']
+  },
+  {
+    title: 'Dashboard Analytic - Kejaksaan RI',
+    description: 'Dashboard Analytic is a web-based application for analyzing data.',
+    year: '2020',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://dasti.kejaksaan.go.id/v5/login',   
+    github: '',
+    images: ['/images/dasti.png']
   },
   {
     title: 'Minerba Verification Proccess (MVP) - Kementerian ESDM',
@@ -261,8 +282,9 @@ export default function Projects() {
                     left: '40px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255, 255, 255, 0.4)',
                     color: 'white',
                     width: '60px',
                     height: '60px',
@@ -272,6 +294,7 @@ export default function Projects() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     zIndex: 100000,
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
                   }}
                 >
                   <ChevronLeft size={36} />
@@ -283,8 +306,9 @@ export default function Projects() {
                     right: '40px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255, 255, 255, 0.4)',
                     color: 'white',
                     width: '60px',
                     height: '60px',
@@ -294,6 +318,7 @@ export default function Projects() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     zIndex: 100000,
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
                   }}
                 >
                   <ChevronRight size={36} />
