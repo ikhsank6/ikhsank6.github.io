@@ -1,0 +1,238 @@
+---
+---
+
+<section id="home" class="hero">
+  <div class="container">
+    <div class="hero-wrapper">
+      <div class="hero-badge animate-on-scroll">
+        <span class="badge-dot"></span>
+        <span>Available for projects and job offers</span>
+      </div>
+      
+      <h1 class="hero-title animate-on-scroll delay-1">
+        Full Stack Developer<br/>
+        <span class="text-muted"></span>
+      </h1>
+      
+      <p class="hero-description animate-on-scroll delay-2">
+        I'm <span class="accent-text">Ikhsan Kurniawan</span>, a software developer based in Jakarta.
+        I specialize in building high-performance web applications with modern technologies
+        like Laravel, Vue, React, and Node.js.
+      </p>
+      
+      <div class="hero-stats animate-on-scroll delay-3">
+        <div class="stat">
+          <span class="stat-value">5+</span>
+          <span class="stat-label">Years Exp.</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">20+</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Quality</span>
+        </div>
+      </div>
+      
+      <div class="hero-cta animate-on-scroll delay-4">
+        <a href="#projects" class="btn-primary">
+          View My Work
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+          </svg>
+        </a>
+        <a href="https://linkedin.com/in/ikhsank6" target="_blank" class="btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+          </svg>
+          Let's Connect
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 0;
+  }
+
+  .hero-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 10px 24px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .badge-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--accent-lime);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 255, 0, 0.4); }
+    50% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(212, 255, 0, 0); }
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 32px;
+    letter-spacing: -0.04em;
+    color: var(--text-primary);
+  }
+
+  .text-muted {
+    color: var(--text-secondary);
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 680px;
+    margin-bottom: 48px;
+  }
+
+  .accent-text {
+    color: var(--accent-lime);
+    font-weight: 600;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 24px 48px;
+    border-radius: 24px;
+    margin-bottom: 48px;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--border-subtle);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 20px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--accent-lime);
+    color: #000;
+    padding: 16px 32px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(212, 255, 0, 0.3);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    color: var(--text-primary);
+    padding: 16px 32px;
+    border-radius: 100px;
+    border: 1px solid var(--border-subtle);
+    font-weight: 700;
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--text-primary);
+    transform: translateY(-4px);
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 80px 0;
+    }
+    
+    .hero-stats {
+      flex-direction: column;
+      gap: 32px;
+      padding: 32px;
+      width: 100%;
+    }
+
+    .stat-divider {
+      width: 60px;
+      height: 1px;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn-primary, .btn-secondary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

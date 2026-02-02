@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Education from '../components/Education.astro';
+import Skills from '../components/Skills';
+import Projects from '../components/Projects';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Ikhsan Kurniawan | Software Developer">
+	<div class="main-container">
+		<Navbar />
+		<main>
+			<Hero />
+			<Skills client:visible />
+			<Projects client:visible />
+			<Education />
+		</main>
+		<Footer />
+	</div>
+</Layout>
+
+<style>
+	main {
+		overflow-x: hidden;
+	}
+</style>

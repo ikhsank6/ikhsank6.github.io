@@ -1,0 +1,216 @@
+---
+const experience = [
+  {
+    role: 'Senior Full Stack Developer',
+    company: 'PT. Example Company',
+    period: '2021 - Present',
+    description: 'Leading development of enterprise web applications using Laravel and React. Managing team of 3 developers.',
+  },
+  {
+    role: 'Full Stack Developer',
+    company: 'Tech Startup',
+    period: '2019 - 2021',
+    description: 'Building scalable SaaS products and RESTful APIs. Implemented CI/CD pipelines.',
+  }
+];
+
+const education = [
+  {
+    degree: 'Bachelor of Computer Science',
+    school: 'IPB University',
+    period: '2015 - 2018',
+    description: 'Focus on software engineering, algorithms, and data structures.',
+  },
+  {
+    degree: 'D3 Information System',
+    school: 'Telkom University',
+    period: '2012 - 2015',
+    description: 'Foundation of programming, web development, and database management.',
+  }
+];
+---
+
+<section id="education">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag animate-on-scroll">
+        <span class="hashtag">#</span>
+        <span>About</span>
+      </div>
+      <h2 class="section-title animate-on-scroll delay-1">
+        Experience & Education
+      </h2>
+      <p class="section-description animate-on-scroll delay-2">
+        My professional journey and academic background
+      </p>
+    </div>
+    
+    <div class="about-grid">
+      <div class="about-column">
+        <h3 class="column-title animate-on-scroll">
+          <span class="title-icon">💼</span>
+          Experience
+        </h3>
+        <div class="timeline">
+          {experience.map((item, index) => (
+            <div class="timeline-item animate-on-scroll" style={`transition-delay: ${0.1 * index}s`}>
+              <div class="timeline-dot"></div>
+              <div class="timeline-body">
+                <span class="timeline-period">{item.period}</span>
+                <h4 class="timeline-title">{item.role}</h4>
+                <p class="timeline-company">{item.company}</p>
+                <p class="timeline-description">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div class="about-column">
+        <h3 class="column-title animate-on-scroll">
+          <span class="title-icon">🎓</span>
+          Education
+        </h3>
+        <div class="timeline">
+          {education.map((item, index) => (
+            <div class="timeline-item animate-on-scroll" style={`transition-delay: ${0.1 * index}s`}>
+              <div class="timeline-dot edu"></div>
+              <div class="timeline-body">
+                <span class="timeline-period">{item.period}</span>
+                <h4 class="timeline-title">{item.degree}</h4>
+                <p class="timeline-company">{item.school}</p>
+                <p class="timeline-description">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #education {
+    padding: 120px 0;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .column-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .title-icon {
+    font-size: 1.6rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    background: var(--accent-lime);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 8px;
+    box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
+    z-index: 2;
+  }
+
+  .timeline-dot.edu {
+    background: var(--accent-blue);
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
+  }
+
+  .timeline-body {
+    flex: 1;
+    padding-bottom: 48px;
+    border-left: 2px solid var(--border-subtle);
+    padding-left: 32px;
+    margin-left: -32px; /* Pull back to align with dot center */
+  }
+
+  /* Adjust line position to center of dot */
+  .timeline-body::before {
+    display: none;
+  }
+
+  /* Corrected line alignment */
+  .timeline-item {
+    padding-left: 6px; /* center dot on line */
+  }
+
+  .timeline-item:last-child .timeline-body {
+    border-left-color: transparent;
+    padding-bottom: 0;
+  }
+
+  .timeline-period {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-lime);
+    background: rgba(212, 255, 0, 0.1);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(212, 255, 0, 0.2);
+  }
+
+  .timeline-item:has(.timeline-dot.edu) .timeline-period {
+    color: var(--accent-blue);
+    background: rgba(0, 102, 255, 0.1);
+    border-color: rgba(0, 102, 255, 0.2);
+  }
+
+  .timeline-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .timeline-company {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .timeline-description {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 968px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 60px;
+    }
+  }
+</style>
