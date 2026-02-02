@@ -78,6 +78,16 @@ const projects = [
     images: ['/images/mvp.png']
   },
   {
+    title: 'Exploration Management System (EMS) - Kementerian ESDM',
+    description: 'EMS is a web-based application for managing exploration data of mineral and coal companies in Indonesia.',
+    year: '2020',
+    status: 'not-live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: '',
+    github: '',
+    images: ['/images/noimage.png']
+  },
+  {
     title: 'Miners - Kementerian ESDM',
     description: 'MINERS is a web-based application for administering reporting by mineral and coal companies in Indonesia to the Ministry of Energy and Mineral Resources. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
     year: '2019',
