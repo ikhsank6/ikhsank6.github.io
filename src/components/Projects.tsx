@@ -17,7 +17,17 @@ const projects = [
     ]
   },
   {
-    title: 'LSP BPPTIK',
+    title: 'Sistem Informasi Perencanaan Pembangunan Desa Tertinggal - Kementerian Desa, Pembangunan Daerah Tertinggal dan Transmigrasi',
+    description: 'SIPPDT is a web-based application for planning the development of lagging villages in Indonesia.',
+    year: '2024',
+    status: 'not-live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: '',
+    github: '',
+    images: ['/images/sippdt_1.png', '/images/sippdt_2.png']
+  },
+  {
+    title: 'LSP BPPTIK - Kementerian Digital dan Informatika',
     description: 'BNSP\'s supporting institution in implementing competency testing and certification, LSP BPPTIK applies SKKNI-based certification.',
     year: '2023',
     status: 'live',
@@ -63,7 +73,7 @@ const projects = [
     year: '2020',
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
-    link: 'https://dasti.kejaksaan.go.id/v5/login',   
+    link: 'https://dasti.kejaksaan.go.id/v5/login',
     github: '',
     images: ['/images/dasti.png']
   },
