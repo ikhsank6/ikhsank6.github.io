@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Background from '../components/Background.astro';
 
 interface Props {
 	title: string;
@@ -23,7 +24,37 @@ const { title, description = "My Professional Portfolio" } = Astro.props;
 		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	</head>
 	<body>
+		<Background />
 		<slot />
+		
+		<script>
+			const observerOptions = {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px'
+			};
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('visible');
+					}
+				});
+			}, observerOptions);
+
+			function initObserver() {
+				document.querySelectorAll('.animate-on-scroll').forEach(el => {
+					observer.observe(el);
+				});
+			}
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initObserver);
+			} else {
+				initObserver();
+			}
+
+			document.addEventListener('astro:after-swap', initObserver);
+		</script>
 	</body>
 </html>
 
