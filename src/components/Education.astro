@@ -1,16 +1,24 @@
 ---
 const experience = [
   {
-    role: 'Senior Full Stack Developer',
-    company: 'PT. Example Company',
-    period: '2021 - Present',
-    description: 'Leading development of enterprise web applications using Laravel and React. Managing team of 3 developers.',
+    role: 'Full Stack Developer',
+    company: 'PT. Mitreka Solusi Indonesia',
+    period: '2022 - Present',
+    description: [
+      'Design, develop, and maintain scalable web applications, APIs, and system integrations',
+      'Implement best practices in coding standards, system design and optimized database performance.',
+      'Support deployment processes and production troubleshooting.'
+    ],
   },
   {
     role: 'Full Stack Developer',
-    company: 'Tech Startup',
-    period: '2019 - 2021',
-    description: 'Building scalable SaaS products and RESTful APIs. Implemented CI/CD pipelines.',
+    company: 'PT Maxxima Innovative Engineering',
+    period: '2018 - 2022',
+    description: [
+      'Design, develop, and maintain scalable web applications, APIs, and system integrations',
+      'Implement best practices in coding standards, system design and optimized database performance.',
+      'Support deployment processes and production troubleshooting.'
+    ],
   }
 ];
 
@@ -19,18 +27,18 @@ const education = [
     degree: 'Bachelor of Computer Science',
     school: 'IPB University',
     period: '2015 - 2018',
-    description: 'Focus on software engineering, algorithms, and data structures.',
+    description: [],
   },
   {
     degree: 'D3 Information System',
     school: 'Telkom University',
     period: '2012 - 2015',
-    description: 'Foundation of programming, web development, and database management.',
+    description: [],
   }
 ];
 ---
 
-<section id="education">
+<section id="about">
   <div class="container">
     <div class="section-header">
       <div class="section-tag animate-on-scroll">
@@ -59,7 +67,17 @@ const education = [
                 <span class="timeline-period">{item.period}</span>
                 <h4 class="timeline-title">{item.role}</h4>
                 <p class="timeline-company">{item.company}</p>
-                <p class="timeline-description">{item.description}</p>
+                <div class="timeline-description">
+                  {Array.isArray(item.description) ? (
+                    <ul class="description-list">
+                      {item.description.map(point => (
+                        <li>{point}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    item.description
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -79,7 +97,17 @@ const education = [
                 <span class="timeline-period">{item.period}</span>
                 <h4 class="timeline-title">{item.degree}</h4>
                 <p class="timeline-company">{item.school}</p>
-                <p class="timeline-description">{item.description}</p>
+                <div class="timeline-description">
+                  {Array.isArray(item.description) && item.description.length > 0 ? (
+                    <ul class="description-list">
+                      {item.description.map(point => (
+                        <li>{point}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    item.description
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -205,6 +233,32 @@ const education = [
     font-size: 0.95rem;
     color: var(--text-muted);
     line-height: 1.7;
+  }
+
+  .description-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .description-list li {
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .description-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-lime);
+    font-weight: bold;
+  }
+
+  .timeline-item:has(.timeline-dot.edu) .description-list li::before {
+    color: var(--accent-blue);
   }
 
   @media (max-width: 968px) {
