@@ -55,9 +55,12 @@ const navItems = [
 
   .nav-notice {
     position: absolute;
-    left: 64px;
+    /* Desktop: Right side of navbar */
     top: 0;
+    left: 70px;
+    transform: none;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 8px;
     background: var(--bg-card);
@@ -69,16 +72,23 @@ const navItems = [
     border: 1px solid var(--border-subtle);
     white-space: nowrap;
     animation: pulse-notice 2s infinite;
-    cursor: pointer;
+    cursor: default;
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-notice svg {
+    transform: rotate(180deg); /* Arrow pointing left to menu */
+    order: -1; /* Move arrow to the left of the text */
   }
 
   @keyframes pulse-notice {
     0%, 100% { opacity: 1; transform: translateX(0); }
-    50% { opacity: 0.7; transform: translateX(4px); }
+    50% { opacity: 0.8; transform: translateX(5px); }
   }
 
   .nav-notice.hidden {
-    display: none;
+    display: none !important;
   }
 
   .floating-item {
@@ -111,6 +121,14 @@ const navItems = [
     color: var(--accent-lime);
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(212, 255, 0, 0.2);
+  }
+
+  /* Active state for current section */
+  .floating-item.active .circle-icon {
+    background: rgba(212, 255, 0, 0.15);
+    border-color: var(--accent-lime);
+    color: var(--accent-lime);
+    box-shadow: 0 0 25px rgba(212, 255, 0, 0.3);
   }
 
   .floating-label {
@@ -207,9 +225,30 @@ const navItems = [
     }
 
     .nav-notice {
-      display: none;
+      display: flex;
+      flex-direction: row;
+      top: 50%;
+      left: auto;
+      right: -130px; /* Position to the right side */
+      transform: translateY(-50%);
+      animation: pulse-notice-mobile 2s infinite;
+    }
+
+    .nav-notice svg {
+      transform: rotate(180deg); /* Point left to menu */
+      order: -1;
     }
     
+    .nav-notice span {
+       display: inline-block;
+    }
+
+    /* Adjust animation for mobile context */
+    @keyframes pulse-notice-mobile {
+      0%, 100% { opacity: 1; transform: translateY(-50%) translateX(0); }
+      50% { opacity: 0.7; transform: translateY(-50%) translateX(3px); }
+    }
+
     .circle-icon {
       width: 44px;
       height: 44px;
@@ -222,35 +261,84 @@ const navItems = [
 </style>
 
 <script>
+  const navNotice = document.getElementById('navNotice');
 
+  // Check if notice was already seen
+  if (localStorage.getItem('navNoticeSeen') === 'true') {
+    navNotice?.classList.add('hidden');
+  }
 
-  // Hide notice on hover or click of any nav item
+  // Hide notice when any nav item is clicked
   document.querySelectorAll('.floating-item').forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      navNotice?.classList.add('hidden');
-      localStorage.setItem('navNoticeSeen', 'true');
-    });
     item.addEventListener('click', () => {
       navNotice?.classList.add('hidden');
       localStorage.setItem('navNoticeSeen', 'true');
     });
   });
 
-  // Check if notice was already seen - only hide if localStorage says so
-  document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('navNoticeSeen') === 'true') {
-      navNotice?.classList.add('hidden');
+  // Auto-hide after 5 seconds and remember
+  setTimeout(() => {
+    navNotice?.classList.add('hidden');
+    localStorage.setItem('navNoticeSeen', 'true');
+  }, 5000);
+
+  // Active section detection
+  const navLinks = document.querySelectorAll('.floating-item');
+
+  // Map nav hrefs to section IDs
+  const hrefToId: Record<string, string> = {
+    '#home': 'home',
+    '#skills': 'skills',
+    '#projects': 'projects',
+    '#about': 'about'
+  };
+
+  function setActiveNav() {
+    // Query sections dynamically (important for client:only components)
+    const sections = document.querySelectorAll('section[id]');
+    const scrollPosition = window.scrollY + window.innerHeight / 3;
+    let currentSection = 'home';
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionBottom = sectionTop + section.offsetHeight;
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        currentSection = section.getAttribute('id') || 'home';
+      }
+    });
+
+    // Clear all active states first
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+    });
+
+    // Set active based on current section
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && hrefToId[href] === currentSection) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  // Run on scroll with throttle for performance
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        setActiveNav();
+        ticking = false;
+      });
+      ticking = true;
     }
   });
 
-  // Also hide notice on click
-  navNotice?.addEventListener('click', () => {
-    navNotice?.classList.add('hidden');
-    localStorage.setItem('navNoticeSeen', 'true');
-  });
+  // Run on load with delay to wait for React components
+  setTimeout(setActiveNav, 500);
 
-  // Auto-hide after 10 seconds
-  setTimeout(() => {
-    navNotice?.classList.add('hidden');
-  }, 10000);
+  // Also update on hash change (when clicking nav links)
+  window.addEventListener('hashchange', () => {
+    setTimeout(setActiveNav, 100);
+  });
 </script>
