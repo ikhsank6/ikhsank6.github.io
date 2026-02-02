@@ -150,12 +150,13 @@ export default function Projects() {
   };
 
   useEffect(() => {
+    // Reveal animation observer
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
+      rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
@@ -163,11 +164,54 @@ export default function Projects() {
       });
     }, observerOptions);
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(el => revealObserver.observe(el));
 
-    return () => observer.disconnect();
+    // Stacking effect: Scale and darken cards as they are covered
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          cards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            const nextCard = cards[index + 1];
+
+            if (nextCard) {
+              const nextRect = nextCard.getBoundingClientRect();
+
+              // overlap: 0 when next card is at bottom of current card
+              // overlap: 1 when next card is at top of current card
+              const overlap = Math.max(0, Math.min(1, (rect.bottom - nextRect.top) / rect.height));
+
+              const scale = 1 - (overlap * 0.06); // Scale down to 0.94
+              const brightness = 1 - (overlap * 0.5); // Darken to 0.5
+              const opacity = 1 - (overlap * 0.3); // Fade slightly
+
+              const el = card as HTMLElement;
+              el.style.transform = `translateZ(0) scale(${scale})`;
+              el.style.filter = `brightness(${brightness})`;
+              el.style.opacity = `${opacity}`;
+            } else {
+              // Ensure last card or visible cards remain normal
+              const el = card as HTMLElement;
+              el.style.transform = `translateZ(0) scale(1)`;
+              el.style.filter = `brightness(1)`;
+              el.style.opacity = `1`;
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => {
+      revealObserver.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (

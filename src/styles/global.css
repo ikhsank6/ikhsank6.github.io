@@ -271,20 +271,25 @@ a {
   gap: 60px;
   align-items: center;
   position: sticky;
-  top: 100px;
+  top: calc(80px + var(--index) * 20px);
   z-index: calc(var(--index) + 1);
   overflow: hidden;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
   
   /* GPU Acceleration for smoother scroll */
-  will-change: transform;
+  will-change: transform, filter;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transform-origin: center top;
   
-  /* Smooth but not heavy transitions */
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+  /* Smooth transitions for hover, but scroll logic handles stacking */
+  transition: 
+    transform 0.4s var(--ease-out-expo), 
+    box-shadow 0.4s var(--ease-out-expo), 
+    border-color 0.4s var(--ease-out-expo),
+    filter 0.4s var(--ease-out-expo);
 }
 
 .project-card::before {
