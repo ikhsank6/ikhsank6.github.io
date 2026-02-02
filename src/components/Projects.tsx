@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, Github, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const projects = [
   {
@@ -144,39 +144,41 @@ export default function Projects() {
             A selection of projects I've worked on
           </p>
         </div>
-        
+
         <div className="projects-wrapper">
           {projects.map((project, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="project-card animate-on-scroll"
-              style={{ 
+              style={{
                 transitionDelay: `${0.1 * idx}s`,
-                '--index': idx 
+                '--index': idx
               } as React.CSSProperties}
             >
               <div className="project-content">
                 <div className="project-meta">
                   <span className="project-year">{project.year}</span>
                   <span className={`project-status ${project.status}`}>
-                    {project.status === 'live' ? 'Live' : 'In Development'}
+                    {project.status === 'live' ? 'Live' :
+                      project.status === 'not-live' ? 'Offline' :
+                        'In Development'}
                   </span>
                 </div>
-                
+
                 <h3 className="project-title">{project.title}</h3>
                 <p className="project-description">{project.description}</p>
-                
+
                 <div className="project-tech">
                   {project.tech.map((tech, tIdx) => (
                     <span key={tIdx} className="tech-badge">{tech}</span>
                   ))}
                 </div>
-                
+
                 <div className="project-links">
                   {project.link && (
-                    <a 
-                      href={project.link} 
-                      target="_blank" 
+                    <a
+                      href={project.link}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="project-link"
                     >
@@ -184,20 +186,11 @@ export default function Projects() {
                       <ArrowUpRight size={14} />
                     </a>
                   )}
-                  {/* <a 
-                    href={project.github} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="project-link secondary"
-                  >
-                    <Github size={16} />
-                    Source
-                  </a> */}
                 </div>
               </div>
-              
-              <div 
-                className="project-image" 
+
+              <div
+                className="project-image"
                 onClick={() => project.images && project.images.length > 0 && openLightbox(project.images)}
                 style={{ cursor: project.images && project.images.length > 0 ? 'zoom-in' : 'default' }}
               >
@@ -222,7 +215,7 @@ export default function Projects() {
 
         {/* Lightbox Modal - Rendered via Portal */}
         {selectedImages && createPortal(
-          <div 
+          <div
             onClick={closeLightbox}
             style={{
               position: 'fixed',
@@ -237,7 +230,7 @@ export default function Projects() {
               padding: '40px',
             }}
           >
-            <button 
+            <button
               onClick={closeLightbox}
               style={{
                 position: 'absolute',
@@ -261,7 +254,7 @@ export default function Projects() {
 
             {selectedImages.length > 1 && (
               <>
-                <button 
+                <button
                   onClick={prevImage}
                   style={{
                     position: 'absolute',
@@ -283,7 +276,7 @@ export default function Projects() {
                 >
                   <ChevronLeft size={36} />
                 </button>
-                <button 
+                <button
                   onClick={nextImage}
                   style={{
                     position: 'absolute',
@@ -308,7 +301,7 @@ export default function Projects() {
               </>
             )}
 
-            <div 
+            <div
               onClick={(e) => e.stopPropagation()}
               style={{
                 maxWidth: '90%',
@@ -320,9 +313,9 @@ export default function Projects() {
                 justifyContent: 'center',
               }}
             >
-              <img 
-                src={selectedImages[currentImageIndex]} 
-                alt="Project Preview" 
+              <img
+                src={selectedImages[currentImageIndex]}
+                alt="Project Preview"
                 style={{
                   width: '100%',
                   height: '100%',

@@ -38,16 +38,7 @@ const navItems = [
   ))}
 </div>
 
-<div class="mobile-menu" id="mobileMenu">
-  {navItems.map(item => (
-    <a href={item.href} class="mobile-link">{item.name}</a>
-  ))}
-</div>
 
-<button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
-  <span></span>
-  <span></span>
-</button>
 
 <style>
   /* Floating Nav - Always Visible */
@@ -200,30 +191,38 @@ const navItems = [
 
   @media (max-width: 968px) {
     .floating-nav {
+      left: 50%;
+      top: auto;
+      bottom: 24px;
+      transform: translateX(-50%);
+      flex-direction: row;
+      gap: 12px;
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 12px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-notice {
       display: none;
     }
     
-    .mobile-menu-btn {
-      display: flex;
+    .circle-icon {
+      width: 44px;
+      height: 44px;
+    }
+
+    .floating-label {
+      display: none;
     }
   }
 </style>
 
 <script>
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const navNotice = document.getElementById('navNotice');
 
-  // Mobile menu toggle
-  mobileMenuBtn?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('active');
-  });
-
-  document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu?.classList.remove('active');
-    });
-  });
 
   // Hide notice on hover or click of any nav item
   document.querySelectorAll('.floating-item').forEach(item => {
