@@ -1,46 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { getTechIconUrl } from '../utils/techIcons';
 
+// Skills data - using tech names that map to utils/techIcons
 const skills = [
-  { name: 'Laravel', slug: 'laravel' },
-  { name: 'Livewire', slug: 'livewire' },
-  { name: 'CodeIgniter', slug: 'codeigniter' },
-  { name: 'Vue.js', slug: 'vuedotjs' },
-  { name: 'React', slug: 'react' },
-  { name: 'Next.js', slug: 'nextdotjs' },
-  { name: 'TypeScript', slug: 'typescript' },
-  { name: 'JavaScript', slug: 'javascript' },
-  { name: 'Tailwind CSS', slug: 'tailwindcss' },
-  { name: 'Node.js', slug: 'nodedotjs' },
-  { name: 'NestJS', slug: 'nestjs' },
-  { name: 'Express', slug: 'express' },
-  { name: 'Prisma', slug: 'prisma' },
-  { name: 'PostgreSQL', slug: 'postgresql' },
-  { name: 'MongoDB', slug: 'mongodb' },
-  { name: 'MySQL', slug: 'mysql' },
+  'Laravel',
+  'Livewire',
+  'Codeigniter',
+  'Vue.js',
+  'React',
+  'Next.js',
+  'TypeScript',
+  'JavaScript',
+  'Tailwind CSS',
+  'Node.js',
+  'NestJS',
+  'Express',
+  'Prisma',
+  'PostgreSQL',
+  'MongoDB',
+  'MySQL',
 ];
 
 export default function Skills() {
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section id="skills">
       <div className="container">
@@ -56,20 +37,20 @@ export default function Skills() {
             Tools and frameworks I use to bring ideas to life
           </p>
         </div>
-        
+
         <div className="skills-container">
           {skills.map((skill, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="skill-pill animate-on-scroll"
               style={{ transitionDelay: `${0.05 * idx}s` }}
             >
-              <img 
-                src={`https://cdn.simpleicons.org/${skill.slug}`} 
-                alt={skill.name}
+              <img
+                src={getTechIconUrl(skill) || ''}
+                alt={skill}
                 loading="lazy"
               />
-              <span>{skill.name}</span>
+              <span>{skill}</span>
             </div>
           ))}
         </div>

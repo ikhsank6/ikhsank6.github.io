@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { TechIcon } from './shared/TechIcon';
 
 const projects = [
   {
@@ -8,7 +9,7 @@ const projects = [
     description: 'NADINE V3 is a web-based application for internal correspondence administration within the Ministry of Energy and Mineral Resources.',
     year: '2025',
     status: 'live',
-    tech: ['Laravel Octane + Road Runner', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'Pinia', 'Tailwind CSS', 'Element Plus'],
+    tech: ['Laravel Octane + Road Runner', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
     link: 'https://ngantor.esdm.go.id/',
     github: '',
     images: [
@@ -55,7 +56,9 @@ const projects = [
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS', 'Service ArcGIS'],
     link: 'https://modi.esdm.go.id/',
     github: '',
-    images: ['/images/modi.png']
+    images: [
+      '/images/modi_1.png',
+      '/images/modi.png']
   },
   {
     title: 'ERKAB - Kementerian ESDM',
@@ -105,7 +108,7 @@ const projects = [
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
     github: '',
-    images: ['/images/noimage.png']
+    images: ['/images/miners.png']
   },
   {
     title: 'MOMS - Kementerian ESDM',
@@ -122,23 +125,92 @@ const projects = [
 export default function Projects() {
   const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const openLightbox = (images: string[], index: number = 0) => {
     setSelectedImages(images);
     setCurrentImageIndex(index);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
     document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = () => {
     setSelectedImages(null);
     setCurrentImageIndex(0);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
     document.body.style.overflow = 'auto';
+  };
+
+  const zoomIn = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setZoomLevel(prev => Math.min(prev + 0.5, 3));
+  };
+
+  const zoomOut = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const newZoom = Math.max(zoomLevel - 0.5, 1);
+    setZoomLevel(newZoom);
+    if (newZoom === 1) {
+      setPanPosition({ x: 0, y: 0 });
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoomLevel > 1) {
+      e.preventDefault();
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && zoomLevel > 1) {
+      setPanPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (zoomLevel > 1 && e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.touches[0].clientX - panPosition.x,
+        y: e.touches[0].clientY - panPosition.y
+      });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
+      e.preventDefault();
+      setPanPosition({
+        x: e.touches[0].clientX - dragStart.x,
+        y: e.touches[0].clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
   };
 
   const nextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedImages) {
       setCurrentImageIndex((prev) => (prev + 1) % selectedImages.length);
+      setZoomLevel(1);
+      setPanPosition({ x: 0, y: 0 });
     }
   };
 
@@ -146,26 +218,13 @@ export default function Projects() {
     e?.stopPropagation();
     if (selectedImages) {
       setCurrentImageIndex((prev) => (prev - 1 + selectedImages.length) % selectedImages.length);
+      setZoomLevel(1);
+      setPanPosition({ x: 0, y: 0 });
     }
   };
 
   useEffect(() => {
-    // Reveal animation observer
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
     const cards = document.querySelectorAll('.project-card');
-    cards.forEach(el => revealObserver.observe(el));
 
     // Stacking effect: Scale and darken cards as they are covered
     let ticking = false;
@@ -208,9 +267,31 @@ export default function Projects() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
 
+    // Carousel dot indicator update only
+    const carousel = document.getElementById('projectsCarousel');
+    const dots = document.querySelectorAll('.carousel-dots .dot');
+    let currentActiveIndex = 0;
+
+    const updateDots = () => {
+      if (!carousel) return;
+
+      const scrollLeft = carousel.scrollLeft;
+      const cardWidth = carousel.firstElementChild?.clientWidth || 0;
+      const gap = 16;
+      const newActiveIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+      if (newActiveIndex !== currentActiveIndex && newActiveIndex >= 0 && newActiveIndex < dots.length) {
+        dots[currentActiveIndex]?.classList.remove('active');
+        dots[newActiveIndex]?.classList.add('active');
+        currentActiveIndex = newActiveIndex;
+      }
+    };
+
+    carousel?.addEventListener('scroll', updateDots, { passive: true });
+
     return () => {
-      revealObserver.disconnect();
       window.removeEventListener('scroll', handleScroll);
+      carousel?.removeEventListener('scroll', updateDots);
     };
   }, []);
 
@@ -230,7 +311,14 @@ export default function Projects() {
           </p>
         </div>
 
-        <div className="projects-wrapper">
+        {/* Carousel Dot Indicators for Mobile */}
+        <div className="carousel-dots" id="carouselDots">
+          {projects.map((_, idx) => (
+            <span key={idx} className={`dot ${idx === 0 ? 'active' : ''}`} data-index={idx}></span>
+          ))}
+        </div>
+
+        <div className="projects-wrapper" id="projectsCarousel">
           {projects.map((project, idx) => (
             <div
               key={idx}
@@ -255,7 +343,7 @@ export default function Projects() {
 
                 <div className="project-tech">
                   {project.tech.map((tech, tIdx) => (
-                    <span key={tIdx} className="tech-badge">{tech}</span>
+                    <TechIcon key={tIdx} tech={tech} />
                   ))}
                 </div>
 
@@ -391,41 +479,113 @@ export default function Projects() {
             )}
 
             <div
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               onClick={(e) => e.stopPropagation()}
               style={{
                 maxWidth: '90%',
-                maxHeight: '90vh',
-                cursor: 'default',
+                maxHeight: '80vh',
+                cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                overflow: 'hidden',
+                userSelect: 'none',
               }}
             >
               <img
                 src={selectedImages[currentImageIndex]}
                 alt="Project Preview"
+                draggable={false}
                 style={{
-                  width: '100%',
-                  height: '100%',
+                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                  transformOrigin: 'center center',
+                  transition: isDragging ? 'none' : 'transform 0.2s ease-out',
                   objectFit: 'contain',
                   borderRadius: '12px',
                   boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+                  maxWidth: '100%',
+                  maxHeight: '80vh',
+                  pointerEvents: 'none',
                 }}
               />
+            </div>
+
+            {/* Zoom Controls */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'absolute',
+                bottom: '40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: 'blur(10px)',
+                padding: '8px 16px',
+                borderRadius: '100px',
+                zIndex: 100001,
+              }}
+            >
+              <button
+                onClick={zoomOut}
+                disabled={zoomLevel <= 1}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: zoomLevel <= 1 ? 'rgba(255,255,255,0.3)' : 'white',
+                  cursor: zoomLevel <= 1 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px',
+                }}
+              >
+                <ZoomOut size={24} />
+              </button>
+              <span style={{
+                color: 'white',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                minWidth: '50px',
+                textAlign: 'center',
+              }}>
+                {Math.round(zoomLevel * 100)}%
+              </span>
+              <button
+                onClick={zoomIn}
+                disabled={zoomLevel >= 3}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: zoomLevel >= 3 ? 'rgba(255,255,255,0.3)' : 'white',
+                  cursor: zoomLevel >= 3 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px',
+                }}
+              >
+                <ZoomIn size={24} />
+              </button>
               {selectedImages.length > 1 && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: '-40px',
-                  color: 'white',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  background: 'rgba(0,0,0,0.5)',
-                  padding: '4px 12px',
-                  borderRadius: '100px',
+                <span style={{
+                  color: 'rgba(255,255,255,0.7)',
+                  fontSize: '0.8rem',
+                  marginLeft: '8px',
+                  paddingLeft: '12px',
+                  borderLeft: '1px solid rgba(255,255,255,0.3)',
                 }}>
                   {currentImageIndex + 1} / {selectedImages.length}
-                </div>
+                </span>
               )}
             </div>
           </div>,

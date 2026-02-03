@@ -13,11 +13,44 @@ import Footer from '../components/Footer.astro';
 	
 	<main>
 		<Hero />
-		<Skills client:visible />
+		<Skills client:only="react" />
 		<Projects client:only="react" />
 		<Education />
 		<Footer />
 	</main>
+
+	<script>
+		// Global Intersection Observer for scroll animations
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('visible');
+				}
+			});
+		}, observerOptions);
+
+		// Function to observe elements
+		const observeElements = () => {
+			document.querySelectorAll('.animate-on-scroll').forEach(el => {
+				observer.observe(el);
+			});
+		};
+
+		// Initial observation
+		observeElements();
+
+		// Re-observe when content changes (e.g. after hydration)
+		const mutationObserver = new MutationObserver(() => {
+			observeElements();
+		});
+
+		mutationObserver.observe(document.body, { childList: true, subtree: true });
+	</script>
 </Layout>
 
 <style>
