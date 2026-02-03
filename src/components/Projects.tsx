@@ -5,6 +5,16 @@ import { TechIcon } from './shared/TechIcon';
 
 const projects = [
   {
+    title: 'Regional Investment Project - Kementerian Investasi/BKPM',
+    description: 'Regional Investment Project is a web-based application to see a list of investments and investment opportunities in Indonesia.',
+    year: '2025',
+    status: 'live',
+    tech: ['AdonisJS', 'Prisma', 'TypeScript', 'PostgreSQL', 'NextJS', 'Tailwind CSS'],
+    link: 'https://regionalinvestment.bkpm.go.id/',
+    github: '',
+    images: ['/images/pir_1.png', '/images/pir_2.png']
+  },
+  {
     title: 'Naskah Dinas Elektronik (NADINE V3) - Kementerian ESDM',
     description: 'NADINE V3 is a web-based application for internal correspondence administration within the Ministry of Energy and Mineral Resources.',
     year: '2025',
@@ -225,56 +235,61 @@ export default function Projects() {
 
   useEffect(() => {
     const cards = document.querySelectorAll('.project-card');
+    const projectsSection = document.getElementById('projects');
+    if (cards.length === 0 || !projectsSection) return;
 
-    // Stacking effect: Scale and darken cards as they are covered
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          cards.forEach((card, index) => {
-            const rect = card.getBoundingClientRect();
-            const nextCard = cards[index + 1];
+    let isVisible = false;
+    const observer = new IntersectionObserver((entries) => {
+      isVisible = entries[0].isIntersecting;
+    }, { threshold: 0.1 });
 
-            if (nextCard) {
-              const nextRect = nextCard.getBoundingClientRect();
+    observer.observe(projectsSection);
 
-              // overlap: 0 when next card is at bottom of current card
-              // overlap: 1 when next card is at top of current card
-              const overlap = Math.max(0, Math.min(1, (rect.bottom - nextRect.top) / rect.height));
+    const updateStacking = () => {
+      if (!isVisible || window.innerWidth <= 968) return;
 
-              const scale = 1 - (overlap * 0.06); // Scale down to 0.94
-              const brightness = 1 - (overlap * 0.5); // Darken to 0.5
-              const opacity = 1 - (overlap * 0.3); // Fade slightly
+      window.requestAnimationFrame(() => {
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const nextCard = cards[index + 1];
+          const el = card as HTMLElement;
+          const overlay = el.querySelector('.project-card-overlay') as HTMLElement;
 
-              const el = card as HTMLElement;
-              el.style.transform = `translateZ(0) scale(${scale})`;
-              el.style.filter = `brightness(${brightness})`;
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const overlap = Math.max(0, Math.min(1, (rect.bottom - nextRect.top) / rect.height));
+
+            if (overlap > 0) {
+              const scale = 1 - (overlap * 0.05);
+              const opacity = 1 - (overlap * 0.2);
+
+              el.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
               el.style.opacity = `${opacity}`;
-            } else {
-              // Ensure last card or visible cards remain normal
-              const el = card as HTMLElement;
-              el.style.transform = `translateZ(0) scale(1)`;
-              el.style.filter = `brightness(1)`;
-              el.style.opacity = `1`;
+              if (overlay) overlay.style.opacity = `${overlap * 0.6}`;
+              return;
             }
-          });
-          ticking = false;
+          }
+
+          // Reset
+          if (el.style.transform !== 'translate3d(0px, 0px, 0px) scale(1)') {
+            el.style.transform = 'translate3d(0, 0, 0) scale(1)';
+            el.style.opacity = '1';
+            if (overlay) overlay.style.opacity = '0';
+          }
         });
-        ticking = true;
-      }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    window.addEventListener('scroll', updateStacking, { passive: true });
+    updateStacking();
 
-    // Carousel dot indicator update only
+    // Carousel mobile dots logic
     const carousel = document.getElementById('projectsCarousel');
     const dots = document.querySelectorAll('.carousel-dots .dot');
     let currentActiveIndex = 0;
 
     const updateDots = () => {
       if (!carousel) return;
-
       const scrollLeft = carousel.scrollLeft;
       const cardWidth = carousel.firstElementChild?.clientWidth || 0;
       const gap = 16;
@@ -290,7 +305,8 @@ export default function Projects() {
     carousel?.addEventListener('scroll', updateDots, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+      window.removeEventListener('scroll', updateStacking);
       carousel?.removeEventListener('scroll', updateDots);
     };
   }, []);
@@ -329,6 +345,8 @@ export default function Projects() {
               } as React.CSSProperties}
             >
               <div className="project-content">
+                {/* Darkening overlay for stacking effect */}
+                <div className="project-card-overlay" />
                 <div className="project-meta">
                   <span className="project-year">{project.year}</span>
                   <span className={`project-status ${project.status}`}>

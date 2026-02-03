@@ -14,6 +14,7 @@ export const techSlugs: Record<string, string> = {
   'Codeigniter': 'codeigniter',
   'NestJS': 'nestjs',
   'Express': 'express',
+  'AdonisJS': 'adonisjs',
   
   // Frontend Frameworks
   'Vue 3': 'vuedotjs',
@@ -21,7 +22,7 @@ export const techSlugs: Record<string, string> = {
   'React': 'react',
   'Next.js': 'nextdotjs',
   'Livewire': 'livewire',
-  
+  'NextJS': 'nextdotjs',
   // Languages
   'TypeScript': 'typescript',
   'JavaScript': 'javascript',
