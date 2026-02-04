@@ -233,6 +233,26 @@ export default function Projects() {
     }
   };
 
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
+        if (e.cancelable) e.preventDefault();
+        setPanPosition({
+          x: e.touches[0].clientX - dragStart.x,
+          y: e.touches[0].clientY - dragStart.y,
+        });
+      }
+    };
+
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    return () => el.removeEventListener('touchmove', onTouchMove);
+  }, [isDragging, zoomLevel, dragStart]);
+
   useEffect(() => {
     const cards = document.querySelectorAll('.project-card');
     const projectsSection = document.getElementById('projects');
@@ -418,20 +438,21 @@ export default function Projects() {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'zoom-out',
-              padding: '40px',
+              padding: '20px',
             }}
           >
             <button
               onClick={closeLightbox}
               style={{
                 position: 'absolute',
-                top: '40px',
-                right: '40px',
-                background: 'rgba(255, 255, 255, 0.1)',
+                top: '20px',
+                right: '20px',
+                background: 'rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(5px)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: 'white',
-                width: '48px',
-                height: '48px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -440,7 +461,7 @@ export default function Projects() {
                 zIndex: 100000,
               }}
             >
-              <X size={32} />
+              <X size={24} />
             </button>
 
             {selectedImages.length > 1 && (
@@ -449,65 +470,63 @@ export default function Projects() {
                   onClick={prevImage}
                   style={{
                     position: 'absolute',
-                    left: '40px',
+                    left: '10px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.1)',
                     backdropFilter: 'blur(10px)',
-                    border: '2px solid rgba(255, 255, 255, 0.4)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     color: 'white',
-                    width: '60px',
-                    height: '60px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
                     zIndex: 100000,
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
                   }}
                 >
-                  <ChevronLeft size={36} />
+                  <ChevronLeft size={28} />
                 </button>
                 <button
                   onClick={nextImage}
                   style={{
                     position: 'absolute',
-                    right: '40px',
+                    right: '10px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.1)',
                     backdropFilter: 'blur(10px)',
-                    border: '2px solid rgba(255, 255, 255, 0.4)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     color: 'white',
-                    width: '60px',
-                    height: '60px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
                     zIndex: 100000,
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
                   }}
                 >
-                  <ChevronRight size={36} />
+                  <ChevronRight size={28} />
                 </button>
               </>
             )}
 
             <div
+              ref={containerRef}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
               onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               onClick={(e) => e.stopPropagation()}
               style={{
-                maxWidth: '90%',
-                maxHeight: '80vh',
+                maxWidth: '95%',
+                maxHeight: '90vh',
                 cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
                 position: 'relative',
                 display: 'flex',
@@ -529,7 +548,7 @@ export default function Projects() {
                   borderRadius: '12px',
                   boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
                   maxWidth: '100%',
-                  maxHeight: '80vh',
+                  maxHeight: '90vh',
                   pointerEvents: 'none',
                 }}
               />

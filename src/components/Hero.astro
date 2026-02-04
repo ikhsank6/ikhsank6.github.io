@@ -305,7 +305,7 @@
 </style>
 
 <style is:global>
-  /* Modal Styles - Global */
+  /* Modal Styles - Global Improved Responsiveness */
   #contact-modal {
     position: fixed;
     top: 0;
@@ -313,16 +313,16 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
-    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 16px;
   }
 
   #contact-modal.active {
@@ -333,13 +333,13 @@
   #contact-modal .modal-content {
     background: linear-gradient(135deg, rgba(30, 30, 35, 0.98) 0%, rgba(15, 15, 20, 0.99) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 40px;
-    max-width: 480px;
+    border-radius: clamp(20px, 4vw, 28px);
+    padding: clamp(24px, 5vw, 40px);
+    max-width: 500px;
     width: 100%;
     position: relative;
-    transform: translateY(30px) scale(0.9);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 
       0 25px 80px -12px rgba(0, 0, 0, 0.8),
       0 0 0 1px rgba(255, 255, 255, 0.05) inset;
@@ -351,19 +351,20 @@
 
   #contact-modal .modal-close {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: clamp(12px, 3vw, 20px);
+    right: clamp(12px, 3vw, 20px);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.6);
-    width: 40px;
-    height: 40px;
+    width: clamp(36px, 8vw, 44px);
+    height: clamp(36, 8vw, 44px);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    z-index: 10;
   }
 
   #contact-modal .modal-close:hover {
@@ -374,11 +375,12 @@
 
   #contact-modal .modal-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: clamp(24px, 6vw, 36px);
+    padding: 0 20px;
   }
 
   #contact-modal .modal-title {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: 800;
     color: #fff;
     margin-bottom: 8px;
@@ -387,110 +389,126 @@
 
   #contact-modal .modal-subtitle {
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+    line-height: 1.4;
   }
 
   #contact-modal .contact-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: clamp(10px, 2vw, 14px);
   }
 
   #contact-modal .contact-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
+    gap: clamp(12px, 3vw, 18px);
+    padding: clamp(14px, 3vw, 20px);
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    transition: all 0.3s ease;
+    border-radius: clamp(14px, 3vw, 18px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
   }
 
   #contact-modal .contact-item:hover {
     background: rgba(255, 255, 255, 0.06);
-    border-color: #d4ff00;
+    border-color: rgba(212, 255, 0, 0.5);
     transform: translateX(4px);
   }
 
   #contact-modal .contact-icon {
-    width: 48px;
-    height: 48px;
+    width: clamp(40px, 10vw, 52px);
+    height: clamp(40px, 10vw, 52px);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    font-size: clamp(20px, 5vw, 24px);
   }
 
-  #contact-modal .email-icon {
-    background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%);
-    color: white;
-  }
-
-  #contact-modal .whatsapp-icon {
-    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-    color: white;
-  }
-
-  #contact-modal .linkedin-icon {
-    background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
-    color: white;
-  }
+  #contact-modal .email-icon { background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%); color: white; }
+  #contact-modal .whatsapp-icon { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: white; }
+  #contact-modal .linkedin-icon { background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%); color: white; }
 
   #contact-modal .contact-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
     flex: 1;
-    min-width: 0;
+    min-width: 0; /* Important for ellipsis to work in flex */
   }
 
   #contact-modal .contact-label {
-    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 2vw, 0.75rem);
     color: rgba(255, 255, 255, 0.4);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   #contact-modal .contact-value {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 2.8vw, 1.05rem);
     color: #fff;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: color 0.3s ease;
+  }
+
+  #contact-modal .contact-item:hover .contact-value {
+    color: #d4ff00;
   }
 
   #contact-modal .contact-arrow {
     color: rgba(255, 255, 255, 0.3);
-    opacity: 0;
-    transform: translateX(-8px);
+    opacity: 0.5;
+    transform: translateX(0);
     transition: all 0.3s ease;
     flex-shrink: 0;
   }
 
   #contact-modal .contact-item:hover .contact-arrow {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(4px);
     color: #d4ff00;
   }
 
-  @media (max-width: 500px) {
+  /* Specific mobile adjustments for long texts */
+  @media (max-width: 400px) {
     #contact-modal .modal-content {
-      padding: 24px;
+      padding: 24px 16px;
+    }
+    
+    #contact-modal .contact-item {
+      padding: 12px;
+      gap: 12px;
     }
 
     #contact-modal .contact-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
     }
 
+    /* Allow wrapping for very long emails on tiny screens only if needed */
+    /* Or just make it slightly smaller */
     #contact-modal .contact-value {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* For ultra thin devices */
+  @media (max-width: 320px) {
+    #contact-modal .contact-value {
+      font-size: 0.75rem;
+    }
+    #contact-modal .contact-label {
+      font-size: 0.65rem;
     }
   }
 </style>
