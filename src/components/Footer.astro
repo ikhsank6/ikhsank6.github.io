@@ -5,12 +5,10 @@ const currentYear = new Date().getFullYear();
 <footer class="footer">
   <div class="container">
     <div class="footer-bottom">
-      <div class="footer-info">
-        <p class="copyright">© {currentYear} Ikhsan Kurniawan. All rights reserved.</p>
-        <p class="built-with">
-          Built with <span class="tech">Astro</span> + <span class="tech">React</span>
-        </p>
-      </div>
+      <p class="copyright">© {currentYear} Ikhsan Kurniawan. All rights reserved.</p>
+      <p class="built-with">
+        Built with <span class="tech">Astro</span> + <span class="tech">React</span>
+      </p>
     </div>
   </div>
 </footer>
@@ -80,11 +78,6 @@ const currentYear = new Date().getFullYear();
     padding-top: 30px;
   }
 
-  .footer-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
 
   .copyright, .built-with {
     font-size: 0.85rem;
@@ -119,10 +112,6 @@ const currentYear = new Date().getFullYear();
       text-align: center;
     }
 
-    .footer-info {
-      flex-direction: column;
-      gap: 8px;
-    }
 
     .footer-links {
       gap: 24px;

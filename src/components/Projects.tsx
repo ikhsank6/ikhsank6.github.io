@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowUpRight, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { TechIcon } from './shared/TechIcon';
 
 const projects = [
@@ -138,10 +138,12 @@ export default function Projects() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState<string>('');
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-  const openLightbox = (images: string[], index: number = 0) => {
+  const openLightbox = (images: string[], title: string, index: number = 0) => {
     setSelectedImages(images);
+    setSelectedTitle(title);
     setCurrentImageIndex(index);
     setZoomLevel(1);
     setPanPosition({ x: 0, y: 0 });
@@ -168,6 +170,12 @@ export default function Projects() {
     if (newZoom === 1) {
       setPanPosition({ x: 0, y: 0 });
     }
+  };
+
+  const resetZoom = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -402,7 +410,7 @@ export default function Projects() {
 
               <div
                 className="project-image"
-                onClick={() => project.images && project.images.length > 0 && openLightbox(project.images)}
+                onClick={() => project.images && project.images.length > 0 && openLightbox(project.images, project.title)}
                 style={{ cursor: project.images && project.images.length > 0 ? 'zoom-in' : 'default' }}
               >
                 {project.images && project.images.length > 0 ? (
@@ -426,204 +434,77 @@ export default function Projects() {
 
         {/* Lightbox Modal - Rendered via Portal */}
         {selectedImages && createPortal(
-          <div
-            onClick={closeLightbox}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0, 0, 0, 0.95)',
-              backdropFilter: 'blur(10px)',
-              zIndex: 99999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'zoom-out',
-              padding: '20px',
-            }}
-          >
-            <button
-              onClick={closeLightbox}
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                background: 'rgba(0, 0, 0, 0.5)',
-                backdropFilter: 'blur(5px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: 'white',
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 100000,
-              }}
-            >
+          <div className="lightbox-overlay active" onClick={closeLightbox}>
+            <button className="lightbox-close" onClick={closeLightbox}>
               <X size={24} />
             </button>
 
+            <div className="lightbox-title-overlay">
+              <h4>{selectedTitle}</h4>
+            </div>
+
             {selectedImages.length > 1 && (
               <>
-                <button
-                  onClick={prevImage}
-                  style={{
-                    position: 'absolute',
-                    left: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: 'white',
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 100000,
-                  }}
-                >
+                <button className="lightbox-nav-btn prev" onClick={prevImage}>
                   <ChevronLeft size={28} />
                 </button>
-                <button
-                  onClick={nextImage}
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: 'white',
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 100000,
-                  }}
-                >
+                <button className="lightbox-nav-btn next" onClick={nextImage}>
                   <ChevronRight size={28} />
                 </button>
               </>
             )}
 
-            <div
-              ref={containerRef}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                maxWidth: '95%',
-                maxHeight: '90vh',
-                cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                userSelect: 'none',
-              }}
-            >
-              <img
-                src={selectedImages[currentImageIndex]}
-                alt="Project Preview"
-                draggable={false}
+            <div className="lightbox-image-wrapper">
+              <div
+                className="lightbox-image-container"
+                ref={containerRef}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onClick={(e) => e.stopPropagation()}
                 style={{
-                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
-                  transformOrigin: 'center center',
-                  transition: isDragging ? 'none' : 'transform 0.2s ease-out',
-                  objectFit: 'contain',
-                  borderRadius: '12px',
-                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
-                  maxWidth: '100%',
-                  maxHeight: '90vh',
-                  pointerEvents: 'none',
+                  cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
                 }}
-              />
-            </div>
+              >
+                <img
+                  src={selectedImages[currentImageIndex]}
+                  alt="Project Preview"
+                  draggable={false}
+                  style={{
+                    transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                    transition: isDragging ? 'none' : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                />
+              </div>
 
-            {/* Zoom Controls */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'absolute',
-                bottom: '40px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                background: 'rgba(0, 0, 0, 0.6)',
-                backdropFilter: 'blur(10px)',
-                padding: '8px 16px',
-                borderRadius: '100px',
-                zIndex: 100001,
-              }}
-            >
-              <button
-                onClick={zoomOut}
-                disabled={zoomLevel <= 1}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: zoomLevel <= 1 ? 'rgba(255,255,255,0.3)' : 'white',
-                  cursor: zoomLevel <= 1 ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '8px',
-                }}
-              >
-                <ZoomOut size={24} />
-              </button>
-              <span style={{
-                color: 'white',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                minWidth: '50px',
-                textAlign: 'center',
-              }}>
-                {Math.round(zoomLevel * 100)}%
-              </span>
-              <button
-                onClick={zoomIn}
-                disabled={zoomLevel >= 3}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: zoomLevel >= 3 ? 'rgba(255,255,255,0.3)' : 'white',
-                  cursor: zoomLevel >= 3 ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '8px',
-                }}
-              >
-                <ZoomIn size={24} />
-              </button>
-              {selectedImages.length > 1 && (
-                <span style={{
-                  color: 'rgba(255,255,255,0.7)',
-                  fontSize: '0.8rem',
-                  marginLeft: '8px',
-                  paddingLeft: '12px',
-                  borderLeft: '1px solid rgba(255,255,255,0.3)',
-                }}>
-                  {currentImageIndex + 1} / {selectedImages.length}
-                </span>
-              )}
+              <div className="lightbox-controls-container" onClick={(e) => e.stopPropagation()}>
+                <div className="lightbox-zoom-controls">
+                  <button onClick={zoomOut} disabled={zoomLevel <= 1} title="Zoom Out">
+                    <ZoomOut size={20} />
+                  </button>
+                  <span>{Math.round(zoomLevel * 100)}%</span>
+                  <button onClick={zoomIn} disabled={zoomLevel >= 3} title="Zoom In">
+                    <ZoomIn size={20} />
+                  </button>
+                  <button onClick={resetZoom} title="Reset">
+                    <RotateCcw size={20} />
+                  </button>
+                  {selectedImages.length > 1 && (
+                    <span style={{
+                      color: 'rgba(255,255,255,0.7)',
+                      fontSize: '0.8rem',
+                      marginLeft: '8px',
+                      paddingLeft: '12px',
+                      borderLeft: '1px solid rgba(255,255,255,0.3)',
+                    }}>
+                      {currentImageIndex + 1} / {selectedImages.length}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>,
           document.body
