@@ -9,7 +9,7 @@ const projects = [
     description: 'Regional Investment Project is a web-based application to see a list of investments and investment opportunities in Indonesia.',
     year: '2025',
     status: 'live',
-    tech: ['AdonisJS', 'Prisma', 'TypeScript', 'PostgreSQL', 'NextJS', 'Tailwind CSS'],
+    tech: ['AdonisJS', 'Prisma', 'TypeScript', 'PostgreSQL', 'NextJS', 'Tailwind CSS', 'ShadcnUI'],
     link: 'https://regionalinvestment.bkpm.go.id/',
     github: '',
     images: ['/images/pir_1.png', '/images/pir_2.png']

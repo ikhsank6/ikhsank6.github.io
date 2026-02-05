@@ -45,6 +45,7 @@ export const techSlugs: Record<string, string> = {
   'Pinia': 'pinia',
   'Element Plus': 'element',
   'Prisma': 'prisma',
+  'ShadcnUI': 'shadcnui',
   
   // Message Queues & Services
   'RabbitMQ': 'rabbitmq',
