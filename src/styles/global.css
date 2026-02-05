@@ -7,22 +7,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Background Colors */
-  --bg-primary: #050505;
-  --bg-container: #0a0a0a;
-  --bg-card: #111111;
-  --bg-card-hover: #161616;
+  /* Background Colors - Brighter */
+  --bg-primary: #0a0a0a;
+  --bg-container: #121212;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #222222;
   
   /* Accent Colors */
   --accent-lime: #D4FF00;
   --accent-blue: #0066FF;
   --accent-gold: #FFD700;
-  --accent-glow: rgba(0, 102, 255, 0.4);
+  --accent-glow: rgba(0, 102, 255, 0.5);
   
-  /* Text Colors */
+  /* Text Colors - More visible */
   --text-primary: #ffffff;
-  --text-secondary: #888888;
-  --text-muted: #555555;
+  --text-secondary: #a0a0a0;
+  --text-muted: #707070;
   
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.08);

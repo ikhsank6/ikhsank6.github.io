@@ -6,6 +6,7 @@
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
   
   <!-- Grid Pattern -->
   <div class="grid-pattern"></div>
@@ -26,31 +27,31 @@
     height: 100%;
     z-index: -1;
     overflow: hidden;
-    background: linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #050505 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #121212 50%, #0a0a0a 100%);
   }
 
-  /* Floating Gradient Orbs */
+  /* Floating Gradient Orbs - More Visible */
   .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
+    filter: blur(100px);
+    opacity: 0.7;
     animation: float 20s ease-in-out infinite;
   }
 
   .orb-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0, 102, 255, 0.4) 0%, transparent 70%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.6) 0%, rgba(0, 102, 255, 0.2) 40%, transparent 70%);
     top: -200px;
     right: -100px;
     animation-delay: 0s;
   }
 
   .orb-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(212, 255, 0, 0.2) 0%, transparent 70%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212, 255, 0, 0.5) 0%, rgba(212, 255, 0, 0.15) 40%, transparent 70%);
     bottom: -150px;
     left: -100px;
     animation-delay: -7s;
@@ -58,13 +59,24 @@
   }
 
   .orb-3 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, rgba(138, 43, 226, 0.2) 40%, transparent 70%);
     top: 50%;
     left: 30%;
     animation-delay: -14s;
     animation-duration: 30s;
+  }
+
+  /* Additional orb for more visual interest */
+  .orb-4 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(255, 100, 100, 0.4) 0%, rgba(255, 100, 100, 0.1) 40%, transparent 70%);
+    top: 20%;
+    right: 20%;
+    animation-delay: -10s;
+    animation-duration: 28s;
   }
 
   @keyframes float {
@@ -82,7 +94,7 @@
     }
   }
 
-  /* Grid Pattern */
+  /* Grid Pattern - More Visible */
   .grid-pattern {
     position: absolute;
     top: 0;
@@ -90,10 +102,10 @@
     width: 100%;
     height: 100%;
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 80%);
   }
 
   /* Particles Container */
@@ -113,7 +125,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.03;
+    opacity: 0.04;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     pointer-events: none;
   }
@@ -159,7 +171,7 @@
     
     particle.animate([
       { opacity: 0, transform: 'translateY(0) scale(0)' },
-      { opacity: 0.6, transform: 'translateY(-20px) scale(1)', offset: 0.3 },
+      { opacity: 0.8, transform: 'translateY(-20px) scale(1)', offset: 0.3 },
       { opacity: 0, transform: 'translateY(-60px) scale(0.5)' }
     ], {
       duration: duration,
@@ -186,7 +198,7 @@
     
     line.animate([
       { opacity: 0, transform: 'translateX(-100px) scaleX(0)' },
-      { opacity: 0.4, transform: 'translateX(0) scaleX(1)', offset: 0.5 },
+      { opacity: 0.6, transform: 'translateX(0) scaleX(1)', offset: 0.5 },
       { opacity: 0, transform: 'translateX(100px) scaleX(0)' }
     ], {
       duration: duration,
