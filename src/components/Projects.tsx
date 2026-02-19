@@ -28,6 +28,16 @@ const projects = [
     ]
   },
   {
+    title: 'Sistem Informasi Ahli Pers - Dewan Pers',
+    description: 'Sistem Informasi Ahli Pers is a web-based application for the administrative management of press-related cases.',
+    year: '2024',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://ahlipers.dewanpers.or.id/register',
+    github: '',
+    images: ['/images/regis_pers.png', '/images/login_pers.png']
+  },
+  {
     title: 'Sistem Informasi Perencanaan Pembangunan Desa Tertinggal - Kementerian Desa, Pembangunan Daerah Tertinggal dan Transmigrasi',
     description: 'SIPPDT is a web-based application for planning the development of lagging villages in Indonesia.',
     year: '2024',
