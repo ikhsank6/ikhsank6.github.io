@@ -37,6 +37,8 @@
     filter: blur(100px);
     opacity: 0.7;
     animation: float 20s ease-in-out infinite;
+    will-change: transform;
+    contain: layout style;
   }
 
   .orb-1 {
@@ -149,9 +151,10 @@
 
 <script>
   const container = document.getElementById('particles');
+  const MAX_PARTICLES = 15;
   
   function createParticle() {
-    if (!container) return;
+    if (!container || container.childElementCount >= MAX_PARTICLES) return;
     
     const particle = document.createElement('div');
     particle.className = 'particle';
@@ -161,11 +164,7 @@
     const y = Math.random() * window.innerHeight;
     const duration = Math.random() * 3000 + 2000;
     
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    particle.style.left = `${x}px`;
-    particle.style.top = `${y}px`;
-    particle.style.boxShadow = `0 0 ${size * 2}px var(--accent-blue)`;
+    particle.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;box-shadow:0 0 ${size * 2}px var(--accent-blue)`;
     
     container.appendChild(particle);
     
@@ -180,7 +179,7 @@
   }
 
   function createLine() {
-    if (!container) return;
+    if (!container || container.childElementCount >= MAX_PARTICLES) return;
     
     const line = document.createElement('div');
     line.className = 'particle-line';
@@ -190,9 +189,7 @@
     const y = Math.random() * window.innerHeight;
     const duration = Math.random() * 2000 + 1500;
     
-    line.style.width = `${width}px`;
-    line.style.left = `${x}px`;
-    line.style.top = `${y}px`;
+    line.style.cssText = `width:${width}px;left:${x}px;top:${y}px`;
     
     container.appendChild(line);
     
@@ -206,12 +203,33 @@
     }).onfinish = () => line.remove();
   }
 
-  // Create particles periodically
-  setInterval(createParticle, 300);
-  setInterval(createLine, 800);
+  // Reduced frequency particles + visibility check
+  let particleInterval: ReturnType<typeof setInterval>;
+  let lineInterval: ReturnType<typeof setInterval>;
+
+  function startParticles() {
+    particleInterval = setInterval(createParticle, 2000);
+    lineInterval = setInterval(createLine, 3000);
+  }
+
+  function stopParticles() {
+    clearInterval(particleInterval);
+    clearInterval(lineInterval);
+  }
+
+  // Only create particles when page is visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopParticles();
+    } else {
+      startParticles();
+    }
+  });
+
+  startParticles();
   
-  // Initial burst
-  for (let i = 0; i < 10; i++) {
-    setTimeout(createParticle, i * 100);
+  // Reduced initial burst
+  for (let i = 0; i < 3; i++) {
+    setTimeout(createParticle, i * 200);
   }
 </script>

@@ -1,144 +1,165 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUpRight, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { TechIcon } from './shared/TechIcon';
 
+// Swiper imports
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+
+// Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 const projects = [
   {
     title: 'Regional Investment Project - Kementerian Investasi/BKPM',
-    description: 'Regional Investment Project is a web-based application to see a list of investments and investment opportunities in Indonesia.',
+    description: 'Regional Investment Project is a web-based application to see a list of investments and investment opportunities in Indonesia. Built with modern stack to handle high-traffic investment data visualization.',
     year: '2025',
     status: 'live',
     tech: ['AdonisJS', 'Prisma', 'TypeScript', 'PostgreSQL', 'NextJS', 'Tailwind CSS', 'ShadcnUI'],
     link: 'https://regionalinvestment.bkpm.go.id/',
     github: '',
-    images: ['/images/pir_1.png', '/images/pir_2.png']
+    images: ['/images/pir_1.webp', '/images/pir_2.webp'],
+    color: '#D4FF00'
   },
   {
     title: 'Naskah Dinas Elektronik (NADINE V3) - Kementerian ESDM',
-    description: 'NADINE V3 is a web-based application for internal correspondence administration within the Ministry of Energy and Mineral Resources.',
+    description: 'A robust correspondence system for the Ministry of Energy and Mineral Resources. Optimized for high performance and reliability with microservices architecture.',
     year: '2025',
     status: 'live',
-    tech: ['Laravel Octane + Road Runner', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
+    tech: ['Laravel Octane', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
     link: 'https://ngantor.esdm.go.id/',
     github: '',
     images: [
-      '/images/nadinev3_2.png',
-      '/images/nadinev3.png',
-    ]
+      '/images/nadinev3_2.webp',
+      '/images/nadinev3.webp',
+    ],
+    color: '#0066FF'
   },
   {
     title: 'Sistem Informasi Ahli Pers - Dewan Pers',
-    description: 'Sistem Informasi Ahli Pers is a web-based application for the administrative management of press-related cases.',
+    description: 'A specialized platform for managing press-related expertise and cases, facilitating streamlined communication and documentation.',
     year: '2024',
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://ahlipers.dewanpers.or.id/register',
     github: '',
-    images: ['/images/regis_pers.png', '/images/login_pers.png']
+    images: ['/images/regis_pers.webp', '/images/login_pers.webp'],
+    color: '#FFD700'
   },
   {
-    title: 'Sistem Informasi Perencanaan Pembangunan Desa Tertinggal - Kementerian Desa, Pembangunan Daerah Tertinggal dan Transmigrasi',
-    description: 'SIPPDT is a web-based application for planning the development of lagging villages in Indonesia.',
+    title: 'Sistem Informasi Perencanaan Pembangunan Desa Tertinggal - Kementerian Desa',
+    description: 'Planning tool for developing lagging villages, focusing on data-driven resource allocation and progress tracking.',
     year: '2024',
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
     github: '',
-    images: ['/images/sippdt_1.png', '/images/sippdt_2.png']
+    images: ['/images/sippdt_1.webp', '/images/sippdt_2.webp'],
+    color: '#FF4444'
   },
   {
     title: 'LSP BPPTIK - Kementerian Digital dan Informatika',
-    description: 'BNSP\'s supporting institution in implementing competency testing and certification, LSP BPPTIK applies SKKNI-based certification.',
+    description: 'Certification and competency testing management system supporting Indonesia\'s digital human capital development.',
     year: '2023',
     status: 'live',
     tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://lspbpptik.komdigi.go.id/',
     github: '',
-    images: ['/images/lsp_bpptik.png']
+    images: ['/images/lsp_bpptik.webp'],
+    color: '#00F5FF'
   },
-
   {
     title: 'Sistem Akademik - SESKOAL',
-    description: 'SIAK is a web-based application for managing academic administration within the Seskoal.',
+    description: 'Integrated academic administration system for the Indonesian Naval Staff and Command College.',
     year: '2021',
     status: 'live',
-    tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS', 'Integrasi Moodle'],
+    tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS', 'Moodle Integration'],
     link: 'https://smartcampus-seskoal.id/siak/#/',
     github: '',
-    images: ['/images/siak_seskoal.png']
+    images: ['/images/siak_seskoal.webp'],
+    color: '#8A2BE2'
   },
   {
     title: 'Minerba One Data Indonesia (MODI) - Kementerian ESDM',
-    description: 'Minerba One Data Indonesia (MODI) is a web-based application for mineral and coal companies to apply for Mining Business Permit (WIUP) permits in Indonesia. It is a government project currently operated by the Indonesian Ministry of Energy and Mineral Resources.',
+    description: 'Centralized portal for Indonesia\'s mineral and coal sector, integrating geographical data with mining permit administration.',
     year: '2021',
     status: 'live',
-    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS', 'Service ArcGIS'],
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS', 'ArcGIS Service'],
     link: 'https://modi.esdm.go.id/',
     github: '',
     images: [
-      '/images/modi_1.png',
-      '/images/modi.png']
+      '/images/modi_1.webp',
+      '/images/modi.webp'],
+    color: '#FF8C00'
   },
   {
-    title: 'ERKAB - Kementerian ESDM',
-    description: 'ERKAB is a web-based application for administering the Work Plan and Budget reporting of mineral and coal companies in Indonesia to the Ministry of Energy and Mineral Resources. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
-    year: '2021',
-    status: 'live',
-    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
-    link: 'https://erkab.esdm.go.id/',
-    github: '',
-    images: ['/images/erkab.png']
-  },
-  {
-    title: 'Dashboard Analytic - Kejaksaan RI',
-    description: 'Dashboard Analytic is a web-based application for analyzing data.',
-    year: '2020',
-    status: 'live',
-    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
-    link: 'https://dasti.kejaksaan.go.id/v5/login',
-    github: '',
-    images: ['/images/dasti.png']
-  },
-  {
-    title: 'Minerba Verification Proccess (MVP) - Kementerian ESDM',
-    description: 'The Minerba Verification Process (MVP) is a web-based application for verifying sales by mineral and coal companies in Indonesia. It is a government project currently operated by the Indonesian Ministry of Energy and Mineral Resources.',
+    title: 'Minerba Verification Process (MVP) - Kementerian ESDM',
+    description: 'Streamlined verification system for mineral and coal sales, ensuring regulatory compliance across Indonesia.',
     year: '2020',
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://mvp.esdm.go.id/',
     github: '',
-    images: ['/images/mvp.png']
+    images: ['/images/mvp.webp'],
+    color: '#32CD32'
+  },
+  {
+    title: 'ERKAB - Kementerian ESDM',
+    description: 'A comprehensive system for mineral and coal companies to submit their Work Plan and Budget reports, facilitating government oversight and planning.',
+    year: '2021',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://erkab.esdm.go.id/',
+    github: '',
+    images: ['/images/erkab.webp'],
+    color: '#FF69B4'
+  },
+  {
+    title: 'Dashboard Analytic - Kejaksaan RI',
+    description: 'Data analytics platform providing actionable insights and reporting for decision-makers in the Attorney General\'s Office.',
+    year: '2020',
+    status: 'live',
+    tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
+    link: 'https://dasti.kejaksaan.go.id/v5/login',
+    github: '',
+    images: ['/images/dasti.webp'],
+    color: '#4682B4'
   },
   {
     title: 'Exploration Management System (EMS) - Kementerian ESDM',
-    description: 'EMS is a web-based application for managing exploration data of mineral and coal companies in Indonesia.',
+    description: 'Specialized tool for managing exploration activities and data, ensuring organized tracking of mineral resource discovery efforts.',
     year: '2020',
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
     github: '',
-    images: ['/images/noimage.png']
+    images: ['/images/noimage.webp'],
+    color: '#708090'
   },
   {
     title: 'Miners - Kementerian ESDM',
-    description: 'MINERS is a web-based application for administering reporting by mineral and coal companies in Indonesia to the Ministry of Energy and Mineral Resources. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
+    description: 'Administrative reporting system for mining companies to fulfill their regulatory obligations to the Ministry of Energy and Mineral Resources.',
     year: '2019',
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
     github: '',
-    images: ['/images/miners.png']
+    images: ['/images/miners.webp'],
+    color: '#556B2F'
   },
   {
     title: 'MOMS - Kementerian ESDM',
-    description: 'MOMS is a web-based application for managing mineral and coal sales and reporting stock levels held by mineral and coal companies in Indonesia. It is a government project currently used by the Indonesian Ministry of Energy and Mineral Resources.',
+    description: 'Mineral and Coal Online Monitoring System for real-time tracking of production and sales across the Indonesian mining sector.',
     year: '2019',
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://moms.esdm.go.id/',
     github: '',
-    images: ['/images/moms.png']
+    images: ['/images/moms.webp'],
+    color: '#CD5C5C'
   }
 ];
 
@@ -150,6 +171,41 @@ export default function Projects() {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState<string>('');
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Robust Panning Logic (matches index.astro pattern)
+  React.useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging && zoomLevel > 1) {
+        setPanPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
+        setPanPosition({ 
+          x: e.touches[0].clientX - dragStart.x, 
+          y: e.touches[0].clientY - dragStart.y 
+        });
+      }
+    };
+
+    const handleEnd = () => setIsDragging(false);
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, [isDragging, zoomLevel, dragStart]);
 
   const openLightbox = (images: string[], title: string, index: number = 0) => {
     setSelectedImages(images);
@@ -188,51 +244,6 @@ export default function Projects() {
     setPanPosition({ x: 0, y: 0 });
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (zoomLevel > 1) {
-      e.preventDefault();
-      setIsDragging(true);
-      setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging && zoomLevel > 1) {
-      setPanPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y,
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (zoomLevel > 1 && e.touches.length === 1) {
-      setIsDragging(true);
-      setDragStart({
-        x: e.touches[0].clientX - panPosition.x,
-        y: e.touches[0].clientY - panPosition.y
-      });
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
-      e.preventDefault();
-      setPanPosition({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y,
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
   const nextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedImages) {
@@ -251,275 +262,174 @@ export default function Projects() {
     }
   };
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
-        if (e.cancelable) e.preventDefault();
-        setPanPosition({
-          x: e.touches[0].clientX - dragStart.x,
-          y: e.touches[0].clientY - dragStart.y,
-        });
-      }
-    };
-
-    el.addEventListener('touchmove', onTouchMove, { passive: false });
-    return () => el.removeEventListener('touchmove', onTouchMove);
-  }, [isDragging, zoomLevel, dragStart]);
-
-  useEffect(() => {
-    const cards = document.querySelectorAll('.project-card');
-    const projectsSection = document.getElementById('projects');
-    if (cards.length === 0 || !projectsSection) return;
-
-    let isVisible = false;
-    const observer = new IntersectionObserver((entries) => {
-      isVisible = entries[0].isIntersecting;
-    }, { threshold: 0.1 });
-
-    observer.observe(projectsSection);
-
-    const updateStacking = () => {
-      if (!isVisible || window.innerWidth <= 968) return;
-
-      window.requestAnimationFrame(() => {
-        cards.forEach((card, index) => {
-          const rect = card.getBoundingClientRect();
-          const nextCard = cards[index + 1];
-          const el = card as HTMLElement;
-          const overlay = el.querySelector('.project-card-overlay') as HTMLElement;
-
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const overlap = Math.max(0, Math.min(1, (rect.bottom - nextRect.top) / rect.height));
-
-            if (overlap > 0) {
-              const scale = 1 - (overlap * 0.05);
-              const opacity = 1 - (overlap * 0.2);
-
-              el.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
-              el.style.opacity = `${opacity}`;
-              if (overlay) overlay.style.opacity = `${overlap * 0.6}`;
-              return;
-            }
-          }
-
-          // Reset
-          if (el.style.transform !== 'translate3d(0px, 0px, 0px) scale(1)') {
-            el.style.transform = 'translate3d(0, 0, 0) scale(1)';
-            el.style.opacity = '1';
-            if (overlay) overlay.style.opacity = '0';
-          }
-        });
-      });
-    };
-
-    window.addEventListener('scroll', updateStacking, { passive: true });
-    updateStacking();
-
-    // Carousel mobile dots logic
-    const carousel = document.getElementById('projectsCarousel');
-    const dots = document.querySelectorAll('.carousel-dots .dot');
-    let currentActiveIndex = 0;
-
-    const updateDots = () => {
-      if (!carousel) return;
-      const scrollLeft = carousel.scrollLeft;
-      const cardWidth = carousel.firstElementChild?.clientWidth || 0;
-      const gap = 16;
-      const newActiveIndex = Math.round(scrollLeft / (cardWidth + gap));
-
-      if (newActiveIndex !== currentActiveIndex && newActiveIndex >= 0 && newActiveIndex < dots.length) {
-        dots[currentActiveIndex]?.classList.remove('active');
-        dots[newActiveIndex]?.classList.add('active');
-        currentActiveIndex = newActiveIndex;
-      }
-    };
-
-    carousel?.addEventListener('scroll', updateDots, { passive: true });
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', updateStacking);
-      carousel?.removeEventListener('scroll', updateDots);
-    };
-  }, []);
-
   return (
-    <section id="projects">
-      <div className="container">
-        <div className="section-header">
-          <div className="section-tag animate-on-scroll">
-            <span className="hashtag">#</span>
-            <span>Work</span>
-          </div>
-          <h2 className="section-title animate-on-scroll delay-1">
-            Featured Projects
-          </h2>
-          <p className="section-description animate-on-scroll delay-2">
-            A selection of projects I've worked on
-          </p>
+    <section id="projects" className="projects-section">
+      <div className="section-header animate-on-scroll">
+        <div className="section-tag">
+          <span className="hashtag">#</span>
+          <span>My Portfolio</span>
+          <span className="project-count">{projects.length} Projects</span>
         </div>
+        <h2 className="section-title">Featured <span className="accent-text">Work</span></h2>
+        <p className="section-description">
+          A selection of government and private sector projects I've led and developed.
+        </p>
+      </div>
 
-        {/* Carousel Dot Indicators for Mobile */}
-        <div className="carousel-dots" id="carouselDots">
-          {projects.map((_, idx) => (
-            <span key={idx} className={`dot ${idx === 0 ? 'active' : ''}`} data-index={idx}></span>
-          ))}
-        </div>
-
-        <div className="projects-wrapper" id="projectsCarousel">
+      <div className="projects-slider-wrapper animate-on-scroll">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={30}
+          slidesPerView={1}
+          centeredSlides={true}
+          loop={true}
+          preventClicks={false}
+          preventClicksPropagation={false}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: true,
+          }}
+          navigation={{
+            prevEl: '.swiper-button-prev-custom',
+            nextEl: '.swiper-button-next-custom',
+          }}
+          pagination={{
+            clickable: true,
+            el: '.swiper-pagination-custom',
+          }}
+          breakpoints={{
+            1024: {
+              slidesPerView: 1.2,
+              spaceBetween: 40,
+            }
+          }}
+          className="projects-swiper"
+        >
           {projects.map((project, idx) => (
-            <div
-              key={idx}
-              className="project-card animate-on-scroll"
-              style={{
-                transitionDelay: `${0.1 * idx}s`,
-                '--index': idx
-              } as React.CSSProperties}
-            >
-              <div className="project-content">
-                {/* Darkening overlay for stacking effect */}
-                <div className="project-card-overlay" />
-                <div className="project-meta">
-                  <span className="project-year">{project.year}</span>
-                  <span className={`project-status ${project.status}`}>
-                    {project.status === 'live' ? 'Live' :
-                      project.status === 'not-live' ? 'Offline' :
-                        'In Development'}
-                  </span>
+            <SwiperSlide key={idx} className="project-slide">
+              <div className="project-slide-content">
+                <div className="project-slide-image-container">
+                  <div 
+                    className="project-slide-image clickable"
+                    onClick={() => project.images && project.images.length > 0 && openLightbox(project.images, project.title)}
+                    title="Click to view screenshots"
+                  >
+                    <img src={project.images[0]} alt={project.title} loading="lazy" />
+                    <div className="project-image-overlay">
+                      <div className="view-details">
+                        <ZoomIn size={32} />
+                        <span>Click to Expand</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="project-title">{project.title}</h3>
-                <p className="project-description">{project.description}</p>
+                <div className="project-slide-info">
+                  <div className="project-slide-meta">
+                    <span className="slide-year">{project.year}</span>
+                    <span className={`slide-status ${project.status}`}>{project.status}</span>
+                  </div>
+                  <h3 className="slide-title">{project.title}</h3>
+                  <p className="slide-description">{project.description}</p>
+                  
+                  <div className="slide-tech">
+                    {project.tech.slice(0, 6).map((tech, i) => (
+                      <TechIcon key={i} tech={tech} />
+                    ))}
+                    {project.tech.length > 6 && <span className="tech-more">+{project.tech.length - 6}</span>}
+                  </div>
 
-                <div className="project-tech">
-                  {project.tech.map((tech, tIdx) => (
-                    <TechIcon key={tIdx} tech={tech} />
-                  ))}
-                </div>
-
-                <div className="project-links">
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                    >
-                      View Project
-                      <ArrowUpRight size={14} />
-                    </a>
-                  )}
+                  <div className="slide-actions">
+                    {project.link && (
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="slide-link">
+                        Live Preview <ArrowUpRight size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
+            </SwiperSlide>
+          ))}
+          
+          {/* Custom Navigation */}
+          <div className="slider-controls">
+            <button className="swiper-button-prev-custom" aria-label="Previous slide">
+              <ChevronLeft size={24} />
+            </button>
+            <div className="swiper-pagination-custom"></div>
+            <button className="swiper-button-next-custom" aria-label="Next slide">
+              <ChevronRight size={24} />
+            </button>
+          </div>
+        </Swiper>
+      </div>
 
-              <div
-                className="project-image"
-                onClick={() => project.images && project.images.length > 0 && openLightbox(project.images, project.title)}
-                style={{ cursor: project.images && project.images.length > 0 ? 'zoom-in' : 'default' }}
-              >
-                {project.images && project.images.length > 0 ? (
+      {/* Project Lightbox Modal */}
+      {selectedImages && createPortal(
+        <div className="project-lightbox-overlay active" onClick={closeLightbox}>
+          <button className="project-lightbox-close" onClick={closeLightbox} aria-label="Close modal">
+            <X size={24} />
+          </button>
+
+          <div className="project-lightbox-title">
+            <h4>{selectedTitle}</h4>
+          </div>
+
+          <div className="project-lightbox-content">
+            <div
+              className="project-lightbox-image-container"
+              ref={containerRef}
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => {
+                if (zoomLevel > 1) {
+                  setIsDragging(true);
+                  setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+                }
+              }}
+              onTouchStart={(e) => {
+                if (zoomLevel > 1 && e.touches.length === 1) {
+                  setIsDragging(true);
+                  setDragStart({ 
+                    x: e.touches[0].clientX - panPosition.x, 
+                    y: e.touches[0].clientY - panPosition.y 
+                  });
+                }
+              }}
+              style={{ cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+            >
+              <img
+                src={selectedImages[currentImageIndex]}
+                alt="Project Preview"
+                draggable={false}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                  transition: isDragging ? 'none' : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              />
+            </div>
+            
+            <div className="project-lightbox-controls" onClick={(e) => e.stopPropagation()}>
+              <div className="project-controls-bar">
+                <button onClick={zoomOut} disabled={zoomLevel <= 1} title="Zoom Out"><ZoomOut size={18} /></button>
+                <span className="zoom-value">{Math.round(zoomLevel * 100)}%</span>
+                <button onClick={zoomIn} disabled={zoomLevel >= 3} title="Zoom In"><ZoomIn size={18} /></button>
+                <div className="controls-divider"></div>
+                <button onClick={resetZoom} title="Reset"><RotateCcw size={18} /></button>
+                
+                {selectedImages.length > 1 && (
                   <>
-                    <img src={project.images[0]} alt={project.title} loading="lazy" />
-                    {project.images.length > 1 && (
-                      <div className="image-count">
-                        +{project.images.length - 1} more
-                      </div>
-                    )}
+                    <div className="controls-divider"></div>
+                    <button onClick={prevImage} title="Previous"><ChevronLeft size={20} /></button>
+                    <span className="nav-index">{currentImageIndex + 1} / {selectedImages.length}</span>
+                    <button onClick={nextImage} title="Next"><ChevronRight size={20} /></button>
                   </>
-                ) : (
-                  <span className="project-placeholder">
-                    {project.title.split(' ').map(w => w[0]).join('')}
-                  </span>
                 )}
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Lightbox Modal - Rendered via Portal */}
-        {selectedImages && createPortal(
-          <div className="lightbox-overlay active" onClick={closeLightbox}>
-            <button className="lightbox-close" onClick={closeLightbox}>
-              <X size={24} />
-            </button>
-
-            <div className="lightbox-title-overlay">
-              <h4>{selectedTitle}</h4>
-            </div>
-
-            {selectedImages.length > 1 && (
-              <>
-                <button className="lightbox-nav-btn prev" onClick={prevImage}>
-                  <ChevronLeft size={28} />
-                </button>
-                <button className="lightbox-nav-btn next" onClick={nextImage}>
-                  <ChevronRight size={28} />
-                </button>
-              </>
-            )}
-
-            <div className="lightbox-image-wrapper">
-              <div
-                className="lightbox-image-container"
-                ref={containerRef}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-                }}
-              >
-                <img
-                  src={selectedImages[currentImageIndex]}
-                  alt="Project Preview"
-                  draggable={false}
-                  style={{
-                    transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
-                    transition: isDragging ? 'none' : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                />
-              </div>
-
-              <div className="lightbox-controls-container" onClick={(e) => e.stopPropagation()}>
-                <div className="lightbox-zoom-controls">
-                  <button onClick={zoomOut} disabled={zoomLevel <= 1} title="Zoom Out">
-                    <ZoomOut size={20} />
-                  </button>
-                  <span>{Math.round(zoomLevel * 100)}%</span>
-                  <button onClick={zoomIn} disabled={zoomLevel >= 3} title="Zoom In">
-                    <ZoomIn size={20} />
-                  </button>
-                  <button onClick={resetZoom} title="Reset">
-                    <RotateCcw size={20} />
-                  </button>
-                  {selectedImages.length > 1 && (
-                    <span style={{
-                      color: 'rgba(255,255,255,0.7)',
-                      fontSize: '0.8rem',
-                      marginLeft: '8px',
-                      paddingLeft: '12px',
-                      borderLeft: '1px solid rgba(255,255,255,0.3)',
-                    }}>
-                      {currentImageIndex + 1} / {selectedImages.length}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-      </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </section>
   );
 }

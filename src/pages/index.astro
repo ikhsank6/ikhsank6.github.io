@@ -13,8 +13,8 @@ import Footer from '../components/Footer.astro';
 	
 	<main>
 		<Hero />
-		<Skills client:only="react" />
-		<Projects client:only="react" />
+		<Skills client:visible />
+		<Projects client:visible />
 		<Education />
 		<Footer />
 	</main>
@@ -30,13 +30,14 @@ import Footer from '../components/Footer.astro';
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
 					entry.target.classList.add('visible');
+					observer.unobserve(entry.target);
 				}
 			});
 		}, observerOptions);
 
 		// Function to observe elements
 		const observeElements = () => {
-			document.querySelectorAll('.animate-on-scroll').forEach(el => {
+			document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
 				observer.observe(el);
 			});
 		};
@@ -44,13 +45,181 @@ import Footer from '../components/Footer.astro';
 		// Initial observation
 		observeElements();
 
-		// Re-observe when content changes (e.g. after hydration)
-		const mutationObserver = new MutationObserver(() => {
-			observeElements();
-		});
+		// Re-observe after hydration completes (limited, not on every mutation)
+		document.addEventListener('astro:after-swap', observeElements);
 
-		mutationObserver.observe(document.body, { childList: true, subtree: true });
+		// Global Certificate Modal Logic
+		const setupModal = () => {
+			const modal = document.getElementById('certModal');
+			const modalImg = document.getElementById('modalImage') as HTMLImageElement;
+			const modalTitle = document.getElementById('modalTitle');
+			const closeBtn = document.getElementById('closeModal');
+			const showBtns = document.querySelectorAll('.show-cert-btn');
+			const imageContainer = document.getElementById('modalImageContainer');
+
+			// Zoom Controls
+			const zoomInBtn = document.getElementById('zoomIn');
+			const zoomOutBtn = document.getElementById('zoomOut');
+			const resetZoomBtn = document.getElementById('resetZoom');
+			const zoomLevelText = document.getElementById('zoomLevel');
+
+			if (!modal || !modalImg || !modalTitle || !closeBtn || !imageContainer) return;
+
+			let zoom = 1;
+			let isDragging = false;
+			let startX = 0, startY = 0;
+			let translateX = 0, translateY = 0;
+
+			const updateTransform = () => {
+				modalImg.style.transform = `scale(${zoom}) translate(${translateX / zoom}px, ${translateY / zoom}px)`;
+				if (zoomLevelText) zoomLevelText.textContent = `${Math.round(zoom * 100)}%`;
+				
+				if (zoom > 1) {
+					imageContainer.classList.add('zoomed');
+				} else {
+					imageContainer.classList.remove('zoomed');
+					translateX = 0;
+					translateY = 0;
+					modalImg.style.transform = `scale(${zoom}) translate(0, 0)`;
+				}
+			};
+
+			const openModal = (imgSrc: string, title: string) => {
+				modalImg.src = imgSrc;
+				modalTitle.textContent = title;
+				modal.classList.add('active');
+				document.body.style.overflow = 'hidden';
+				resetZoom();
+			};
+
+			const closeModal = () => {
+				modal.classList.remove('active');
+				document.body.style.overflow = '';
+				setTimeout(() => {
+					modalImg.src = '';
+					resetZoom();
+				}, 400);
+			};
+
+			const resetZoom = () => {
+				zoom = 1;
+				translateX = 0;
+				translateY = 0;
+				updateTransform();
+			};
+
+			const handleZoom = (delta: number) => {
+				const newZoom = Math.max(1, Math.min(zoom + delta, 4));
+				zoom = newZoom;
+				updateTransform();
+			};
+
+			// Event Listeners
+			showBtns.forEach(btn => {
+				btn.addEventListener('click', () => {
+					const img = btn.getAttribute('data-image');
+					const title = btn.getAttribute('data-title');
+					if (img && title) openModal(img, title);
+				});
+			});
+
+			closeBtn.addEventListener('click', closeModal);
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) closeModal();
+			});
+
+			zoomInBtn?.addEventListener('click', () => handleZoom(0.5));
+			zoomOutBtn?.addEventListener('click', () => handleZoom(-0.5));
+			resetZoomBtn?.addEventListener('click', resetZoom);
+
+			// Panning logic
+			imageContainer.addEventListener('mousedown', (e) => {
+				if (zoom > 1) {
+					isDragging = true;
+					imageContainer.classList.add('dragging');
+					startX = e.clientX - translateX;
+					startY = e.clientY - translateY;
+				}
+			});
+
+			window.addEventListener('mousemove', (e) => {
+				if (isDragging) {
+					translateX = e.clientX - startX;
+					translateY = e.clientY - startY;
+					updateTransform();
+				}
+			});
+
+			window.addEventListener('mouseup', () => {
+				isDragging = false;
+				imageContainer.classList.remove('dragging');
+			});
+
+			// Touch Panning
+			imageContainer.addEventListener('touchstart', (e) => {
+				if (zoom > 1 && e.touches.length === 1) {
+					isDragging = true;
+					startX = e.touches[0].clientX - translateX;
+					startY = e.touches[0].clientY - translateY;
+				}
+			}, { passive: true });
+
+			imageContainer.addEventListener('touchmove', (e) => {
+				if (isDragging && e.touches.length === 1) {
+					translateX = e.touches[0].clientX - startX;
+					translateY = e.touches[0].clientY - startY;
+					updateTransform();
+				}
+			}, { passive: false });
+
+			imageContainer.addEventListener('touchend', () => {
+				isDragging = false;
+			});
+
+			// Close on Escape
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && modal.classList.contains('active')) {
+					closeModal();
+				}
+			});
+		};
+
+		// Run setup
+		setupModal();
+		document.addEventListener('astro:after-swap', setupModal);
 	</script>
+
+	<!-- Global Certificate Modal (Moved outside main to fix z-index stacking context issues) -->
+	<div id="certModal" class="lightbox-overlay">
+		<button class="lightbox-close" id="closeModal" aria-label="Close modal">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+		</button>
+
+		<div class="lightbox-title-overlay">
+			<h4 id="modalTitle"></h4>
+		</div>
+
+		<div class="lightbox-image-wrapper">
+			<div class="lightbox-image-container" id="modalImageContainer">
+				<img id="modalImage" src="" alt="Certificate preview" draggable="false" />
+			</div>
+			
+			<div class="lightbox-controls-container">
+				<div class="lightbox-zoom-controls">
+					<button id="zoomOut" title="Zoom Out">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+					</button>
+					<span id="zoomLevel">100%</span>
+					<button id="zoomIn" title="Zoom In">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+					</button>
+					<button id="resetZoom" title="Reset">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </Layout>
 
 <style>
