@@ -5,26 +5,25 @@
    ======================================== */
 
 :root {
-  /* Background Colors - Brighter */
-  --bg-primary: #0a0a0a;
-  --bg-container: #121212;
-  --bg-card: #1a1a1a;
-  --bg-card-hover: #222222;
-  
+  --bg-primary: #080808;
+  --bg-container: #101010;
+  --bg-card: #181818;
+  --bg-card-hover: #202020;
+
   /* Accent Colors */
   --accent-lime: #D4FF00;
   --accent-blue: #0066FF;
   --accent-gold: #FFD700;
-  --accent-glow: rgba(0, 102, 255, 0.5);
-  
-  /* Text Colors - Brightened for better contrast */
+  --accent-glow: rgba(0, 102, 255, 0.45);
+
+  /* Text Colors */
   --text-primary: #ffffff;
-  --text-secondary: #cacaca;
-  --text-muted: #949494;
-  
+  --text-secondary: #d2d2d2;
+  --text-muted: #a8a8a8;
+
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-card: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-card: rgba(255, 255, 255, 0.07);
   
   /* Typography */
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -62,9 +61,10 @@ body {
   border: 1px solid var(--border-subtle);
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 0 80px -20px var(--accent-glow);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 100px -30px var(--accent-glow),
+    0 40px 80px -20px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
 }
@@ -206,6 +206,18 @@ a {
 .delay-3 { transition-delay: 0.3s; }
 .delay-4 { transition-delay: 0.4s; }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ========================================
    SKILL SECTION
    ======================================== */
@@ -237,9 +249,9 @@ a {
 
 .skill-pill:hover {
   background: var(--bg-card-hover);
-  border-color: var(--accent-lime);
-  box-shadow: 0 0 30px rgba(212, 255, 0, 0.1);
-  transform: translateY(-3px);
+  border-color: rgba(212, 255, 0, 0.5);
+  box-shadow: 0 0 20px rgba(212, 255, 0, 0.08), 0 4px 12px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
 }
 
 .skill-pill img {
@@ -294,14 +306,14 @@ a {
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: 
-    box-shadow 0.4s var(--ease-out-expo), 
-    border-color 0.4s var(--ease-out-expo),
-    transform 0.4s var(--ease-out-expo);
+  transition:
+    box-shadow 0.35s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-expo),
+    transform 0.35s var(--ease-out-expo);
   position: relative;
 }
 
@@ -318,11 +330,12 @@ a {
 }
 
 .project-card:hover {
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(212, 255, 0, 0.06);
-  border-color: rgba(212, 255, 0, 0.2);
-  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(212, 255, 0, 0.12),
+    0 0 24px rgba(212, 255, 0, 0.05);
+  border-color: rgba(212, 255, 0, 0.22);
+  transform: translateY(-3px);
 }
 
 .project-card:hover::before {
@@ -390,9 +403,9 @@ a {
 }
 
 .project-description {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.65;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -664,17 +677,19 @@ a {
 }
 
 .section-title {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
   color: var(--text-primary);
+  letter-spacing: -0.04em;
   margin-bottom: 16px;
 }
 
 .section-description {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
+  line-height: 1.65;
 }
 
 /* ========================================
