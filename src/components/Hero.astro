@@ -4,53 +4,62 @@
 <section id="home" class="hero">
   <div class="container">
     <div class="hero-wrapper">
-      <div class="hero-badge animate-on-scroll">
-        <span class="badge-dot"></span>
-        <span>Available for projects and job offers</span>
-      </div>
-      
-      <h1 class="hero-title animate-on-scroll delay-1">
-        Full Stack Developer<br/>
-        <span class="text-muted"></span>
-      </h1>
-      
-      <p class="hero-description animate-on-scroll delay-2">
-        I'm <span class="accent-text">Ikhsan Kurniawan</span>, a software developer based in Jakarta.
-        I specialize in building high-performance web applications with modern technologies
-        like Laravel, Vue, React, and Node.js.
-      </p>
-      
-      <div class="hero-stats animate-on-scroll delay-3">
-        <div class="stat">
-          <span class="stat-value">5+</span>
-          <span class="stat-label">Years Exp.</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">10+</span>
-          <span class="stat-label">Projects</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">100%</span>
-          <span class="stat-label">Quality</span>
-        </div>
-      </div>
-      
-      <div class="hero-cta animate-on-scroll delay-4">
-        <a href="#projects" class="btn-primary">
-          View My Work
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+
+      <!-- Eyebrow meta -->
+      <div class="hero-eyebrow animate-on-scroll">
+        <span class="eyebrow-status">
+          <span class="badge-dot"></span>
+          Open to work
+        </span>
+        <span class="eyebrow-sep">·</span>
+        <span class="eyebrow-location">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
           </svg>
-        </a>
-        <button id="open-contact-modal" class="btn-secondary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-          </svg>
-          Let's Connect
-        </button>
+          Jakarta, Indonesia
+        </span>
       </div>
+
+      <!-- Name row: name left, stats right -->
+      <div class="hero-title-row animate-on-scroll delay-1">
+        <h1 class="hero-name">
+          <span class="name-first">Ikhsan</span>
+          <span class="name-last">Kurniawan<span class="name-period">.</span></span>
+        </h1>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value">5<span class="stat-plus">+</span></span>
+            <span class="stat-label">Years of<br/>experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">10<span class="stat-plus">+</span></span>
+            <span class="stat-label">Projects<br/>delivered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="hero-divider animate-on-scroll delay-2"></div>
+
+      <!-- Description + CTA full width -->
+      <div class="hero-bottom animate-on-scroll delay-3">
+        <p class="hero-description">
+          <span class="desc-tag">Fullstack Developer</span> with 5+ years of experience in web application development, covering backend APIs, frontend interfaces, and database management. Experienced in using modern frameworks such as Laravel and Node.js for backend development, as well as Vue.js and Next.js for frontend applications, optimizing application performance, and ensuring code quality through best practices and effective team collaboration.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn-primary">
+            View My Work
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M7 17L17 7M17 7H7M17 7V17"/>
+            </svg>
+          </a>
+          <button id="open-contact-modal" class="btn-secondary">
+            Let's Connect
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -127,36 +136,36 @@
     min-height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 100px 0 80px 0;
+    padding: 120px 0 100px;
   }
 
   .hero-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
   }
 
-  .hero-badge {
-    display: inline-flex;
+  /* Eyebrow */
+  .hero-eyebrow {
+    display: flex;
     align-items: center;
-    gap: 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    padding: 10px 24px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+    gap: 14px;
+    margin-bottom: 48px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
     font-weight: 500;
   }
 
+  .eyebrow-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .badge-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background: var(--accent-lime);
     border-radius: 50%;
     position: relative;
@@ -166,141 +175,221 @@
   .badge-dot::after {
     content: '';
     position: absolute;
-    inset: -4px;
+    inset: -3px;
     border-radius: 50%;
     background: var(--accent-lime);
-    opacity: 0.4;
-    animation: pulse-ring 2s infinite;
+    opacity: 0.35;
+    animation: pulse-ring 2.5s ease-in-out infinite;
   }
 
   @keyframes pulse-ring {
-    0%, 100% { transform: scale(1); opacity: 0.4; }
-    50% { transform: scale(1.8); opacity: 0; }
+    0%, 100% { transform: scale(1); opacity: 0.35; }
+    50% { transform: scale(2); opacity: 0; }
   }
 
-  .hero-title {
-    font-size: clamp(3rem, 8vw, 5rem);
+  .eyebrow-sep {
+    color: var(--border-subtle);
+    font-size: 1rem;
+  }
+
+  .eyebrow-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Title row */
+  .hero-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    gap: 32px;
+    margin-bottom: 28px;
+  }
+
+  /* Name */
+  .hero-name {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(4rem, 11vw, 8.5rem);
     font-weight: 800;
-    line-height: 1.05;
-    margin-bottom: 32px;
-    letter-spacing: -0.04em;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    flex: 1;
+  }
+
+  .name-first {
     color: var(--text-primary);
   }
 
-  .text-muted {
-    color: var(--text-secondary);
+  .name-last {
+    color: var(--text-primary);
+  }
+
+  .name-period {
+    color: var(--accent-lime);
+  }
+
+  /* Role */
+  .hero-role {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 28px;
+  }
+
+  /* Divider */
+  .hero-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border-subtle);
+    margin-bottom: 40px;
+  }
+
+  /* Bottom row */
+  .hero-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
 
   .hero-description {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     color: var(--text-secondary);
-    line-height: 1.6;
-    max-width: 680px;
-    margin-bottom: 48px;
+    line-height: 1.75;
+    width: 100%;
   }
 
-  .accent-text {
+  .desc-tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(212, 255, 0, 0.08);
     color: var(--accent-lime);
-    font-weight: 600;
+    border: 1px solid rgba(212, 255, 0, 0.25);
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 0.9em;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    vertical-align: middle;
+    margin-right: 4px;
   }
 
+  /* CTAs */
+  .hero-cta {
+    display: flex;
+    gap: 14px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent-lime);
+    color: #000;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(212, 255, 0, 0.28);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 14px 28px;
+    border-radius: 100px;
+    border: 1px solid var(--border-subtle);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-3px);
+  }
+
+  /* Stats */
   .hero-stats {
     display: flex;
-    align-items: center;
-    gap: 40px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    padding: 24px 48px;
-    border-radius: 24px;
-    margin-bottom: 48px;
-    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+    flex-direction: column;
+    gap: 28px;
+    flex-shrink: 0;
+    align-self: flex-end;
+    padding-bottom: 6px;
   }
 
   .stat {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    text-align: right;
   }
 
   .stat-value {
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .stat-plus {
+    color: var(--accent-lime);
   }
 
   .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: right;
   }
 
-  .stat-divider {
-    width: 1px;
-    height: 48px;
-    background: var(--border-subtle);
-  }
-
-  .hero-cta {
-    display: flex;
-    gap: 20px;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--accent-lime);
-    color: #000;
-    padding: 16px 32px;
-    border-radius: 100px;
-    font-weight: 700;
-    font-size: 1rem;
-    transition: var(--transition-smooth);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(212, 255, 0, 0.3);
-  }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: transparent;
-    color: var(--text-primary);
-    padding: 16px 32px;
-    border-radius: 100px;
-    border: 1px solid var(--border-subtle);
-    font-weight: 700;
-    font-size: 1rem;
-    transition: var(--transition-smooth);
-  }
-
-  .btn-secondary:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: var(--text-primary);
-    transform: translateY(-4px);
-  }
-
+  /* Mobile */
   @media (max-width: 768px) {
     .hero {
-      padding: 80px 0;
-    }
-    
-    .hero-stats {
-      flex-direction: column;
-      gap: 32px;
-      padding: 32px;
-      width: 100%;
+      padding: 100px 0 80px;
     }
 
-    .stat-divider {
-      width: 60px;
-      height: 1px;
+    .hero-title-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .hero-name {
+      font-size: clamp(3.5rem, 16vw, 6rem);
+    }
+
+    .hero-stats {
+      flex-direction: row;
+      gap: 32px;
+      align-self: flex-start;
+    }
+
+    .stat {
+      text-align: left;
+    }
+
+    .stat-label {
+      text-align: left;
     }
 
     .hero-cta {
@@ -308,7 +397,8 @@
       width: 100%;
     }
 
-    .btn-primary, .btn-secondary {
+    .btn-primary,
+    .btn-secondary {
       width: 100%;
       justify-content: center;
     }
