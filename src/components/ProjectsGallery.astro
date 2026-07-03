@@ -165,6 +165,7 @@ import { getTechIconUrl } from '../utils/techIcons';
     line-height: 1;
     pointer-events: none;
     user-select: none;
+    z-index: 1;
   }
 
   .panel-body {
@@ -173,6 +174,7 @@ import { getTechIconUrl } from '../utils/techIcons';
     gap: 44px;
     align-items: center;
     width: 100%;
+    z-index: 2;
   }
 
   .panel-media {
@@ -180,7 +182,7 @@ import { getTechIconUrl } from '../utils/techIcons';
     display: block;
     padding: 0;
     border: none;
-    background: none;
+    background: var(--c3-dark);
     border-radius: 24px;
     overflow: hidden;
     cursor: pointer;

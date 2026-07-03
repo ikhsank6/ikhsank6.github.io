@@ -2,9 +2,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-// TEMP DIAGNOSTIC — remove before shipping
-(window as any).__gsap = gsap;
-(window as any).__ScrollTrigger = ScrollTrigger;
 
 /**
  * Central animation entry point. Every motion concern lives here, registered
@@ -86,12 +83,6 @@ function runPreloader(): void {
     preloader?.remove();
     startHeroTimeline();
     return;
-  }
-
-  try {
-    sessionStorage.setItem('introSeen', '1');
-  } catch {
-    /* private mode — ignore */
   }
 
   // Lock scroll during the intro.

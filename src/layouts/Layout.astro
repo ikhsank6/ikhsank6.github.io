@@ -17,14 +17,12 @@ const { title, description = "My Professional Portfolio" } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<!-- FOUC guard: initial hidden animation states only apply when JS runs.
-		     skip-intro: returning visitors and reduced-motion users never see the preloader. -->
+		     skip-intro: reduced-motion users never see the preloader; everyone else
+		     sees it on every load, including refreshes. -->
 		<script is:inline>
 			document.documentElement.classList.add('js');
 			try {
-				if (
-					sessionStorage.getItem('introSeen') ||
-					matchMedia('(prefers-reduced-motion: reduce)').matches
-				) {
+				if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
 					document.documentElement.classList.add('skip-intro');
 				}
 			} catch (e) {
