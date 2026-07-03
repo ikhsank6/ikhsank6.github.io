@@ -30,7 +30,7 @@ const navItems = [
 
 <nav class="floating-nav" id="floatingNav" aria-label="Section navigation">
   {navItems.map(item => (
-    <a href={item.href} class="floating-item" aria-label={item.name}>
+    <a href={item.href} class="floating-item" aria-label={item.name} data-open-contact={item.href === '#contact' ? '' : undefined}>
       <div class="circle-icon" set:html={item.icon}></div>
       <span class="floating-label">{item.name}</span>
     </a>
@@ -146,12 +146,19 @@ const navItems = [
 <script>
   const navLinks = document.querySelectorAll('.floating-item');
 
+  navLinks.forEach(link => {
+    if (link.getAttribute('href') === '#contact') {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
+    }
+  });
+
   const hrefToId: Record<string, string> = {
     '#home': 'home',
     '#skills': 'skills',
     '#projects': 'projects',
-    '#about': 'about',
-    '#contact': 'contact'
+    '#about': 'about'
   };
 
   function setActiveNav() {

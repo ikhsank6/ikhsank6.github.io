@@ -117,7 +117,6 @@ section {
 #skills { background: var(--c3-bg); }
 #projects { background: var(--c3-dark); }
 #about { background: var(--c3-surface); }
-#contact { background: var(--c3-green); }
 
 /* Defer rendering of off-screen text sections (gallery pins, so excluded) */
 #skills, #about {

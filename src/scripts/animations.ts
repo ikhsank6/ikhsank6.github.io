@@ -2,6 +2,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+// TEMP DIAGNOSTIC — remove before shipping
+(window as any).__gsap = gsap;
+(window as any).__ScrollTrigger = ScrollTrigger;
 
 /**
  * Central animation entry point. Every motion concern lives here, registered
@@ -33,11 +36,9 @@ export function initAnimations(): void {
 
       revealHero();
       heroExitParallax();
-      spinCube();
       setupScrollReveals();
       buildMarquees();
       drawTimelineSpines();
-      revealCtaLetters();
 
       if (desktop && pointerFine) {
         buildHorizontalGallery();
@@ -61,7 +62,7 @@ export function initAnimations(): void {
   // Reduced-motion visitors: reveal everything immediately, no motion.
   mm.add('(prefers-reduced-motion: reduce)', () => {
     document.getElementById('preloader')?.remove();
-    gsap.set('[data-animate], [data-hero], .name-letter, .cta-letter', {
+    gsap.set('[data-animate], [data-hero], .name-letter', {
       opacity: 1,
       y: 0,
       clearProps: 'transform',
@@ -209,12 +210,6 @@ function heroExitParallax(): void {
   });
 }
 
-function spinCube(): void {
-  gsap.to('.hero-cube', { rotationX: 360, rotationY: 720, duration: 48, ease: 'none', repeat: -1 });
-  gsap.to('.hero-cube-wrap', { y: 18, duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true });
-  gsap.to('.hero-ring', { rotation: 360, duration: 30, ease: 'none', repeat: -1 });
-}
-
 /* ----------------------------- scroll reveals ----------------------------- */
 
 function setupScrollReveals(): void {
@@ -224,20 +219,6 @@ function setupScrollReveals(): void {
     once: true,
     onEnter: (batch) =>
       gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08, overwrite: true }),
-  });
-}
-
-function revealCtaLetters(): void {
-  const letters = gsap.utils.toArray<HTMLElement>('.cta-letter');
-  if (letters.length === 0) return;
-  gsap.set(letters, { yPercent: 110 });
-  gsap.to(letters, {
-    opacity: 1,
-    yPercent: 0,
-    duration: 0.7,
-    ease: 'back.out(1.4)',
-    stagger: 0.03,
-    scrollTrigger: { trigger: '#contact', start: 'top 70%', once: true },
   });
 }
 
