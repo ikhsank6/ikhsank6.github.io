@@ -30,6 +30,17 @@ import ProjectLightbox from '../components/ProjectLightbox';
 
 		initAnimations();
 
+		// Lazy-load Three.js scene so it doesn't block the critical JS bundle.
+		// Uses requestIdleCallback (or setTimeout fallback) to defer until idle.
+		const loadScene = () =>
+			import('../scripts/hero-scene').then(({ initHeroScene }) => initHeroScene());
+
+		if ('requestIdleCallback' in window) {
+			requestIdleCallback(loadScene, { timeout: 1500 });
+		} else {
+			setTimeout(loadScene, 200);
+		}
+
 		// Certificate lightbox (Education section) — kept as vanilla, decoupled
 		// from the React project lightbox.
 		const setupModal = () => {
