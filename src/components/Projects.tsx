@@ -5,7 +5,9 @@ import { TechIcon } from './shared/TechIcon';
 
 // Swiper imports
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { A11y, Navigation, Pagination, Autoplay } from 'swiper/modules';
+
+import { trapFocus } from '../scripts/focus-trap';
 
 // Swiper styles
 import 'swiper/css';
@@ -172,6 +174,24 @@ export default function Projects() {
   const [selectedTitle, setSelectedTitle] = useState<string>('');
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Trap keyboard focus inside the lightbox and close on Escape while open.
+  React.useEffect(() => {
+    if (!selectedImages || !lightboxRef.current) return;
+    const releaseFocus = trapFocus(lightboxRef.current);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      releaseFocus();
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [selectedImages]);
 
   // Robust Panning Logic (matches index.astro pattern)
   React.useEffect(() => {
@@ -264,7 +284,7 @@ export default function Projects() {
 
   return (
     <section id="projects" className="projects-section">
-      <div className="section-header animate-on-scroll">
+      <div className="section-header" data-animate>
         <div className="section-tag">
           <span className="hashtag">#</span>
           <span>My Portfolio</span>
@@ -276,19 +296,23 @@ export default function Projects() {
         </p>
       </div>
 
-      <div className="projects-slider-wrapper animate-on-scroll">
+      <div className="projects-slider-wrapper" data-animate>
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[A11y, Navigation, Pagination, Autoplay]}
           spaceBetween={30}
           slidesPerView={1}
           centeredSlides={true}
           loop={true}
           preventClicks={false}
           preventClicksPropagation={false}
-          autoplay={{
-            delay: 4000,
-            disableOnInteraction: true,
-          }}
+          autoplay={
+            prefersReducedMotion
+              ? false
+              : {
+                  delay: 4000,
+                  disableOnInteraction: true,
+                }
+          }
           navigation={{
             prevEl: '.swiper-button-prev-custom',
             nextEl: '.swiper-button-next-custom',
@@ -307,11 +331,20 @@ export default function Projects() {
         >
           {projects.map((project, idx) => (
             <SwiperSlide key={idx} className="project-slide">
-              <div className="project-slide-content">
+              <div className="project-slide-content" data-tilt>
                 <div className="project-slide-image-container">
-                  <div 
+                  <div
                     className="project-slide-image clickable"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View screenshots of ${project.title}`}
                     onClick={() => project.images && project.images.length > 0 && openLightbox(project.images, project.title)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (project.images && project.images.length > 0) openLightbox(project.images, project.title);
+                      }
+                    }}
                     title="Click to view screenshots"
                   >
                     <img src={project.images[0]} alt={project.title} loading="lazy" />
@@ -366,7 +399,14 @@ export default function Projects() {
 
       {/* Project Lightbox Modal */}
       {selectedImages && createPortal(
-        <div className="project-lightbox-overlay active" onClick={closeLightbox}>
+        <div
+          className="project-lightbox-overlay active"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedTitle}
+          ref={lightboxRef}
+        >
           <button className="project-lightbox-close" onClick={closeLightbox} aria-label="Close modal">
             <X size={24} />
           </button>
@@ -410,18 +450,18 @@ export default function Projects() {
             
             <div className="project-lightbox-controls" onClick={(e) => e.stopPropagation()}>
               <div className="project-controls-bar">
-                <button onClick={zoomOut} disabled={zoomLevel <= 1} title="Zoom Out"><ZoomOut size={18} /></button>
+                <button onClick={zoomOut} disabled={zoomLevel <= 1} title="Zoom Out" aria-label="Zoom out"><ZoomOut size={18} /></button>
                 <span className="zoom-value">{Math.round(zoomLevel * 100)}%</span>
-                <button onClick={zoomIn} disabled={zoomLevel >= 3} title="Zoom In"><ZoomIn size={18} /></button>
+                <button onClick={zoomIn} disabled={zoomLevel >= 3} title="Zoom In" aria-label="Zoom in"><ZoomIn size={18} /></button>
                 <div className="controls-divider"></div>
-                <button onClick={resetZoom} title="Reset"><RotateCcw size={18} /></button>
-                
+                <button onClick={resetZoom} title="Reset" aria-label="Reset zoom"><RotateCcw size={18} /></button>
+
                 {selectedImages.length > 1 && (
                   <>
                     <div className="controls-divider"></div>
-                    <button onClick={prevImage} title="Previous"><ChevronLeft size={20} /></button>
+                    <button onClick={prevImage} title="Previous" aria-label="Previous image"><ChevronLeft size={20} /></button>
                     <span className="nav-index">{currentImageIndex + 1} / {selectedImages.length}</span>
-                    <button onClick={nextImage} title="Next"><ChevronRight size={20} /></button>
+                    <button onClick={nextImage} title="Next" aria-label="Next image"><ChevronRight size={20} /></button>
                   </>
                 )}
               </div>

@@ -10,7 +10,7 @@ const skills = [
 export default function Skills() {
   return (
     <section id="skills" className="skills-section">
-      <div className="section-header animate-on-scroll">
+      <div className="section-header" data-animate>
         <div className="section-tag">
           <span className="hashtag">#</span>
           <span>Technical Stack</span>
@@ -20,11 +20,7 @@ export default function Skills() {
       </div>
       <div className="skills-container">
         {skills.map((skill, idx) => (
-          <div
-            key={idx}
-            className="skill-pill animate-on-scroll"
-            style={{ transitionDelay: `${0.05 * idx}s` }}
-          >
+          <div key={idx} className="skill-pill" data-animate>
             <img
               src={getTechIconUrl(skill) || ''}
               alt={skill}

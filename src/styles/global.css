@@ -184,27 +184,13 @@ a {
   50% { transform: translateY(-10px); }
 }
 
-/* Scroll Animation Classes */
-.animate-on-scroll {
+/* GSAP initial states — scoped to .js so no-JS visitors see full content.
+   GSAP animates these to visible (see src/scripts/animations.ts). */
+.js [data-animate],
+.js [data-hero],
+.js .name-letter {
   opacity: 0;
-  transform: translateY(40px);
-  transition: var(--transition-smooth);
 }
-
-.animate-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Ensure project-card doesnt have transform transition when scroll-syncing */
-.project-card.visible {
-  transition: opacity 0.6s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo), border-color 0.4s var(--ease-out-expo);
-}
-
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
-.delay-4 { transition-delay: 0.4s; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -212,10 +198,35 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .animate-on-scroll {
+  .js [data-animate],
+  .js [data-hero],
+  .js .name-letter {
     opacity: 1;
-    transform: none;
   }
+}
+
+/* Elements tilted in 3D by GSAP */
+[data-tilt] {
+  transform-style: preserve-3d;
+}
+
+/* Skip link — visible only when focused */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000;
+  background: var(--accent-lime);
+  color: #000;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 100px;
+  transform: translateY(-200%);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 /* ========================================

@@ -11,7 +11,7 @@ import Footer from '../components/Footer.astro';
 <Layout title="Ikhsan Kurniawan | Fullstack Developer">
 	<Navbar />
 	
-	<main>
+	<main id="main">
 		<Hero />
 		<Skills client:visible />
 		<Projects client:visible />
@@ -20,33 +20,10 @@ import Footer from '../components/Footer.astro';
 	</main>
 
 	<script>
-		// Global Intersection Observer for scroll animations
-		const observerOptions = {
-			threshold: 0.1,
-			rootMargin: '0px 0px -50px 0px'
-		};
+		import { initAnimations } from '../scripts/animations';
+		import { trapFocus } from '../scripts/focus-trap';
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('visible');
-					observer.unobserve(entry.target);
-				}
-			});
-		}, observerOptions);
-
-		// Function to observe elements
-		const observeElements = () => {
-			document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
-				observer.observe(el);
-			});
-		};
-
-		// Initial observation
-		observeElements();
-
-		// Re-observe after hydration completes (limited, not on every mutation)
-		document.addEventListener('astro:after-swap', observeElements);
+		initAnimations();
 
 		// Global Certificate Modal Logic
 		const setupModal = () => {
@@ -69,6 +46,7 @@ import Footer from '../components/Footer.astro';
 			let isDragging = false;
 			let startX = 0, startY = 0;
 			let translateX = 0, translateY = 0;
+			let releaseFocus: (() => void) | null = null;
 
 			const updateTransform = () => {
 				modalImg.style.transform = `scale(${zoom}) translate(${translateX / zoom}px, ${translateY / zoom}px)`;
@@ -90,11 +68,14 @@ import Footer from '../components/Footer.astro';
 				modal.classList.add('active');
 				document.body.style.overflow = 'hidden';
 				resetZoom();
+				releaseFocus = trapFocus(modal);
 			};
 
 			const closeModal = () => {
 				modal.classList.remove('active');
 				document.body.style.overflow = '';
+				releaseFocus?.();
+				releaseFocus = null;
 				setTimeout(() => {
 					modalImg.src = '';
 					resetZoom();
@@ -190,7 +171,7 @@ import Footer from '../components/Footer.astro';
 	</script>
 
 	<!-- Global Certificate Modal (Moved outside main to fix z-index stacking context issues) -->
-	<div id="certModal" class="lightbox-overlay">
+	<div id="certModal" class="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
 		<button class="lightbox-close" id="closeModal" aria-label="Close modal">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
 		</button>
@@ -206,14 +187,14 @@ import Footer from '../components/Footer.astro';
 			
 			<div class="lightbox-controls-container">
 				<div class="lightbox-zoom-controls">
-					<button id="zoomOut" title="Zoom Out">
+					<button id="zoomOut" title="Zoom Out" aria-label="Zoom out">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
 					</button>
 					<span id="zoomLevel">100%</span>
-					<button id="zoomIn" title="Zoom In">
+					<button id="zoomIn" title="Zoom In" aria-label="Zoom in">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
 					</button>
-					<button id="resetZoom" title="Reset">
+					<button id="resetZoom" title="Reset" aria-label="Reset zoom">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
 					</button>
 				</div>

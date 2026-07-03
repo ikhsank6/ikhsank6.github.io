@@ -1,12 +1,12 @@
 ---
 ---
 
-<div class="animated-bg">
-  <!-- Gradient Orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  
+<div class="animated-bg" aria-hidden="true">
+  <!-- Gradient Orbs — .orb-wrap = parallax layer, .orb = GSAP float -->
+  <div class="orb-wrap orb-wrap-1"><div class="orb orb-1"></div></div>
+  <div class="orb-wrap orb-wrap-2"><div class="orb orb-2"></div></div>
+  <div class="orb-wrap orb-wrap-3"><div class="orb orb-3"></div></div>
+
   <!-- Grid Pattern -->
   <div class="grid-pattern"></div>
 
@@ -26,58 +26,52 @@
     background: linear-gradient(135deg, #080808 0%, #101010 50%, #080808 100%);
   }
 
-  .orb {
+  .orb-wrap {
     position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.4;
-    animation: float 25s ease-in-out infinite;
     will-change: transform;
     contain: layout style;
   }
 
-  .orb-1 {
+  .orb {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.4;
+    will-change: transform;
+  }
+
+  .orb-wrap-1 {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(0, 102, 255, 0.55) 0%, rgba(0, 102, 255, 0.15) 45%, transparent 70%);
     top: -150px;
     right: -80px;
-    animation-delay: 0s;
+  }
+
+  .orb-1 {
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.55) 0%, rgba(0, 102, 255, 0.15) 45%, transparent 70%);
+  }
+
+  .orb-wrap-2 {
+    width: 500px;
+    height: 500px;
+    bottom: -100px;
+    left: -80px;
   }
 
   .orb-2 {
-    width: 500px;
-    height: 500px;
     background: radial-gradient(circle, rgba(212, 255, 0, 0.45) 0%, rgba(212, 255, 0, 0.12) 45%, transparent 70%);
-    bottom: -100px;
-    left: -80px;
-    animation-delay: -9s;
-    animation-duration: 30s;
+  }
+
+  .orb-wrap-3 {
+    width: 420px;
+    height: 420px;
+    top: 50%;
+    left: 30%;
   }
 
   .orb-3 {
-    width: 420px;
-    height: 420px;
     background: radial-gradient(circle, rgba(138, 43, 226, 0.4) 0%, rgba(138, 43, 226, 0.12) 45%, transparent 70%);
-    top: 50%;
-    left: 30%;
-    animation-delay: -18s;
-    animation-duration: 35s;
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translate(0, 0) scale(1);
-    }
-    25% {
-      transform: translate(50px, -30px) scale(1.05);
-    }
-    50% {
-      transform: translate(-30px, 50px) scale(0.95);
-    }
-    75% {
-      transform: translate(-50px, -20px) scale(1.02);
-    }
   }
 
   .grid-pattern {
@@ -103,7 +97,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .orb { animation: none; }
     .particles { display: none; }
   }
 
