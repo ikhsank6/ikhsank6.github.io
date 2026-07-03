@@ -1,94 +1,52 @@
 ---
 const navItems = [
-  { 
-    name: 'Home', 
+  {
+    name: 'Home',
     href: '#home',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
   },
-  { 
-    name: 'Stack', 
+  {
+    name: 'Stack',
     href: '#skills',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>`
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>`
   },
-  { 
-    name: 'Work', 
+  {
+    name: 'Work',
     href: '#projects',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`
   },
-  { 
-    name: 'About', 
+  {
+    name: 'About',
     href: '#about',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`
+  },
+  {
+    name: 'Contact',
+    href: '#contact',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`
   },
 ];
 ---
 
-<!-- Floating Side Menu (Always Visible) -->
-<div class="floating-nav" id="floatingNav">
-  <div class="nav-notice" id="navNotice">
-    <span>Click here to navigate</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-  </div>
-  
+<nav class="floating-nav" id="floatingNav" aria-label="Section navigation">
   {navItems.map(item => (
-    <a href={item.href} class="floating-item" title={item.name}>
+    <a href={item.href} class="floating-item" aria-label={item.name}>
       <div class="circle-icon" set:html={item.icon}></div>
       <span class="floating-label">{item.name}</span>
     </a>
   ))}
-</div>
-
-
+</nav>
 
 <style>
-  /* Floating Nav - Always Visible */
   .floating-nav {
     position: fixed;
-    left: 40px;
+    left: 32px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-  }
-
-  .nav-notice {
-    position: absolute;
-    /* Desktop: Right side of navbar */
-    top: 0;
-    left: 70px;
-    transform: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg-card);
-    color: var(--accent-lime);
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: 1px solid var(--border-subtle);
-    white-space: nowrap;
-    animation: pulse-notice 2s infinite;
-    cursor: default;
-    pointer-events: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  }
-
-  .nav-notice svg {
-    transform: rotate(180deg); /* Arrow pointing left to menu */
-    order: -1; /* Move arrow to the left of the text */
-  }
-
-  @keyframes pulse-notice {
-    0%, 100% { opacity: 1; transform: translateX(0); }
-    50% { opacity: 0.8; transform: translateX(5px); }
-  }
-
-  .nav-notice.hidden {
-    display: none !important;
+    gap: 14px;
   }
 
   .floating-item {
@@ -99,43 +57,40 @@ const navItems = [
     text-decoration: none;
   }
 
+  /* Solid dark chips — legible over every section color (MetaMask pattern) */
   .circle-icon {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(10, 10, 10, 0.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border-subtle);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
     border-radius: 50%;
-    color: var(--text-secondary);
-    transition: var(--transition-smooth);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.85);
+    transition: var(--transition-fast);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   }
 
   .floating-item:hover .circle-icon {
-    background: rgba(212, 255, 0, 0.1);
-    border-color: var(--accent-lime);
-    color: var(--accent-lime);
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(212, 255, 0, 0.2);
+    border-color: var(--mm-orange);
+    color: var(--mm-orange);
+    transform: scale(1.08);
   }
 
-  /* Active state for current section */
   .floating-item.active .circle-icon {
-    background: rgba(212, 255, 0, 0.15);
-    border-color: var(--accent-lime);
-    color: var(--accent-lime);
-    box-shadow: 0 0 25px rgba(212, 255, 0, 0.3);
+    background: var(--mm-orange);
+    border-color: var(--mm-orange);
+    color: var(--mm-white);
   }
 
   .floating-label {
     position: absolute;
-    left: 64px;
-    background: var(--bg-card);
-    color: var(--text-primary);
+    left: 62px;
+    background: var(--mm-black);
+    color: var(--mm-white);
     padding: 6px 14px;
     border-radius: 8px;
     font-size: 0.85rem;
@@ -144,114 +99,42 @@ const navItems = [
     transform: translateX(-10px);
     transition: var(--transition-fast);
     pointer-events: none;
-    border: 1px solid var(--border-subtle);
     white-space: nowrap;
   }
 
-  .floating-item:hover .floating-label {
+  .floating-item:hover .floating-label,
+  .floating-item:focus-visible .floating-label {
     opacity: 1;
     transform: translateX(0);
-  }
-
-  .mobile-menu-btn {
-    display: none;
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    z-index: 1001;
-    flex-direction: column;
-    gap: 6px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    cursor: pointer;
-    padding: 12px;
-  }
-
-  .mobile-menu-btn span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--text-primary);
-    transition: var(--transition-fast);
-  }
-
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 80px;
-    left: 20px;
-    right: 20px;
-    background: var(--bg-container);
-    border: 1px solid var(--border-subtle);
-    border-radius: 24px;
-    padding: 32px;
-    z-index: 1000;
-    flex-direction: column;
-    gap: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  }
-
-  .mobile-menu.active {
-    display: flex;
-  }
-
-  .mobile-link {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    text-align: center;
-  }
-
-  .mobile-link:hover {
-    color: var(--accent-lime);
   }
 
   @media (max-width: 968px) {
     .floating-nav {
       left: 50%;
       top: auto;
-      bottom: 24px;
+      bottom: 20px;
       transform: translateX(-50%);
       flex-direction: row;
-      gap: 12px;
-      background: rgba(10, 10, 10, 0.9);
+      gap: 10px;
+      background: rgba(10, 10, 10, 0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      padding: 12px 20px;
+      padding: 10px 16px;
       border-radius: 100px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .nav-notice {
-      display: flex;
-      flex-direction: row;
-      top: 50%;
-      left: auto;
-      right: -130px; /* Position to the right side */
-      transform: translateY(-50%);
-      animation: pulse-notice-mobile 2s infinite;
-    }
-
-    .nav-notice svg {
-      transform: rotate(180deg); /* Point left to menu */
-      order: -1;
-    }
-    
-    .nav-notice span {
-       display: inline-block;
-    }
-
-    /* Adjust animation for mobile context */
-    @keyframes pulse-notice-mobile {
-      0%, 100% { opacity: 1; transform: translateY(-50%) translateX(0); }
-      50% { opacity: 0.7; transform: translateY(-50%) translateX(3px); }
     }
 
     .circle-icon {
       width: 44px;
       height: 44px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .floating-item.active .circle-icon {
+      background: var(--mm-orange);
     }
 
     .floating-label {
@@ -261,68 +144,36 @@ const navItems = [
 </style>
 
 <script>
-  const navNotice = document.getElementById('navNotice');
-
-  // Check if notice was already seen
-  if (localStorage.getItem('navNoticeSeen') === 'true') {
-    navNotice?.classList.add('hidden');
-  }
-
-  // Hide notice when any nav item is clicked
-  document.querySelectorAll('.floating-item').forEach(item => {
-    item.addEventListener('click', () => {
-      navNotice?.classList.add('hidden');
-      localStorage.setItem('navNoticeSeen', 'true');
-    });
-  });
-
-  // Auto-hide after 5 seconds and remember
-  setTimeout(() => {
-    navNotice?.classList.add('hidden');
-    localStorage.setItem('navNoticeSeen', 'true');
-  }, 5000);
-
-  // Active section detection
   const navLinks = document.querySelectorAll('.floating-item');
 
-  // Map nav hrefs to section IDs
   const hrefToId: Record<string, string> = {
     '#home': 'home',
     '#skills': 'skills',
     '#projects': 'projects',
-    '#about': 'about'
+    '#about': 'about',
+    '#contact': 'contact'
   };
 
   function setActiveNav() {
-    // Query sections dynamically (important for client:only components)
     const sections = document.querySelectorAll('section[id]');
     const scrollPosition = window.scrollY + window.innerHeight / 3;
     let currentSection = 'home';
-    
+
     sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionBottom = sectionTop + section.offsetHeight;
-      
+      const el = section as HTMLElement;
+      const sectionTop = el.offsetTop;
+      const sectionBottom = sectionTop + el.offsetHeight;
       if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-        currentSection = section.getAttribute('id') || 'home';
+        currentSection = el.getAttribute('id') || 'home';
       }
     });
 
-    // Clear all active states first
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-    });
-
-    // Set active based on current section
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
-      if (href && hrefToId[href] === currentSection) {
-        link.classList.add('active');
-      }
+      link.classList.toggle('active', !!href && hrefToId[href] === currentSection);
     });
   }
 
-  // Run on scroll with throttle for performance
   let ticking = false;
   window.addEventListener('scroll', () => {
     if (!ticking) {
@@ -334,11 +185,6 @@ const navItems = [
     }
   });
 
-  // Run on load with delay to wait for React components
   setTimeout(setActiveNav, 500);
-
-  // Also update on hash change (when clicking nav links)
-  window.addEventListener('hashchange', () => {
-    setTimeout(setActiveNav, 100);
-  });
+  window.addEventListener('hashchange', () => setTimeout(setActiveNav, 100));
 </script>

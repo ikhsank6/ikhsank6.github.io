@@ -5,7 +5,7 @@ const lastName = 'Kurniawan';
 
 <section id="home" class="hero">
   <div class="container">
-    <div class="hero-wrapper">
+    <div class="hero-wrapper" data-hero-exit>
 
       <!-- Decorative 3D cube (GSAP-driven) -->
       <div class="hero-cube-wrap" aria-hidden="true">
@@ -18,6 +18,7 @@ const lastName = 'Kurniawan';
           <div class="cube-face cube-bottom"></div>
         </div>
       </div>
+      <div class="hero-ring" aria-hidden="true"></div>
 
       <!-- Eyebrow meta -->
       <div class="hero-eyebrow" data-hero="eyebrow">
@@ -27,7 +28,7 @@ const lastName = 'Kurniawan';
         </span>
         <span class="eyebrow-sep">·</span>
         <span class="eyebrow-location">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
             <circle cx="12" cy="9" r="2.5"/>
           </svg>
@@ -35,35 +36,22 @@ const lastName = 'Kurniawan';
         </span>
       </div>
 
-      <!-- Name row: name left, stats right -->
-      <div class="hero-title-row">
-        <h1 class="hero-name" aria-label={`${firstName} ${lastName}.`}>
-          <span class="name-first" aria-hidden="true">
-            {firstName.split('').map((letter) => <span class="name-letter">{letter}</span>)}
-          </span>
-          <span class="name-last" aria-hidden="true">
-            {lastName.split('').map((letter) => <span class="name-letter">{letter}</span>)}<span class="name-letter name-period">.</span>
-          </span>
-        </h1>
-        <div class="hero-stats" data-hero="stats">
-          <div class="stat" data-tilt>
-            <span class="stat-value"><span data-count="5">5</span><span class="stat-plus">+</span></span>
-            <span class="stat-label">Years of<br/>experience</span>
-          </div>
-          <div class="stat" data-tilt>
-            <span class="stat-value"><span data-count="10">10</span><span class="stat-plus">+</span></span>
-            <span class="stat-label">Projects<br/>delivered</span>
-          </div>
-        </div>
-      </div>
+      <!-- Stacked display name -->
+      <h1 class="hero-name display-type" aria-label={`${firstName} ${lastName}.`}>
+        <span class="name-line" aria-hidden="true">
+          {firstName.split('').map((letter) => <span class="name-letter">{letter}</span>)}
+        </span>
+        <span class="name-line" aria-hidden="true">
+          {lastName.split('').map((letter) => <span class="name-letter">{letter}</span>)}<span class="name-letter name-period">.</span>
+        </span>
+      </h1>
 
-      <!-- Divider -->
-      <div class="hero-divider" data-hero="divider"></div>
-
-      <!-- Description + CTA full width -->
+      <!-- Description -->
       <div class="hero-bottom" data-hero="bottom">
         <p class="hero-description">
-          <span class="desc-tag">Fullstack Developer</span> with 5+ years of experience in web application development, covering backend APIs, frontend interfaces, and database management. Experienced in using modern frameworks such as Laravel and Node.js for backend development, as well as Vue.js and Next.js for frontend applications, optimizing application performance, and ensuring code quality through best practices and effective team collaboration.
+          <span class="desc-tag">Fullstack Developer</span> with 5+ years of experience building
+          government-scale web platforms — backend APIs, frontend interfaces, and database
+          architecture with Laravel, Node.js, Vue and Next.js.
         </p>
         <div class="hero-cta">
           <a href="#projects" class="btn-primary" data-magnetic>
@@ -75,6 +63,22 @@ const lastName = 'Kurniawan';
           <button id="open-contact-modal" class="btn-secondary" data-magnetic>
             Let's Connect
           </button>
+        </div>
+      </div>
+
+      <!-- Stats chips -->
+      <div class="hero-stats" data-hero="stats">
+        <div class="stat" data-tilt>
+          <span class="stat-value"><span data-count="5">5</span><span class="stat-plus">+</span></span>
+          <span class="stat-label">Years of experience</span>
+        </div>
+        <div class="stat" data-tilt>
+          <span class="stat-value"><span data-count="13">13</span></span>
+          <span class="stat-label">Projects delivered</span>
+        </div>
+        <div class="stat" data-tilt>
+          <span class="stat-value"><span data-count="9">9</span></span>
+          <span class="stat-label">Government institutions</span>
         </div>
       </div>
 
@@ -95,12 +99,11 @@ const lastName = 'Kurniawan';
       <h2 class="modal-title" id="contact-modal-title">Let's Connect</h2>
       <p class="modal-subtitle">Feel free to reach out through any of these channels</p>
     </div>
-    
+
     <div class="contact-list">
-      <!-- Email -->
       <a href="mailto:ikhsankurniawan.ikhwan@gmail.com" class="contact-item">
         <div class="contact-icon email-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
@@ -109,15 +112,14 @@ const lastName = 'Kurniawan';
           <span class="contact-label">Email</span>
           <span class="contact-value">ikhsankurniawan.ikhwan@gmail.com</span>
         </div>
-        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M7 17L17 7M17 7H7M17 7V17"/>
         </svg>
       </a>
-      
-      <!-- WhatsApp -->
+
       <a href="https://wa.me/6281381799202" target="_blank" rel="noopener noreferrer" class="contact-item">
         <div class="contact-icon whatsapp-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
         </div>
@@ -125,15 +127,14 @@ const lastName = 'Kurniawan';
           <span class="contact-label">WhatsApp</span>
           <span class="contact-value">+62 813-8179-9202</span>
         </div>
-        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M7 17L17 7M17 7H7M17 7V17"/>
         </svg>
       </a>
-      
-      <!-- LinkedIn -->
+
       <a href="https://linkedin.com/in/ikhsank6" target="_blank" rel="noopener noreferrer" class="contact-item">
         <div class="contact-icon linkedin-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
           </svg>
         </div>
@@ -141,7 +142,7 @@ const lastName = 'Kurniawan';
           <span class="contact-label">LinkedIn</span>
           <span class="contact-value">linkedin.com/in/ikhsank6</span>
         </div>
-        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="contact-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M7 17L17 7M17 7H7M17 7V17"/>
         </svg>
       </a>
@@ -151,25 +152,29 @@ const lastName = 'Kurniawan';
 
 <style>
   .hero {
-    min-height: 100%;
+    min-height: 100svh;
     display: flex;
     align-items: center;
-    padding: 120px 0 100px;
+    padding-top: 90px;
+    padding-bottom: 90px;
+    overflow: hidden;
   }
 
   .hero-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     position: relative;
+    gap: 36px;
   }
 
   /* Decorative 3D cube */
   .hero-cube-wrap {
     position: absolute;
-    top: -10px;
-    right: 70px;
+    top: -30px;
+    right: 6%;
     width: 110px;
     height: 110px;
     perspective: 700px;
@@ -186,9 +191,9 @@ const lastName = 'Kurniawan';
   .cube-face {
     position: absolute;
     inset: 0;
-    background: rgba(212, 255, 0, 0.03);
-    border: 1px solid rgba(212, 255, 0, 0.22);
-    box-shadow: inset 0 0 24px rgba(212, 255, 0, 0.05);
+    background: rgba(15, 243, 120, 0.08);
+    border: 1.5px solid rgba(8, 194, 95, 0.55);
+    box-shadow: inset 0 0 24px rgba(15, 243, 120, 0.1);
   }
 
   .cube-front  { transform: translateZ(55px); }
@@ -198,16 +203,24 @@ const lastName = 'Kurniawan';
   .cube-top    { transform: rotateX(90deg) translateZ(55px); }
   .cube-bottom { transform: rotateX(-90deg) translateZ(55px); }
 
+  .hero-ring {
+    position: absolute;
+    bottom: 40px;
+    left: 5%;
+    width: 90px;
+    height: 90px;
+    border: 2px dashed rgba(20, 20, 20, 0.14);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   @media (max-width: 1100px) {
-    .hero-cube-wrap { display: none; }
+    .hero-cube-wrap, .hero-ring { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-cube-wrap { display: none; }
-  }
-
-  .name-letter {
-    display: inline-block;
+    .hero-cube-wrap, .hero-ring { display: none; }
   }
 
   /* Eyebrow */
@@ -215,10 +228,11 @@ const lastName = 'Kurniawan';
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 48px;
     font-size: 0.85rem;
-    color: var(--text-muted);
-    font-weight: 500;
+    color: var(--c3-ink-soft);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .eyebrow-status {
@@ -230,7 +244,7 @@ const lastName = 'Kurniawan';
   .badge-dot {
     width: 8px;
     height: 8px;
-    background: var(--accent-lime);
+    background: var(--c3-green-deep);
     border-radius: 50%;
     position: relative;
     flex-shrink: 0;
@@ -241,7 +255,7 @@ const lastName = 'Kurniawan';
     position: absolute;
     inset: -3px;
     border-radius: 50%;
-    background: var(--accent-lime);
+    background: var(--c3-green-deep);
     opacity: 0.35;
     animation: pulse-ring 2.5s ease-in-out infinite;
   }
@@ -251,209 +265,160 @@ const lastName = 'Kurniawan';
     50% { transform: scale(2); opacity: 0; }
   }
 
-  .eyebrow-sep {
-    color: var(--border-subtle);
-    font-size: 1rem;
-  }
+  .eyebrow-sep { opacity: 0.5; }
 
   .eyebrow-location {
     display: flex;
     align-items: center;
     gap: 5px;
-  }
-
-  /* Title row */
-  .hero-title-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    width: 100%;
-    gap: 32px;
-    margin-bottom: 28px;
+    opacity: 0.85;
   }
 
   /* Name */
   .hero-name {
     display: flex;
     flex-direction: column;
-    font-size: clamp(4rem, 11vw, 8.5rem);
-    font-weight: 800;
-    line-height: 0.9;
-    letter-spacing: -0.05em;
-    flex: 1;
+    align-items: center;
+    font-size: clamp(3.2rem, 10.5vw, 8.8rem);
+    color: var(--c3-ink);
+    z-index: 1;
   }
 
-  .name-first {
-    color: var(--text-primary);
+  .name-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+    white-space: nowrap;
   }
 
-  .name-last {
-    color: var(--text-primary);
+  .name-letter {
+    display: inline-block;
   }
 
   .name-period {
-    color: var(--accent-lime);
+    color: var(--c3-green-text);
   }
 
-  /* Role */
-  .hero-role {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 28px;
-  }
-
-  /* Divider */
-  .hero-divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border-subtle);
-    margin-bottom: 40px;
-  }
-
-  /* Bottom row */
+  /* Bottom: description + CTAs */
   .hero-bottom {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    align-items: center;
+    gap: 28px;
+    max-width: 720px;
   }
 
   .hero-description {
     font-size: 1.05rem;
     color: var(--text-secondary);
     line-height: 1.75;
-    width: 100%;
   }
 
   .desc-tag {
     display: inline-flex;
     align-items: center;
-    background: rgba(212, 255, 0, 0.08);
-    color: var(--accent-lime);
-    border: 1px solid rgba(212, 255, 0, 0.25);
-    border-radius: 6px;
-    padding: 2px 10px;
+    background: rgba(15, 243, 120, 0.16);
+    color: var(--c3-green-text);
+    border: 1px solid rgba(8, 194, 95, 0.35);
+    border-radius: 100px;
+    padding: 2px 12px;
     font-size: 0.9em;
     font-weight: 700;
-    letter-spacing: 0.01em;
     vertical-align: middle;
     margin-right: 4px;
   }
 
-  /* CTAs */
+  /* CTAs — MetaMask pill language */
   .hero-cta {
     display: flex;
     gap: 14px;
+    justify-content: center;
   }
 
   .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--accent-lime);
-    color: #000;
-    padding: 14px 28px;
-    border-radius: 100px;
-    font-weight: 700;
+    background: var(--c3-green);
+    color: var(--c3-dark);
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 600;
     font-size: 0.95rem;
-    transition: var(--transition-smooth);
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
   }
 
   .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(212, 255, 0, 0.28);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(15, 243, 120, 0.4);
   }
 
   .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: transparent;
-    color: var(--text-secondary);
-    padding: 14px 28px;
-    border-radius: 100px;
-    border: 1px solid var(--border-subtle);
+    background: var(--c3-surface);
+    color: var(--c3-ink);
+    padding: 16px 32px;
+    border-radius: 12px;
+    border: 1px solid var(--c3-line);
     font-weight: 600;
     font-size: 0.95rem;
-    transition: var(--transition-smooth);
+    transition: border-color 0.3s var(--ease-out-expo), background 0.3s var(--ease-out-expo);
     cursor: pointer;
+    font-family: var(--font-main);
   }
 
   .btn-secondary:hover {
-    color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.04);
-    transform: translateY(-3px);
+    border-color: var(--c3-ink);
+    background: var(--c3-surface-2);
   }
 
-  /* Stats */
+  /* Stats chips */
   .hero-stats {
     display: flex;
-    flex-direction: column;
-    gap: 28px;
-    flex-shrink: 0;
-    align-self: flex-end;
-    padding-bottom: 6px;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .stat {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    text-align: right;
+    align-items: center;
+    gap: 2px;
+    background: var(--c3-surface);
+    border: 1px solid var(--c3-line);
+    border-radius: 16px;
+    padding: 18px 28px;
+    min-width: 150px;
   }
 
   .stat-value {
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    line-height: 1;
-    letter-spacing: -0.04em;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--c3-ink);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
   }
 
   .stat-plus {
-    color: var(--accent-lime);
+    color: var(--c3-green-text);
   }
 
   .stat-label {
     font-size: 0.78rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-weight: 500;
-    line-height: 1.4;
-    text-align: right;
   }
 
   /* Mobile */
   @media (max-width: 768px) {
-    .hero {
-      padding: 100px 0 80px;
-    }
+    .hero-wrapper { gap: 28px; }
 
-    .hero-title-row {
+    .hero-eyebrow {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    .hero-name {
-      font-size: clamp(3.5rem, 16vw, 6rem);
-    }
-
-    .hero-stats {
-      flex-direction: row;
-      gap: 32px;
-      align-self: flex-start;
-    }
-
-    .stat {
-      text-align: left;
-    }
-
-    .stat-label {
-      text-align: left;
+      gap: 8px;
     }
 
     .hero-cta {
@@ -466,18 +431,26 @@ const lastName = 'Kurniawan';
       width: 100%;
       justify-content: center;
     }
+
+    .hero-stats { gap: 10px; }
+
+    .stat {
+      flex: 1 1 45%;
+      min-width: 0;
+      padding: 14px 12px;
+    }
   }
 </style>
 
 <style is:global>
-  /* Modal Styles - Global Improved Responsiveness */
+  /* Contact modal — light card (MetaMask style) */
   #contact-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(1, 30, 28, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     display: flex;
@@ -496,8 +469,7 @@ const lastName = 'Kurniawan';
   }
 
   #contact-modal .modal-content {
-    background: linear-gradient(135deg, rgba(30, 30, 35, 0.98) 0%, rgba(15, 15, 20, 0.99) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--mm-white);
     border-radius: clamp(20px, 4vw, 28px);
     padding: clamp(24px, 5vw, 40px);
     max-width: 500px;
@@ -505,9 +477,7 @@ const lastName = 'Kurniawan';
     position: relative;
     transform: translateY(30px) scale(0.95);
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 
-      0 25px 80px -12px rgba(0, 0, 0, 0.8),
-      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.6);
   }
 
   #contact-modal.active .modal-content {
@@ -518,12 +488,12 @@ const lastName = 'Kurniawan';
     position: absolute;
     top: clamp(12px, 3vw, 20px);
     right: clamp(12px, 3vw, 20px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.6);
+    background: rgba(10, 10, 10, 0.05);
+    border: 1px solid rgba(10, 10, 10, 0.12);
+    color: rgba(10, 10, 10, 0.65);
     width: clamp(36px, 8vw, 44px);
-    height: clamp(36, 8vw, 44px);
-    border-radius: 12px;
+    height: clamp(36px, 8vw, 44px);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -533,8 +503,8 @@ const lastName = 'Kurniawan';
   }
 
   #contact-modal .modal-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: var(--mm-black);
+    color: var(--mm-white);
     transform: rotate(90deg);
   }
 
@@ -545,15 +515,16 @@ const lastName = 'Kurniawan';
   }
 
   #contact-modal .modal-title {
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    font-weight: 800;
-    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    color: var(--mm-black);
     margin-bottom: 8px;
-    letter-spacing: -0.02em;
   }
 
   #contact-modal .modal-subtitle {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(10, 10, 10, 0.55);
     font-size: clamp(0.85rem, 2.5vw, 1rem);
     line-height: 1.4;
   }
@@ -569,8 +540,8 @@ const lastName = 'Kurniawan';
     align-items: center;
     gap: clamp(12px, 3vw, 18px);
     padding: clamp(14px, 3vw, 20px);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 10, 10, 0.03);
+    border: 1.5px solid rgba(10, 10, 10, 0.1);
     border-radius: clamp(14px, 3vw, 18px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
@@ -580,20 +551,19 @@ const lastName = 'Kurniawan';
   }
 
   #contact-modal .contact-item:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(212, 255, 0, 0.5);
+    border-color: var(--mm-black);
+    background: rgba(10, 10, 10, 0.05);
     transform: translateX(4px);
   }
 
   #contact-modal .contact-icon {
     width: clamp(40px, 10vw, 52px);
     height: clamp(40px, 10vw, 52px);
-    border-radius: 12px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: clamp(20px, 5vw, 24px);
   }
 
   #contact-modal .email-icon { background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%); color: white; }
@@ -605,20 +575,20 @@ const lastName = 'Kurniawan';
     flex-direction: column;
     gap: 2px;
     flex: 1;
-    min-width: 0; /* Important for ellipsis to work in flex */
+    min-width: 0;
   }
 
   #contact-modal .contact-label {
     font-size: clamp(0.7rem, 2vw, 0.75rem);
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(10, 10, 10, 0.45);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 700;
   }
 
   #contact-modal .contact-value {
-    font-size: clamp(0.85rem, 2.8vw, 1.05rem);
-    color: #fff;
+    font-size: clamp(0.85rem, 2.8vw, 1rem);
+    color: var(--mm-black);
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -627,54 +597,26 @@ const lastName = 'Kurniawan';
   }
 
   #contact-modal .contact-item:hover .contact-value {
-    color: #d4ff00;
+    color: var(--mm-orange);
   }
 
   #contact-modal .contact-arrow {
-    color: rgba(255, 255, 255, 0.3);
-    opacity: 0.5;
+    color: rgba(10, 10, 10, 0.3);
     transform: translateX(0);
     transition: all 0.3s ease;
     flex-shrink: 0;
   }
 
   #contact-modal .contact-item:hover .contact-arrow {
-    opacity: 1;
     transform: translateX(4px);
-    color: #d4ff00;
+    color: var(--mm-orange);
   }
 
-  /* Specific mobile adjustments for long texts */
   @media (max-width: 400px) {
-    #contact-modal .modal-content {
-      padding: 24px 16px;
-    }
-    
-    #contact-modal .contact-item {
-      padding: 12px;
-      gap: 12px;
-    }
-
-    #contact-modal .contact-icon {
-      width: 38px;
-      height: 38px;
-    }
-
-    /* Allow wrapping for very long emails on tiny screens only if needed */
-    /* Or just make it slightly smaller */
-    #contact-modal .contact-value {
-      font-size: 0.8rem;
-    }
-  }
-
-  /* For ultra thin devices */
-  @media (max-width: 320px) {
-    #contact-modal .contact-value {
-      font-size: 0.75rem;
-    }
-    #contact-modal .contact-label {
-      font-size: 0.65rem;
-    }
+    #contact-modal .modal-content { padding: 24px 16px; }
+    #contact-modal .contact-item { padding: 12px; gap: 12px; }
+    #contact-modal .contact-icon { width: 38px; height: 38px; }
+    #contact-modal .contact-value { font-size: 0.8rem; }
   }
 </style>
 
@@ -705,21 +647,17 @@ const lastName = 'Kurniawan';
     }
   }
 
-  if (openBtn) {
-    openBtn.addEventListener('click', openModal);
-  }
+  openBtn?.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
 
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeModal);
-  }
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
 
-  if (modal) {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-  }
+  // The contact CTA section reuses this modal.
+  document.querySelectorAll('[data-open-contact]').forEach((el) => {
+    el.addEventListener('click', openModal);
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal?.classList.contains('active')) {
@@ -727,4 +665,3 @@ const lastName = 'Kurniawan';
     }
   });
 </script>
-

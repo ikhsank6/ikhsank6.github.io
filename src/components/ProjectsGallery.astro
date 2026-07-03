@@ -1,0 +1,524 @@
+---
+import { archiveProjects, featuredProjects, STATUS_LABEL, projects } from '../data/projects';
+import { getTechIconUrl } from '../utils/techIcons';
+---
+
+<section id="projects" class="projects-section">
+  <div class="section-header" data-animate>
+    <div class="section-tag">
+      <span class="hashtag">#</span>
+      <span>My Portfolio</span>
+      <span class="project-count">{projects.length} Projects</span>
+    </div>
+    <h2 class="section-title">Featured <span class="accent-text">Work</span></h2>
+    <p class="section-description">
+      Government and private sector platforms I've led and developed. Scroll to explore.
+    </p>
+  </div>
+
+  <!-- Pinned horizontal gallery (desktop) / scroll-snap swipe (touch) -->
+  <div class="gallery-pin" id="galleryPin">
+    <div class="gallery-track" id="galleryTrack">
+      {featuredProjects.map((project, index) => (
+        <article class="gallery-panel">
+          <span class="panel-index display-type" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <div class="panel-body">
+            <button
+              class="panel-media"
+              type="button"
+              aria-label={`View screenshots of ${project.title}`}
+              data-project-index={index}
+            >
+              <img
+                src={project.images[0]}
+                alt=""
+                loading={index === 0 ? 'eager' : 'lazy'}
+                width="1280"
+                height="800"
+              />
+            </button>
+            <div class="panel-info">
+              <div class="panel-meta">
+                <span class="panel-year">{project.year}</span>
+                <span class={`panel-status ${project.status}`}>{STATUS_LABEL[project.status]}</span>
+              </div>
+              <h3 class="panel-title display-type">{project.title}</h3>
+              <p class="panel-client">{project.client}</p>
+              <p class="panel-description">{project.description}</p>
+              <div class="panel-tech">
+                {project.tech.slice(0, 6).map((tech) => (
+                  <span class="panel-tech-icon" title={tech}>
+                    <img src={getTechIconUrl(tech) || ''} alt={tech} loading="lazy" width="20" height="20" />
+                  </span>
+                ))}
+                {project.tech.length > 6 && <span class="panel-tech-more">+{project.tech.length - 6}</span>}
+              </div>
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" class="panel-link" data-magnetic>
+                  Live Preview
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="gallery-progress" aria-hidden="true">
+      <div class="gallery-progress-bar" id="galleryProgressBar"></div>
+    </div>
+  </div>
+
+  <!-- Archive — minimal list with cursor-follow preview on desktop -->
+  <div class="archive" data-animate>
+    <h3 class="archive-title">Archive</h3>
+    <ul class="archive-list" id="archiveList">
+      {archiveProjects.map((project, index) => (
+        <li>
+          <button
+            class="archive-row"
+            type="button"
+            data-project-index={featuredProjects.length + index}
+            data-preview={project.images[0]}
+            aria-label={`View screenshots of ${project.title} (${project.year})`}
+          >
+            <span class="archive-num">{String(featuredProjects.length + index + 1).padStart(2, '0')}</span>
+            <span class="archive-name">{project.title}</span>
+            <span class="archive-client">{project.client}</span>
+            <span class="archive-year">{project.year}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <div class="archive-preview" id="archivePreview" aria-hidden="true">
+      <img src="" alt="" id="archivePreviewImg" width="320" height="200" />
+    </div>
+  </div>
+</section>
+
+<!-- Custom cursor label for gallery media (pointer-fine only, driven by GSAP) -->
+<div class="gallery-cursor" id="galleryCursor" aria-hidden="true">View</div>
+
+<script>
+  import { projects } from '../data/projects';
+
+  // Bridge: static gallery → React lightbox island (decoupled via CustomEvent).
+  document.querySelectorAll<HTMLElement>('[data-project-index]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const project = projects[Number(el.dataset.projectIndex)];
+      if (!project || project.images.length === 0) return;
+      const media = el.querySelector('img') ?? el;
+      window.dispatchEvent(
+        new CustomEvent('project:open', {
+          detail: {
+            images: project.images,
+            title: `${project.title} — ${project.client}`,
+            sourceRect: media.getBoundingClientRect(),
+          },
+        })
+      );
+    });
+  });
+</script>
+
+<style>
+  .projects-section {
+    overflow: clip; /* pinned track overflows horizontally */
+    padding-bottom: 60px;
+  }
+
+  /* ------------------------------ gallery ------------------------------ */
+
+  .gallery-pin {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 82vh;
+  }
+
+  .gallery-track {
+    display: flex;
+    align-items: stretch;
+    gap: 5vw;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .gallery-panel {
+    position: relative;
+    width: min(82vw, 1150px);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .panel-index {
+    position: absolute;
+    top: 50%;
+    left: -0.12em;
+    transform: translateY(-58%);
+    font-size: clamp(10rem, 26vw, 24rem);
+    color: rgba(206, 233, 253, 0.07);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .panel-body {
+    position: relative;
+    display: flex;
+    gap: 44px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .panel-media {
+    flex: 1.15;
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 24px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16 / 10;
+    box-shadow: 0 30px 70px rgba(5, 0, 40, 0.5);
+  }
+
+  .panel-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.45);
+    transform: scale(1.01);
+    transition: filter 0.5s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+  }
+
+  .panel-media:hover img,
+  .panel-media:focus-visible img {
+    filter: grayscale(0);
+    transform: scale(1.05);
+  }
+
+  .panel-media:focus-visible {
+    outline: 3px solid var(--mm-orange);
+    outline-offset: 3px;
+  }
+
+  .panel-info {
+    flex: 0.85;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+  }
+
+  .panel-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .panel-year {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--mm-ice);
+    background: rgba(206, 233, 253, 0.12);
+    padding: 4px 14px;
+    border-radius: 100px;
+  }
+
+  .panel-status {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  .panel-status.live {
+    color: #A5F3B4;
+    border-color: rgba(165, 243, 180, 0.4);
+  }
+
+  .panel-status.dev,
+  .panel-status.not-live {
+    color: rgba(206, 233, 253, 0.75);
+    border-color: rgba(206, 233, 253, 0.3);
+  }
+
+  .panel-title {
+    font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+    color: var(--mm-white);
+  }
+
+  .panel-client {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--mm-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .panel-description {
+    font-size: 1rem;
+    color: rgba(206, 233, 253, 0.8);
+    line-height: 1.65;
+    max-width: 46ch;
+  }
+
+  .panel-tech {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .panel-tech-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+  }
+
+  .panel-tech-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .panel-tech-more {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(206, 233, 253, 0.7);
+  }
+
+  .panel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    background: var(--mm-white);
+    color: var(--mm-black);
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: background 0.3s var(--ease-out-expo);
+  }
+
+  .panel-link:hover {
+    background: var(--c3-green);
+    color: var(--c3-dark);
+  }
+
+  .gallery-progress {
+    margin-top: 40px;
+    height: 3px;
+    background: rgba(206, 233, 253, 0.15);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .gallery-progress-bar {
+    height: 100%;
+    width: 100%;
+    background: var(--mm-orange);
+    border-radius: 100px;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  /* ------------------------------ archive ------------------------------ */
+
+  .archive {
+    position: relative;
+    margin-top: 90px;
+  }
+
+  .archive-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(206, 233, 253, 0.6);
+    margin-bottom: 18px;
+  }
+
+  .archive-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(206, 233, 253, 0.18);
+  }
+
+  .archive-row {
+    display: grid;
+    grid-template-columns: 3rem 1.2fr 1fr 4rem;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 20px 8px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(206, 233, 253, 0.18);
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-main);
+    transition: background 0.3s var(--ease-out-expo), padding-left 0.3s var(--ease-out-expo);
+  }
+
+  .archive-row:hover,
+  .archive-row:focus-visible {
+    background: rgba(206, 233, 253, 0.07);
+    padding-left: 20px;
+  }
+
+  .archive-row:focus-visible {
+    outline: 2px solid var(--mm-orange);
+    outline-offset: -2px;
+  }
+
+  .archive-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--mm-orange);
+  }
+
+  .archive-name {
+    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+    font-weight: 800;
+    color: var(--mm-ice);
+    letter-spacing: -0.02em;
+  }
+
+  .archive-client {
+    font-size: 0.85rem;
+    color: rgba(206, 233, 253, 0.6);
+    font-weight: 500;
+  }
+
+  .archive-year {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(206, 233, 253, 0.6);
+    text-align: right;
+  }
+
+  .archive-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    box-shadow: 0 24px 60px rgba(5, 0, 40, 0.55);
+    will-change: transform;
+  }
+
+  .archive-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* --------------------------- custom cursor --------------------------- */
+
+  .gallery-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    border-radius: 50%;
+    background: var(--c3-green);
+    color: var(--c3-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    transform: scale(0);
+    will-change: transform;
+  }
+
+  @media (hover: none), (pointer: coarse), (max-width: 968px) {
+    .gallery-cursor,
+    .archive-preview { display: none; }
+  }
+
+  /* ------------------------- touch / mobile mode ------------------------ */
+
+  @media (max-width: 968px), (pointer: coarse) {
+    .gallery-pin {
+      min-height: 0;
+      margin-inline: calc(-1 * var(--gutter));
+    }
+
+    .gallery-track {
+      width: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 16px;
+      padding: 0 24px 8px;
+      scrollbar-width: none;
+    }
+
+    .gallery-track::-webkit-scrollbar { display: none; }
+
+    .gallery-panel {
+      width: 86vw;
+      scroll-snap-align: center;
+    }
+
+    .panel-index {
+      font-size: 7rem;
+      top: -10px;
+      transform: none;
+    }
+
+    .panel-body {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(206, 233, 253, 0.15);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .panel-media { flex: none; }
+    .panel-media img { filter: none; }
+
+    .gallery-progress {
+      margin: 24px 24px 0;
+    }
+
+    .archive-row {
+      grid-template-columns: 2.2rem 1fr 3.4rem;
+    }
+
+    .archive-client { display: none; }
+  }
+</style>

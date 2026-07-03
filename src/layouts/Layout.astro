@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import Background from '../components/Background.astro';
+import Preloader from '../components/Preloader.astro';
 
 interface Props {
 	title: string;
@@ -16,22 +16,37 @@ const { title, description = "My Professional Portfolio" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<!-- FOUC guard: initial hidden animation states only apply when JS runs -->
-		<script is:inline>document.documentElement.classList.add('js');</script>
+		<!-- FOUC guard: initial hidden animation states only apply when JS runs.
+		     skip-intro: returning visitors and reduced-motion users never see the preloader. -->
+		<script is:inline>
+			document.documentElement.classList.add('js');
+			try {
+				if (
+					sessionStorage.getItem('introSeen') ||
+					matchMedia('(prefers-reduced-motion: reduce)').matches
+				) {
+					document.documentElement.classList.add('skip-intro');
+				}
+			} catch (e) {
+				document.documentElement.classList.add('skip-intro');
+			}
+		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<!-- Preconnect to font origins -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<!-- Load font non-blocking with preload + swap -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-		<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" /></noscript>
+		<!-- Load font non-blocking with preload + swap. Inter is a faithful,
+		     free stand-in for cookie3's Helvetica Now; real Helvetica Neue is the
+		     first local fallback so Apple devices render the exact reference face. -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+		<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
 	</head>
 	<body>
 		<a href="#main" class="skip-link">Skip to main content</a>
-		<Background />
+		<Preloader />
 		<slot />
 	</body>
 </html>

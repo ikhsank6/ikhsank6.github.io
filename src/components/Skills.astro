@@ -1,0 +1,81 @@
+---
+import { getTechIconUrl } from '../utils/techIcons';
+
+const rowOne = ['Laravel', 'Livewire', 'Codeigniter', 'Vue.js', 'React', 'Next.js', 'TypeScript', 'JavaScript'];
+const rowTwo = ['Tailwind CSS', 'Node.js', 'NestJS', 'Express', 'Prisma', 'PostgreSQL', 'MongoDB', 'MySQL'];
+
+const rows = [
+  { skills: rowOne, direction: 'left' },
+  { skills: rowTwo, direction: 'right' },
+];
+---
+
+<section id="skills" class="skills-section">
+  <div class="section-header" data-animate>
+    <div class="section-tag">
+      <span class="hashtag">#</span>
+      <span>Technical Stack</span>
+    </div>
+    <h2 class="section-title">My <span class="accent-text">Skills</span></h2>
+    <p class="section-description">The technologies and tools I use to bring ideas to life.</p>
+  </div>
+
+  <div class="marquee-group" data-animate>
+    {rows.map((row) => (
+      <div class="marquee-row" data-marquee={row.direction}>
+        <div class="marquee-track">
+          {[0, 1].map((copy) => (
+            <div class="marquee-copy" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {row.skills.map((skill) => (
+                <div class="skill-pill">
+                  <img src={getTechIconUrl(skill) || ''} alt="" loading="lazy" width="24" height="24" />
+                  <span>{skill}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Full-bleed marquee rows — escape the section's centering padding */
+  .marquee-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-inline: calc(-1 * var(--gutter));
+    overflow: hidden;
+  }
+
+  .marquee-row {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    will-change: transform;
+  }
+
+  .marquee-copy {
+    display: inline-flex;
+    gap: 16px;
+    padding-right: 16px;
+  }
+
+  /* Reduced motion / no JS: one copy, wrapped into a static centered grid */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-group { margin-inline: 0; }
+    .marquee-track { display: block; white-space: normal; }
+    .marquee-copy { display: flex; flex-wrap: wrap; justify-content: center; }
+    .marquee-copy[aria-hidden='true'] { display: none; }
+  }
+
+  :global(html:not(.js)) .marquee-group { margin-inline: 0; }
+  :global(html:not(.js)) .marquee-track { display: block; white-space: normal; }
+  :global(html:not(.js)) .marquee-copy { display: flex; flex-wrap: wrap; justify-content: center; }
+  :global(html:not(.js)) .marquee-copy[aria-hidden='true'] { display: none; }
+</style>

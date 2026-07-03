@@ -69,6 +69,7 @@ const certificates = [
           Experience
         </h3>
         <div class="timeline">
+          <div class="timeline-spine" aria-hidden="true"></div>
           {experience.map((item, index) => (
             <div class="timeline-item" data-animate>
               <div class="timeline-dot"></div>
@@ -99,6 +100,7 @@ const certificates = [
           Education
         </h3>
         <div class="timeline">
+          <div class="timeline-spine" aria-hidden="true"></div>
           {education.map((item, index) => (
             <div class="timeline-item" data-animate>
               <div class="timeline-dot edu"></div>
@@ -127,6 +129,7 @@ const certificates = [
           Certifications
         </h3>
         <div class="timeline">
+          <div class="timeline-spine" aria-hidden="true"></div>
           {certificates.map((item, index) => (
             <div class="timeline-item" data-animate>
               <div class="timeline-dot cert"></div>
@@ -155,10 +158,6 @@ const certificates = [
 </section>
 
 <style>
-  #about {
-    padding: 120px 0;
-  }
-
   .about-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -186,6 +185,25 @@ const certificates = [
   .timeline {
     display: flex;
     flex-direction: column;
+    position: relative;
+  }
+
+  /* Indigo spine drawn over the static light line via GSAP scaleY scrub */
+  .timeline-spine {
+    position: absolute;
+    top: 10px;
+    bottom: 40px;
+    left: 12px;
+    width: 2px;
+    background: var(--c3-green-deep);
+    transform-origin: top center;
+    transform: scaleY(0);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-spine { display: none; }
   }
 
   .timeline-item {
@@ -197,22 +215,19 @@ const certificates = [
   .timeline-dot {
     width: 14px;
     height: 14px;
-    background: var(--accent-lime);
+    background: var(--c3-green-deep);
     border-radius: 50%;
     flex-shrink: 0;
     margin-top: 8px;
-    box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
     z-index: 2;
   }
 
   .timeline-dot.edu {
-    background: var(--accent-blue);
-    box-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
+    background: var(--c3-ink);
   }
 
   .timeline-dot.cert {
-    background: var(--accent-gold); /* Gold color for certificates */
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    background: var(--c3-purple);
   }
 
   .timeline-body {
@@ -242,24 +257,24 @@ const certificates = [
     display: inline-block;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--accent-lime);
-    background: rgba(212, 255, 0, 0.1);
+    color: var(--c3-green-deep);
+    background: rgba(15, 243, 120, 0.14);
     padding: 6px 16px;
     border-radius: 100px;
     margin-bottom: 16px;
-    border: 1px solid rgba(212, 255, 0, 0.2);
+    border: 1px solid rgba(8, 194, 95, 0.25);
   }
 
   .timeline-item:has(.timeline-dot.edu) .timeline-period {
-    color: var(--accent-blue);
-    background: rgba(0, 102, 255, 0.1);
-    border-color: rgba(0, 102, 255, 0.2);
+    color: var(--c3-ink);
+    background: rgba(20, 20, 20, 0.06);
+    border-color: rgba(20, 20, 20, 0.14);
   }
 
   .timeline-period.cert {
-    color: var(--accent-gold);
-    background: rgba(255, 215, 0, 0.1);
-    border-color: rgba(255, 215, 0, 0.2);
+    color: var(--c3-purple);
+    background: rgba(124, 58, 237, 0.08);
+    border-color: rgba(124, 58, 237, 0.25);
   }
 
   .timeline-title {
@@ -301,12 +316,12 @@ const certificates = [
     content: "•";
     position: absolute;
     left: 0;
-    color: var(--accent-lime);
+    color: var(--c3-green-deep);
     font-weight: bold;
   }
 
   .timeline-item:has(.timeline-dot.edu) .description-list li::before {
-    color: var(--accent-blue);
+    color: var(--c3-ink);
   }
 
   /* Certificate Button Style */
@@ -315,22 +330,24 @@ const certificates = [
     align-items: center;
     gap: 10px;
     margin-top: 16px;
-    padding: 10px 20px;
-    background: rgba(255, 215, 0, 0.05);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 12px 24px;
+    background: var(--mm-black);
+    border: none;
     border-radius: 100px;
-    color: var(--accent-gold);
-    font-size: 0.9rem;
+    color: var(--mm-white);
+    font-size: 0.85rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: var(--font-main);
     cursor: pointer;
     transition: all 0.3s var(--ease-out-expo);
   }
 
   .show-cert-btn:hover {
-    background: rgba(255, 215, 0, 0.1);
-    border-color: var(--accent-gold);
+    background: var(--mm-orange);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(255, 92, 22, 0.3);
   }
 
   .btn-icon {
