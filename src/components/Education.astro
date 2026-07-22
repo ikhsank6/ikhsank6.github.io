@@ -65,8 +65,8 @@ const certificates = [
     <div class="about-grid">
       <div class="about-column">
         <h3 class="column-title" data-animate>
-          <span class="title-icon">💼</span>
           Experience
+          <span class="column-count meta-type">{String(experience.length).padStart(2, '0')}</span>
         </h3>
         <div class="timeline">
           <div class="timeline-spine" aria-hidden="true"></div>
@@ -96,8 +96,8 @@ const certificates = [
       
       <div class="about-column">
         <h3 class="column-title" data-animate>
-          <span class="title-icon">🎓</span>
           Education
+          <span class="column-count meta-type">{String(education.length).padStart(2, '0')}</span>
         </h3>
         <div class="timeline">
           <div class="timeline-spine" aria-hidden="true"></div>
@@ -125,8 +125,8 @@ const certificates = [
         </div>
 
         <h3 class="column-title" data-animate style="margin-top: 64px;">
-          <span class="title-icon">📜</span>
           Certifications
+          <span class="column-count meta-type">{String(certificates.length).padStart(2, '0')}</span>
         </h3>
         <div class="timeline">
           <div class="timeline-spine" aria-hidden="true"></div>
@@ -168,18 +168,23 @@ const certificates = [
 
   .column-title {
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    justify-content: space-between;
     gap: 16px;
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
     margin-bottom: 48px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--border-subtle);
   }
 
-  .title-icon {
-    font-size: 1.6rem;
+  /* How many entries the column holds — real information, and it keeps the
+     rule from ending on empty space. */
+  .column-count {
+    color: var(--text-muted);
+    flex-shrink: 0;
   }
 
   .timeline {
@@ -346,9 +351,10 @@ const certificates = [
   }
 
   .show-cert-btn:hover {
-    background: var(--mm-orange);
+    background: var(--c3-green);
+    color: var(--c3-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 92, 22, 0.3);
+    box-shadow: 0 8px 20px rgba(15, 243, 120, 0.35);
   }
 
   .btn-icon {

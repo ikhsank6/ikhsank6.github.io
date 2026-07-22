@@ -5,6 +5,8 @@ dist/
 
 # dependencies
 node_modules/
+# python venv for tools/cutout.py
+.venv/
 
 # logs
 npm-debug.log*

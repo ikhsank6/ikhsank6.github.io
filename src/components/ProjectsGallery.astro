@@ -12,22 +12,34 @@ import { getTechIconUrl } from '../utils/techIcons';
     </div>
     <h2 class="section-title">Featured <span class="accent-text">Work</span></h2>
     <p class="section-description">
-      Government and private sector platforms I've led and developed. Scroll to explore.
+      Government and private sector platforms I've led and developed.
     </p>
   </div>
 
-  <!-- Pinned horizontal gallery (desktop) / scroll-snap swipe (touch) -->
-  <div class="gallery-pin" id="galleryPin">
-    <div class="gallery-track" id="galleryTrack">
-      {featuredProjects.map((project, index) => (
-        <article class="gallery-panel">
-          <span class="panel-index display-type" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-          <div class="panel-body">
+  <!-- Arrows sit on the left and right sides of the card area -->
+  <div class="cf-stage-wrapper">
+    <button class="cf-nav cf-nav-prev" id="cfPrev" type="button" aria-label="Previous project">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <div
+      class="coverflow"
+      id="coverflow"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Featured projects"
+      tabindex="0"
+    >
+      <div class="cf-stage" id="cfStage">
+        {featuredProjects.map((project, index) => (
+          <article class="cf-card" data-cf-card data-index={index}>
             <button
-              class="panel-media"
+              class="cf-media"
               type="button"
-              aria-label={`View screenshots of ${project.title}`}
               data-project-index={index}
+              aria-label={`View screenshots of ${project.title}`}
             >
               <img
                 src={project.images[0]}
@@ -37,24 +49,28 @@ import { getTechIconUrl } from '../utils/techIcons';
                 height="800"
               />
             </button>
-            <div class="panel-info">
-              <div class="panel-meta">
-                <span class="panel-year">{project.year}</span>
-                <span class={`panel-status ${project.status}`}>{STATUS_LABEL[project.status]}</span>
+
+            <div class="cf-info">
+              <div class="cf-meta">
+                <span class="cf-year meta-type">{project.year}</span>
+                <span class={`cf-status meta-type ${project.status}`}>{STATUS_LABEL[project.status]}</span>
               </div>
-              <h3 class="panel-title display-type">{project.title}</h3>
-              <p class="panel-client">{project.client}</p>
-              <p class="panel-description">{project.description}</p>
-              <div class="panel-tech">
-                {project.tech.slice(0, 6).map((tech) => (
-                  <span class="panel-tech-icon" title={tech}>
-                    <img src={getTechIconUrl(tech) || ''} alt={tech} loading="lazy" width="20" height="20" />
+
+              <h3 class="cf-title">{project.title}</h3>
+              <p class="cf-client meta-type">{project.client}</p>
+              <p class="cf-description">{project.description}</p>
+
+              <div class="cf-tech">
+                {project.tech.slice(0, 5).map((tech) => (
+                  <span class="cf-tech-icon" title={tech}>
+                    <img src={getTechIconUrl(tech) || ''} alt={tech} loading="lazy" width="18" height="18" />
                   </span>
                 ))}
-                {project.tech.length > 6 && <span class="panel-tech-more">+{project.tech.length - 6}</span>}
+                {project.tech.length > 5 && <span class="cf-tech-more">+{project.tech.length - 5}</span>}
               </div>
+
               {project.link && (
-                <a href={project.link} target="_blank" rel="noopener noreferrer" class="panel-link" data-magnetic>
+                <a href={project.link} target="_blank" rel="noopener noreferrer" class="cf-link">
                   Live Preview
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M7 17L17 7M17 7H7M17 7V17"/>
@@ -62,284 +78,533 @@ import { getTechIconUrl } from '../utils/techIcons';
                 </a>
               )}
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        ))}
+      </div>
     </div>
-    <div class="gallery-progress" aria-hidden="true">
-      <div class="gallery-progress-bar" id="galleryProgressBar"></div>
+
+    <button class="cf-nav cf-nav-next" id="cfNext" type="button" aria-label="Next project">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Dots below the stage -->
+  <div class="cf-controls">
+    <div class="cf-dots" id="cfDots">
+      {featuredProjects.map((project, index) => (
+        <button class="cf-dot" type="button" data-cf-dot={index} aria-label={`Show ${project.title}`}></button>
+      ))}
     </div>
   </div>
 
-  <!-- Archive — minimal list with cursor-follow preview on desktop -->
+  <p class="visually-hidden" aria-live="polite" id="cfStatus"></p>
+
+  <!-- Archive — card grid. Anatomy follows the SIPPDT product card: fixed
+       aspect, media on top, info panel below, hairline-separated mono footer.
+       The screenshot is on the card itself, so the old cursor-follow preview
+       is gone. -->
   <div class="archive" data-animate>
-    <h3 class="archive-title">Archive</h3>
-    <ul class="archive-list" id="archiveList">
+    <h3 class="archive-title meta-type">Archive</h3>
+    <ul class="archive-grid">
       {archiveProjects.map((project, index) => (
         <li>
           <button
-            class="archive-row"
+            class="project-card"
             type="button"
             data-project-index={featuredProjects.length + index}
-            data-preview={project.images[0]}
             aria-label={`View screenshots of ${project.title} (${project.year})`}
           >
-            <span class="archive-num">{String(featuredProjects.length + index + 1).padStart(2, '0')}</span>
-            <span class="archive-name">{project.title}</span>
-            <span class="archive-client">{project.client}</span>
-            <span class="archive-year">{project.year}</span>
+            <span class="card-media">
+              <img src={project.images[0]} alt="" loading="lazy" width="640" height="400" />
+            </span>
+            <span class="card-info">
+              <span class="card-title">{project.title}</span>
+              <span class="card-description">{project.description}</span>
+              <span class="card-tech">
+                {project.tech.slice(0, 4).map((tech) => (
+                  <span class="card-tech-icon" title={tech}>
+                    <img src={getTechIconUrl(tech) || ''} alt={tech} loading="lazy" width="16" height="16" />
+                  </span>
+                ))}
+                {project.tech.length > 4 && <span class="card-tech-more">+{project.tech.length - 4}</span>}
+              </span>
+              <span class="card-footer">
+                <span class="card-client meta-type">{project.client}</span>
+                <span class="card-action meta-type">
+                  View
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                  </svg>
+                </span>
+              </span>
+            </span>
           </button>
         </li>
       ))}
     </ul>
-    <div class="archive-preview" id="archivePreview" aria-hidden="true">
-      <img src="" alt="" id="archivePreviewImg" width="320" height="200" />
-    </div>
   </div>
 </section>
-
-<!-- Custom cursor label for gallery media (pointer-fine only, driven by GSAP) -->
-<div class="gallery-cursor" id="galleryCursor" aria-hidden="true">View</div>
 
 <script>
   import { projects } from '../data/projects';
 
-  // Bridge: static gallery → React lightbox island (decoupled via CustomEvent).
-  document.querySelectorAll<HTMLElement>('[data-project-index]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const project = projects[Number(el.dataset.projectIndex)];
-      if (!project || project.images.length === 0) return;
-      const media = el.querySelector('img') ?? el;
-      window.dispatchEvent(
-        new CustomEvent('project:open', {
-          detail: {
-            images: project.images,
-            title: `${project.title} — ${project.client}`,
-            sourceRect: media.getBoundingClientRect(),
-          },
-        })
-      );
+  /* --------------------------- lightbox bridge --------------------------- */
+  // Static markup → React lightbox island, decoupled via CustomEvent.
+  function openLightbox(el: HTMLElement): void {
+    const project = projects[Number(el.dataset.projectIndex)];
+    if (!project || project.images.length === 0) return;
+    const media = el.querySelector('img') ?? el;
+    window.dispatchEvent(
+      new CustomEvent('project:open', {
+        detail: {
+          images: project.images,
+          title: `${project.title} — ${project.client}`,
+          sourceRect: media.getBoundingClientRect(),
+        },
+      })
+    );
+  }
+
+  /* ------------------------------ coverflow ------------------------------ */
+
+  function initCoverflow(): void {
+    const root = document.getElementById('coverflow');
+    const stage = document.getElementById('cfStage');
+    if (!root || !stage) return;
+
+    const cards = Array.from(stage.querySelectorAll<HTMLElement>('[data-cf-card]'));
+    const dots = Array.from(document.querySelectorAll<HTMLElement>('[data-cf-dot]'));
+    const status = document.getElementById('cfStatus');
+    if (cards.length === 0) return;
+
+    let active = 0;
+
+    // Geometry is derived from the container width, so one code path covers
+    // phone through desktop — there is no second mobile carousel to keep in
+    // sync with this one.
+    function geometry() {
+      const width = root!.clientWidth;
+      const narrow = width < 700;
+      return {
+        step: narrow ? width * 0.42 : Math.min(330, width * 0.26),
+        rotation: narrow ? 16 : 24,
+        depth: narrow ? 90 : 160,
+        // On a phone the neighbours sit right against the focused card, so
+        // they have to sit back further to stop their text bleeding into it.
+        neighbour: narrow ? 0.32 : 0.55,
+      };
+    }
+
+    function layout(): void {
+      const { step, rotation, depth, neighbour } = geometry();
+      const total = cards.length;
+
+      cards.forEach((card, index) => {
+        // Shortest signed distance around the ring, so the focused card always
+        // has neighbours on both sides — no lopsided first and last slide.
+        let offset = index - active;
+        if (offset > total / 2) offset -= total;
+        if (offset < -total / 2) offset += total;
+        const distance = Math.abs(offset);
+        const direction = Math.sign(offset);
+        // Neighbours bunch up instead of marching out linearly — that
+        // compression is what reads as depth rather than a flat row.
+        const x = direction * step * (distance === 0 ? 0 : 1 + (distance - 1) * 0.62);
+        const clamped = Math.min(distance, 1);
+
+        card.style.transform =
+          `translate(-50%, -50%) translateX(${x}px) translateZ(${-depth * distance}px) ` +
+          `rotateY(${-direction * rotation * clamped}deg) scale(${1 - 0.1 * clamped})`;
+        // Anything past the first neighbour is atmosphere, not content — kept
+        // faint enough that its text never competes with the focused card.
+        const fade = [1, neighbour, 0.1][distance] ?? 0;
+        card.style.opacity = String(fade);
+        card.style.zIndex = String(30 - distance);
+        card.style.pointerEvents = distance > 1 ? 'none' : 'auto';
+
+        const isActive = distance === 0;
+        card.classList.toggle('is-active', isActive);
+        // Only the focused card takes tab stops; the rest stay reachable via
+        // the arrows and dots, so nothing is stranded off the tab order.
+        card.querySelectorAll<HTMLElement>('button, a').forEach((el) => {
+          el.tabIndex = isActive ? 0 : -1;
+        });
+      });
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('is-active', index === active);
+        dot.setAttribute('aria-current', index === active ? 'true' : 'false');
+      });
+
+      if (status) {
+        const title = cards[active].querySelector('.cf-title')?.textContent ?? '';
+        status.textContent = `Project ${active + 1} of ${cards.length}: ${title}`;
+      }
+    }
+
+    function goTo(index: number): void {
+      const total = cards.length;
+      active = ((index % total) + total) % total;
+      layout();
+    }
+
+    document.getElementById('cfPrev')?.addEventListener('click', () => goTo(active - 1));
+    document.getElementById('cfNext')?.addEventListener('click', () => goTo(active + 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)));
+
+    // Clicking a neighbour brings it to centre; clicking the focused card's
+    // media opens the lightbox.
+    cards.forEach((card, index) => {
+      card.addEventListener('click', (event) => {
+        if (index !== active) {
+          event.preventDefault();
+          goTo(index);
+          return;
+        }
+        const media = (event.target as Element | null)?.closest?.('[data-project-index]');
+        if (media) openLightbox(media as HTMLElement);
+      });
     });
-  });
+
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); goTo(active - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); goTo(active + 1); }
+    });
+
+    // Pointer drag / swipe.
+    let startX = 0;
+    let dragging = false;
+    root.addEventListener('pointerdown', (event) => {
+      dragging = true;
+      startX = event.clientX;
+    });
+    root.addEventListener('pointerup', (event) => {
+      if (!dragging) return;
+      dragging = false;
+      const delta = event.clientX - startX;
+      if (Math.abs(delta) > 45) goTo(active + (delta < 0 ? 1 : -1));
+    });
+    root.addEventListener('pointercancel', () => { dragging = false; });
+
+    // Observe the stage itself, not just the window: geometry is derived from
+    // clientWidth, and the first measurement can land at 0 (fonts still
+    // loading, an ancestor still resolving its flex sizing). A window-resize
+    // listener alone would leave that bad measurement stuck until the user
+    // happened to resize.
+    let pending = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(pending);
+      pending = requestAnimationFrame(layout);
+    });
+    ro.observe(root);
+
+    layout();
+  }
+
+  initCoverflow();
+
+  // Archive cards go straight to the lightbox.
+  document
+    .querySelectorAll<HTMLElement>('.archive [data-project-index]')
+    .forEach((el) => el.addEventListener('click', () => openLightbox(el)));
 </script>
 
 <style>
   .projects-section {
-    overflow: clip; /* pinned track overflows horizontally */
+    overflow: clip;
     padding-bottom: 60px;
   }
 
-  /* ------------------------------ gallery ------------------------------ */
+  /* ------------------------------ coverflow ----------------------------- */
 
-  .gallery-pin {
+  .coverflow {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 82vh;
+    /* As a flex item inside .cf-stage-wrapper this needs a definite width:
+       its only child (.cf-stage) is absolutely positioned, so there is no
+       intrinsic content to size against and the box collapses to 0 — which
+       puts every card off-screen at left:50% of nothing. */
+    flex: 1;
+    min-width: 0;
+    height: clamp(500px, 64vh, 600px);
+    perspective: 1000px;
+    /* Full-bleed so neighbours can run past the text column, then faded at
+       both edges so the row reads as continuing rather than stopping dead. */
+    margin-inline: calc(-1 * var(--gutter));
+    overflow: hidden;
+    user-select: none;
+    touch-action: pan-y;
+    mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
   }
 
-  .gallery-track {
-    display: flex;
-    align-items: stretch;
-    gap: 5vw;
-    width: max-content;
-    will-change: transform;
+  .coverflow:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: -4px;
   }
 
-  .gallery-panel {
-    position: relative;
-    width: min(82vw, 1150px);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
+  .cf-stage {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
   }
 
-  .panel-index {
+  .cf-card {
     position: absolute;
     top: 50%;
-    left: -0.12em;
-    transform: translateY(-58%);
-    font-size: clamp(10rem, 26vw, 24rem);
-    color: rgba(206, 233, 253, 0.07);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    z-index: 1;
-  }
-
-  .panel-body {
-    position: relative;
+    left: 50%;
+    width: min(350px, 76vw);
+    height: clamp(450px, 58vh, 545px);
     display: flex;
-    gap: 44px;
-    align-items: center;
-    width: 100%;
-    z-index: 2;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #11161b;
+    border: 1px solid rgba(206, 233, 253, 0.16);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transform: translate(-50%, -50%);
+    transition:
+      transform 0.7s var(--ease-out-expo),
+      opacity 0.7s var(--ease-out-expo),
+      border-color 0.4s var(--ease-out-expo);
+    will-change: transform, opacity;
+    cursor: pointer;
   }
 
-  .panel-media {
-    flex: 1.15;
-    display: block;
+  .cf-card.is-active {
+    border-color: rgba(206, 233, 253, 0.28);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+    cursor: default;
+  }
+
+  .cf-media {
+    flex: 0 0 40%;
+    min-height: 0;
     padding: 0;
     border: none;
     background: var(--c3-dark);
-    border-radius: 24px;
     overflow: hidden;
-    cursor: pointer;
-    aspect-ratio: 16 / 10;
-    box-shadow: 0 30px 70px rgba(5, 0, 40, 0.5);
+    display: block;
+    cursor: zoom-in;
   }
 
-  .panel-media img {
+  .cf-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
     display: block;
-    filter: grayscale(0.45);
-    transform: scale(1.01);
+    filter: grayscale(0.55);
     transition: filter 0.5s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
   }
 
-  .panel-media:hover img,
-  .panel-media:focus-visible img {
-    filter: grayscale(0);
-    transform: scale(1.05);
+  .cf-card.is-active .cf-media img { filter: grayscale(0); }
+  .cf-card.is-active .cf-media:hover img { transform: scale(1.05); }
+
+  .cf-media:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: -3px;
   }
 
-  .panel-media:focus-visible {
-    outline: 3px solid var(--mm-orange);
-    outline-offset: 3px;
-  }
-
-  .panel-info {
-    flex: 0.85;
+  .cf-info {
+    flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    text-align: left;
+    padding: 20px;
+    background: #11161b;
   }
 
-  .panel-meta {
+  .cf-meta {
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
-  .panel-year {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--mm-ice);
-    background: rgba(206, 233, 253, 0.12);
-    padding: 4px 14px;
+  .cf-year {
+    color: rgba(206, 233, 253, 0.7);
+    background: rgba(206, 233, 253, 0.1);
+    padding: 4px 10px;
     border-radius: 100px;
   }
 
-  .panel-status {
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 5px 12px;
+  .cf-status {
+    padding: 4px 10px;
     border-radius: 100px;
     border: 1px solid;
   }
 
-  .panel-status.live {
-    color: #A5F3B4;
-    border-color: rgba(165, 243, 180, 0.4);
-  }
+  .cf-status.live { color: #A5F3B4; border-color: rgba(165, 243, 180, 0.4); }
+  .cf-status.dev,
+  .cf-status.not-live { color: rgba(206, 233, 253, 0.7); border-color: rgba(206, 233, 253, 0.28); }
 
-  .panel-status.dev,
-  .panel-status.not-live {
-    color: rgba(206, 233, 253, 0.75);
-    border-color: rgba(206, 233, 253, 0.3);
-  }
-
-  .panel-title {
-    font-size: clamp(1.6rem, 3.4vw, 2.8rem);
-    color: var(--mm-white);
-  }
-
-  .panel-client {
-    font-size: 0.95rem;
+  .cf-title {
+    font-size: 1.3rem;
     font-weight: 700;
-    color: var(--mm-orange);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: -0.025em;
+    color: var(--mm-white);
+    line-height: 1.15;
   }
 
-  .panel-description {
-    font-size: 1rem;
-    color: rgba(206, 233, 253, 0.8);
-    line-height: 1.65;
-    max-width: 46ch;
+  .cf-client {
+    margin-top: 6px;
+    color: var(--c3-green);
   }
 
-  .panel-tech {
+  .cf-description {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(206, 233, 253, 0.62);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cf-tech {
     display: flex;
-    gap: 8px;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 16px;
   }
 
-  .panel-tech-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
+  .cf-tech-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px;
+    padding: 5px;
+    flex-shrink: 0;
   }
 
-  .panel-tech-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+  .cf-tech-icon img { width: 100%; height: 100%; object-fit: contain; }
 
-  .panel-tech-more {
-    font-size: 0.8rem;
+  .cf-tech-more {
+    font-size: 0.72rem;
     font-weight: 700;
-    color: rgba(206, 233, 253, 0.7);
+    color: rgba(206, 233, 253, 0.55);
   }
 
-  .panel-link {
+  .cf-link {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 8px;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 12px 20px;
     background: var(--mm-white);
-    color: var(--mm-black);
-    padding: 14px 28px;
+    color: var(--c3-dark);
     border-radius: 100px;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.85rem;
     transition: background 0.3s var(--ease-out-expo);
   }
 
-  .panel-link:hover {
+  .cf-link:hover { background: var(--c3-green); }
+
+  /* Stage wrapper — arrows on left and right, coverflow in center */
+  .cf-stage-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .cf-nav {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(206, 233, 253, 0.2);
+    color: var(--mm-ice);
+    cursor: pointer;
+    z-index: 40;
+    transition: background 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+  }
+
+  .cf-nav-prev {
+    position: absolute;
+    left: var(--gutter, 24px);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .cf-nav-next {
+    position: absolute;
+    right: var(--gutter, 24px);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .cf-nav:hover {
     background: var(--c3-green);
+    border-color: var(--c3-green);
     color: var(--c3-dark);
+    transform: translateY(-50%) scale(1.1);
   }
 
-  .gallery-progress {
-    margin-top: 40px;
-    height: 3px;
-    background: rgba(206, 233, 253, 0.15);
-    border-radius: 100px;
-    overflow: hidden;
+  .cf-nav:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: 3px;
   }
 
-  .gallery-progress-bar {
-    height: 100%;
-    width: 100%;
-    background: var(--mm-orange);
+  /* Dots only — centered below */
+  .cf-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .cf-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cf-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(206, 233, 253, 0.28);
+    cursor: pointer;
+    transition: background 0.3s var(--ease-out-expo), width 0.3s var(--ease-out-expo);
+  }
+
+  .cf-dot.is-active {
+    background: var(--c3-green);
+    width: 26px;
     border-radius: 100px;
-    transform: scaleX(0);
-    transform-origin: left center;
+  }
+
+  .cf-dot:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 768px) {
+    .cf-nav {
+      width: 36px;
+      height: 36px;
+    }
+
+    .cf-nav-prev { left: 8px; }
+    .cf-nav-next { right: 8px; }
   }
 
   /* ------------------------------ archive ------------------------------ */
@@ -350,177 +615,183 @@ import { getTechIconUrl } from '../utils/techIcons';
   }
 
   .archive-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
+    color: rgba(206, 233, 253, 0.55);
+    margin-bottom: 22px;
     letter-spacing: 0.2em;
-    color: rgba(206, 233, 253, 0.6);
-    margin-bottom: 18px;
   }
 
-  .archive-list {
+  .archive-grid {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid rgba(206, 233, 253, 0.18);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 24px;
   }
 
-  .archive-row {
-    display: grid;
-    grid-template-columns: 3rem 1.2fr 1fr 4rem;
-    align-items: center;
-    gap: 16px;
+  /* Card — one surface, media and info sharing a single rounded clip. */
+  .project-card {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    padding: 20px 8px;
-    background: none;
-    border: none;
-    border-bottom: 1px solid rgba(206, 233, 253, 0.18);
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    border: 1px solid rgba(206, 233, 253, 0.14);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #11161b;
     cursor: pointer;
     text-align: left;
     font-family: var(--font-main);
-    transition: background 0.3s var(--ease-out-expo), padding-left 0.3s var(--ease-out-expo);
+    transition: border-color 0.4s var(--ease-out-expo), background 0.4s var(--ease-out-expo);
   }
 
-  .archive-row:hover,
-  .archive-row:focus-visible {
-    background: rgba(206, 233, 253, 0.07);
-    padding-left: 20px;
+  .project-card:hover,
+  .project-card:focus-visible {
+    border-color: rgba(206, 233, 253, 0.32);
+    background: #161c22;
   }
 
-  .archive-row:focus-visible {
-    outline: 2px solid var(--mm-orange);
-    outline-offset: -2px;
+  .project-card:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: 3px;
   }
 
-  .archive-num {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--mm-orange);
-  }
-
-  .archive-name {
-    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
-    font-weight: 800;
-    color: var(--mm-ice);
-    letter-spacing: -0.02em;
-  }
-
-  .archive-client {
-    font-size: 0.85rem;
-    color: rgba(206, 233, 253, 0.6);
-    font-weight: 500;
-  }
-
-  .archive-year {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: rgba(206, 233, 253, 0.6);
-    text-align: right;
-  }
-
-  .archive-preview {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 300px;
-    aspect-ratio: 16 / 10;
-    border-radius: 16px;
+  .card-media {
+    flex: 1;
+    min-height: 0;
     overflow: hidden;
-    pointer-events: none;
-    z-index: 50;
-    opacity: 0;
-    box-shadow: 0 24px 60px rgba(5, 0, 40, 0.55);
-    will-change: transform;
+    background: var(--c3-dark);
+    display: block;
   }
 
-  .archive-preview img {
+  .card-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
+    display: block;
+    filter: grayscale(0.5);
+    transition: filter 0.5s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
   }
 
-  /* --------------------------- custom cursor --------------------------- */
+  .project-card:hover .card-media img,
+  .project-card:focus-visible .card-media img {
+    filter: grayscale(0);
+    transform: scale(1.05);
+  }
 
-  .gallery-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 60;
-    width: 84px;
-    height: 84px;
-    margin: -42px 0 0 -42px;
-    border-radius: 50%;
-    background: var(--c3-green);
-    color: var(--c3-dark);
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 18px;
+    background: #11161b;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--mm-ice);
+  }
+
+  .card-description {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: rgba(206, 233, 253, 0.6);
+    /* Always exactly three lines — clamped when long, reserved when short — so
+       every info panel is the same height and the titles align across a row. */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.8em;
+  }
+
+  .card-tech {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .card-tech-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    pointer-events: none;
-    transform: scale(0);
-    will-change: transform;
+    padding: 5px;
   }
 
-  @media (hover: none), (pointer: coarse), (max-width: 968px) {
-    .gallery-cursor,
-    .archive-preview { display: none; }
+  .card-tech-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  /* ------------------------- touch / mobile mode ------------------------ */
+  .card-tech-more {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(206, 233, 253, 0.55);
+  }
 
-  @media (max-width: 968px), (pointer: coarse) {
-    .gallery-pin {
-      min-height: 0;
-      margin-inline: calc(-1 * var(--gutter));
-    }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(206, 233, 253, 0.12);
+  }
 
-    .gallery-track {
-      width: 100%;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+  .card-client {
+    color: rgba(206, 233, 253, 0.45);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .card-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    color: var(--mm-ice);
+    transition: color 0.3s var(--ease-out-expo);
+  }
+
+  .card-action svg {
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+
+  .project-card:hover .card-action,
+  .project-card:focus-visible .card-action {
+    color: var(--c3-green);
+  }
+
+  .project-card:hover .card-action svg,
+  .project-card:focus-visible .card-action svg {
+    transform: translate(2px, -2px);
+  }
+
+  /* ------------------------------- mobile ------------------------------- */
+
+  @media (max-width: 768px) {
+    .cf-card { height: clamp(430px, 62vh, 500px); }
+    .cf-info { padding: 16px; }
+    .cf-title { font-size: 1.15rem; }
+
+    .archive-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 16px;
-      padding: 0 24px 8px;
-      scrollbar-width: none;
     }
-
-    .gallery-track::-webkit-scrollbar { display: none; }
-
-    .gallery-panel {
-      width: 86vw;
-      scroll-snap-align: center;
-    }
-
-    .panel-index {
-      font-size: 7rem;
-      top: -10px;
-      transform: none;
-    }
-
-    .panel-body {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(206, 233, 253, 0.15);
-      border-radius: 24px;
-      padding: 18px;
-    }
-
-    .panel-media { flex: none; }
-    .panel-media img { filter: none; }
-
-    .gallery-progress {
-      margin: 24px 24px 0;
-    }
-
-    .archive-row {
-      grid-template-columns: 2.2rem 1fr 3.4rem;
-    }
-
-    .archive-client { display: none; }
   }
 </style>

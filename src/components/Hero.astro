@@ -1,46 +1,46 @@
 ---
 const firstName = 'Ikhsan';
 const lastName = 'Kurniawan';
+
+/* The hero ledger — three facts, set as data rather than prose. */
+const ledger = [
+  { figure: '05', unit: '+', label: 'Years building' },
+  { figure: '10', unit: '+', label: 'Platforms shipped' },
+  { figure: 'JKT', unit: '', label: 'Jakarta, Indonesia' },
+];
 ---
 
 <section id="home" class="hero">
-  <!-- Three.js particle network — positioned relative to the full section -->
-  <canvas id="hero-canvas" aria-hidden="true"></canvas>
-
   <div class="container">
+    <!-- Two columns of equal optical weight: the whole text stack on the left,
+         the portrait standing full-height on the right, both centred on the
+         same axis. The portrait still crosses the surname's last glyph — one
+         small negative margin — so the two columns read as one composition
+         rather than two panels side by side. -->
     <div class="hero-wrapper" data-hero-exit>
 
-      <div class="hero-eyebrow" data-hero="eyebrow">
-        <span class="eyebrow-status">
-          <span class="badge-dot"></span>
-          Open to work
-        </span>
-        <span class="eyebrow-sep">·</span>
-        <span class="eyebrow-location">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            <circle cx="12" cy="9" r="2.5"/>
-          </svg>
-          Jakarta, Indonesia
-        </span>
-      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow meta-type" data-hero="eyebrow">
+          <span class="eyebrow-status">
+            <span class="badge-dot"></span>
+            Open to work
+          </span>
+          <span class="eyebrow-role">Fullstack Developer</span>
+        </p>
 
-      <!-- Stacked display name -->
-      <h1 class="hero-name display-type" aria-label={`${firstName} ${lastName}.`}>
-        <span class="name-line" aria-hidden="true">
-          {firstName.split('').map((letter) => <span class="name-letter">{letter}</span>)}
-        </span>
-        <span class="name-line" aria-hidden="true">
-          {lastName.split('').map((letter) => <span class="name-letter">{letter}</span>)}<span class="name-letter name-period">.</span>
-        </span>
-      </h1>
+        <h1 class="hero-name display-type" aria-label={`${firstName} ${lastName}`}>
+          <span class="name-line" aria-hidden="true">
+            {firstName.split('').map((letter) => <span class="name-letter">{letter}</span>)}
+          </span>
+          <span class="name-line" aria-hidden="true">
+            {lastName.split('').map((letter) => <span class="name-letter">{letter}</span>)}
+          </span>
+        </h1>
 
-      <!-- Description -->
       <div class="hero-bottom" data-hero="bottom">
         <p class="hero-description">
-          <span class="desc-tag">Fullstack Developer</span> with 5+ years of experience building
-          government-scale web platforms — backend APIs, frontend interfaces, and database
-          architecture with Laravel, Node.js, Vue and Next.js.
+          I build government-scale web platforms — backend APIs, frontend interfaces
+          and database architecture — with Laravel, Node.js, Vue and Next.js.
         </p>
         <div class="hero-cta">
           <a href="#projects" class="btn-primary" data-magnetic>
@@ -55,16 +55,31 @@ const lastName = 'Kurniawan';
         </div>
       </div>
 
-      <!-- Stats chips -->
-      <div class="hero-stats" data-hero="stats">
-        <div class="stat" data-tilt>
-          <span class="stat-value"><span data-count="5">5</span><span class="stat-plus">+</span></span>
-          <span class="stat-label">Years of experience</span>
-        </div>
-        <div class="stat" data-tilt>
-          <span class="stat-value"><span data-count="10">10</span><span class="stat-plus">+</span></span>
-          <span class="stat-label">Projects delivered</span>
-        </div>
+        <dl class="hero-ledger" data-hero="stats">
+          {ledger.map((entry) => (
+            <div class="ledger-entry">
+              <dt class="ledger-figure">
+                {entry.figure.length === 2
+                  ? <span data-count={entry.figure}>{entry.figure}</span>
+                  : entry.figure}<span class="ledger-unit">{entry.unit}</span>
+              </dt>
+              <dd class="ledger-label meta-type">{entry.label}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <!-- The <img> is the rendered element until the WebGL layer reports
+           ready; it stays the fallback for no-WebGL and reduced-motion. -->
+      <div class="hero-portrait" data-hero="portrait" id="heroPortrait">
+        <img
+          src="/images/ikhsan-cutout.webp"
+          alt="Ikhsan Kurniawan"
+          width="1086"
+          height="1233"
+          fetchpriority="high"
+          decoding="async"
+        />
       </div>
 
     </div>
@@ -140,12 +155,31 @@ const lastName = 'Kurniawan';
     min-height: 100svh;
     display: flex;
     align-items: center;
-    padding-top: 90px;
-    padding-bottom: 90px;
+    padding-top: 76px;
+    padding-bottom: 76px;
     overflow: hidden;
   }
 
-  /* Container sits above the canvas */
+  /* Column rules — the layout grid made faintly visible. Structure, not
+     texture: it marks the same 12 columns the content is set on. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(20, 20, 20, 0.045) 0 1px,
+      transparent 1px calc(100% / 12)
+    );
+    background-position: var(--gutter) 0;
+    background-size: calc(100% - var(--gutter) * 2) 100%;
+    background-repeat: no-repeat;
+    mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
   .hero > .container {
     position: relative;
     z-index: 1;
@@ -153,40 +187,43 @@ const lastName = 'Kurniawan';
 
   .hero-wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    text-align: center;
+    column-gap: clamp(20px, 3.5vw, 56px);
+    text-align: left;
     position: relative;
-    gap: 36px;
   }
 
-  /* Three.js canvas — covers the full section (section has position:relative) */
-  #hero-canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    min-width: 0;
+    /* The surname is allowed to run past this column so the portrait's
+       shoulder can still cross it — the graze is the whole point. */
+    overflow: visible;
   }
 
   /* Eyebrow */
   .hero-eyebrow {
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-size: 0.85rem;
+    gap: 18px;
     color: var(--c3-ink-soft);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  }
+
+  .eyebrow-role {
+    padding-left: 18px;
+    border-left: 1px solid var(--c3-line);
   }
 
   .eyebrow-status {
     display: flex;
     align-items: center;
     gap: 8px;
+    color: var(--c3-green-text);
   }
 
   .badge-dot {
@@ -213,22 +250,19 @@ const lastName = 'Kurniawan';
     50% { transform: scale(2); opacity: 0; }
   }
 
-  .eyebrow-sep { opacity: 0.5; }
-
-  .eyebrow-location {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    opacity: 0.85;
-  }
-
-  /* Name */
+  /* Composition — name and portrait occupy one grid cell so the cutout's
+     alpha does the occluding. Bottom-aligned: the shoulders land on the
+     surname, the head rises clear above the first line. */
   .hero-name {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    font-size: clamp(3.2rem, 10.5vw, 8.8rem);
+    align-items: flex-start;
+    /* Sized to nearly fill its column, so the name block and the portrait
+       carry the same optical mass. Both scale with vw (see .hero-portrait)
+       so the gap between them stays proportionate instead of drifting. */
+    font-size: clamp(2.4rem, 7.6vw, 8rem);
     color: var(--c3-ink);
+    position: relative;
     z-index: 1;
   }
 
@@ -243,17 +277,75 @@ const lastName = 'Kurniawan';
     display: inline-block;
   }
 
-  .name-period {
-    color: var(--c3-green-text);
+  /* Portrait — its own column, sized against viewport *width* so it tracks the
+     name (which is also vw-driven) and the gap between them stays constant
+     rather than drifting as the two scale on different axes. `max-height`
+     keeps it inside short viewports; `aspect-ratio` shrinks the width to
+     match when it does. */
+  .hero-portrait {
+    position: relative;
+    width: clamp(230px, 34vw, 520px);
+    max-height: 68vh;
+    aspect-ratio: 1086 / 1233;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Grounding wash — without it the cutout floats on bare white. Sits behind
+     the figure, tinted with the signature accent. */
+  .hero-portrait::before {
+    content: '';
+    position: absolute;
+    inset: 6% -18% -4% -18%;
+    background: radial-gradient(
+      58% 52% at 50% 52%,
+      rgba(15, 243, 120, 0.26),
+      rgba(15, 243, 120, 0) 72%
+    );
+    z-index: -1;
+  }
+
+  /* The WebGL canvas replaces the <img> only once it has drawn a frame, so
+     there is never a gap where neither is showing. */
+  .hero-portrait :global(.hero-portrait-canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hero-portrait.is-gl img {
+    visibility: hidden;
+  }
+
+  .hero-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    /* The pas foto crops the subject on three sides — mid-torso at the bottom
+       and through the shoulders at both edges — so the cutout carries three
+       hard cuts. Two intersecting gradients dissolve all of them: the figure
+       fades into the page instead of ending on straight lines. The horizontal
+       pass is safe because the head never reaches the frame edges. */
+    mask-image:
+      linear-gradient(to bottom, #000 74%, transparent 99%),
+      linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+      linear-gradient(to bottom, #000 74%, transparent 99%),
+      linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    -webkit-mask-composite: source-in;
   }
 
   /* Bottom: description + CTAs */
   .hero-bottom {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 28px;
-    max-width: 720px;
+    max-width: 46ch;
   }
 
   .hero-description {
@@ -262,25 +354,10 @@ const lastName = 'Kurniawan';
     line-height: 1.75;
   }
 
-  .desc-tag {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(15, 243, 120, 0.16);
-    color: var(--c3-green-text);
-    border: 1px solid rgba(8, 194, 95, 0.35);
-    border-radius: 100px;
-    padding: 2px 12px;
-    font-size: 0.9em;
-    font-weight: 700;
-    vertical-align: middle;
-    margin-right: 4px;
-  }
-
   /* CTAs — MetaMask pill language */
   .hero-cta {
     display: flex;
     gap: 14px;
-    justify-content: center;
   }
 
   .btn-primary {
@@ -322,56 +399,124 @@ const lastName = 'Kurniawan';
     background: var(--c3-surface-2);
   }
 
-  /* Stats chips */
-  .hero-stats {
+  /* Ledger — three facts on a hairline rule. Figures carry the weight; the
+     labels stay quiet in mono. Replaces the boxed stat cards. */
+  .hero-ledger {
     display: flex;
-    gap: 16px;
     flex-wrap: wrap;
-    justify-content: center;
+    gap: 0;
+    border-top: 1px solid var(--c3-line);
+    padding-top: 20px;
+    margin: 0;
+    width: 100%;
+    max-width: 640px;
   }
 
-  .stat {
+  .ledger-entry {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    background: var(--c3-surface);
-    border: 1px solid var(--c3-line);
-    border-radius: 16px;
-    padding: 18px 28px;
-    min-width: 150px;
+    gap: 4px;
+    padding-inline: 28px;
+    border-left: 1px solid var(--c3-line);
+    flex: 1 1 0;
+    min-width: 0;
   }
 
-  .stat-value {
-    font-size: 2.2rem;
-    font-weight: 700;
+  .ledger-entry:first-child {
+    padding-left: 0;
+    border-left: none;
+  }
+
+  .ledger-figure {
+    font-size: 2rem;
+    font-weight: 600;
     color: var(--c3-ink);
-    line-height: 1.1;
+    line-height: 1;
     letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
   }
 
-  .stat-plus {
+  .ledger-unit {
     color: var(--c3-green-text);
   }
 
-  .stat-label {
-    font-size: 0.78rem;
+  .ledger-label {
     color: var(--text-secondary);
-    font-weight: 500;
+    margin: 0;
   }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    .hero-wrapper { gap: 28px; }
+  /* Tablet & Mobile — Center aligned layout */
+  @media (max-width: 968px) {
+    .hero-wrapper {
+      align-items: center;
+      text-align: center;
+    }
 
     .hero-eyebrow {
-      flex-direction: column;
-      gap: 8px;
+      justify-content: center;
+    }
+
+    /* One column. The portrait leads — putting it after the text would strand
+       it below the ledger, far from the name it belongs to. */
+    .hero-wrapper {
+      grid-template-columns: 1fr;
+      row-gap: 26px;
+    }
+
+    .hero-text {
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-name {
+      align-items: center;
+      text-align: center;
+      font-size: clamp(2.4rem, 9vw, 4.4rem);
+    }
+
+    .hero-portrait {
+      order: -1;
+      justify-self: center;
+      width: clamp(190px, 52vw, 300px);
+      max-height: 40vh;
+    }
+
+    .hero-bottom {
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .hero-description {
+      text-align: center;
+      margin-inline: auto;
+    }
+
+    .hero-cta {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .hero-ledger {
+      justify-content: center;
+      margin-inline: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-text { gap: 24px; }
+
+    .hero-eyebrow {
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      justify-content: center;
     }
 
     .hero-cta {
       flex-direction: column;
       width: 100%;
+      max-width: 380px;
+      margin-inline: auto;
     }
 
     .btn-primary,
@@ -380,13 +525,17 @@ const lastName = 'Kurniawan';
       justify-content: center;
     }
 
-    .hero-stats { gap: 10px; }
-
-    .stat {
-      flex: 1 1 45%;
-      min-width: 0;
-      padding: 14px 12px;
+    .hero-ledger {
+      padding-top: 16px;
     }
+
+    .ledger-entry {
+      padding-inline: 12px;
+      text-align: center;
+    }
+
+    .ledger-figure { font-size: 1.5rem; }
+    .ledger-label { font-size: 0.62rem; letter-spacing: 0.1em; }
   }
 </style>
 

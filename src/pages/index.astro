@@ -30,15 +30,16 @@ import ProjectLightbox from '../components/ProjectLightbox';
 
 		initAnimations();
 
-		// Lazy-load Three.js scene so it doesn't block the critical JS bundle.
-		// Uses requestIdleCallback (or setTimeout fallback) to defer until idle.
-		const loadScene = () =>
-			import('../scripts/hero-scene').then(({ initHeroScene }) => initHeroScene());
+		// WebGL portrait layer — deferred to idle so it never competes with
+		// first paint. No-ops without WebGL or under reduced motion, leaving
+		// the plain <img> in place.
+		const loadPortraitGL = () =>
+			import('../scripts/hero-portrait-gl').then(({ initHeroPortraitGL }) => initHeroPortraitGL());
 
 		if ('requestIdleCallback' in window) {
-			requestIdleCallback(loadScene, { timeout: 1500 });
+			requestIdleCallback(loadPortraitGL, { timeout: 1500 });
 		} else {
-			setTimeout(loadScene, 200);
+			setTimeout(loadPortraitGL, 200);
 		}
 
 		// Certificate lightbox (Education section) — kept as vanilla, decoupled

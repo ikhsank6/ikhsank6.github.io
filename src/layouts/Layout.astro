@@ -35,12 +35,16 @@ const { title, description = "My Professional Portfolio" } = Astro.props;
 		<!-- Preconnect to font origins -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<!-- Load font non-blocking with preload + swap. Inter is a faithful,
-		     free stand-in for cookie3's Helvetica Now; real Helvetica Neue is the
-		     first local fallback so Apple devices render the exact reference face. -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-		<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+		<!-- Load fonts non-blocking with preload + swap, both families in one
+		     request. Inter is a faithful, free stand-in for cookie3's Helvetica
+		     Now; real Helvetica Neue is the first local fallback so Apple devices
+		     render the exact reference face. JetBrains Mono carries metadata only
+		     (eyebrow, field labels, ledger figures, card footers) — the same
+		     Inter + JetBrains Mono pairing used in SIPPDT, so the portfolio and
+		     the work it presents speak one language. -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+		<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" /></noscript>
 	</head>
 	<body>
 		<a href="#main" class="skip-link">Skip to main content</a>

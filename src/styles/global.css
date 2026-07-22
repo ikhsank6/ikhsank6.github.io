@@ -54,6 +54,9 @@
   /* Typography — Helvetica-faithful (cookie3 uses Helvetica Now) */
   --font-main: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-display: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Utility face — metadata only (eyebrow, field labels, ledger figures, card
+     footers). Never for prose or headings. Matches SIPPDT's own pairing. */
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -146,6 +149,29 @@ a {
   text-transform: none;
   letter-spacing: -0.03em;
   line-height: 1.02;
+}
+
+/* Screen-reader only — live regions, off-screen labels. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Metadata type — mono, uppercase, wide. Labels and figures, never prose. */
+.meta-type {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Accent Text — deep green reads on light; bright green on the dark section */
@@ -280,42 +306,8 @@ a {
 }
 
 /* ========================================
-   SKILL SECTION
+   SKILL SECTION — styles moved to Skills.astro component
    ======================================== */
-
-.skill-pill {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--c3-surface);
-  border: 1px solid var(--c3-line);
-  border-radius: 100px;
-  padding: 12px 24px;
-  transition: var(--transition-fast);
-  cursor: default;
-}
-
-.skill-pill:hover {
-  background: var(--c3-green);
-  border-color: var(--c3-green);
-  transform: translateY(-2px);
-}
-
-.skill-pill:hover span {
-  color: var(--c3-dark);
-}
-
-.skill-pill img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.skill-pill span {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
 
 /* ========================================
    SECTION HEADERS

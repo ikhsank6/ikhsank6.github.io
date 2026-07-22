@@ -11,6 +11,7 @@ export const techSlugs: Record<string, string> = {
   // Backend Frameworks
   'Laravel': 'laravel',
   'Laravel Octane + Road Runner': 'laravel',
+  'Laravel Octane': 'laravel',
   'Codeigniter': 'codeigniter',
   'NestJS': 'nestjs',
   'Express': 'express',
@@ -50,10 +51,16 @@ export const techSlugs: Record<string, string> = {
   // Message Queues & Services
   'RabbitMQ': 'rabbitmq',
   'Service ArcGIS': 'esri',
+  'ArcGIS Service': 'esri',
+  'Moodle': 'moodle',
   'Integrasi Moodle': 'moodle',
+  'Moodle Integration': 'moodle',
   
   // Runtime
   'Node.js': 'nodedotjs',
+
+  // Mapping / GIS
+  'Leaflet': 'leaflet',
 };
 
 /**
@@ -62,8 +69,31 @@ export const techSlugs: Record<string, string> = {
  * @returns Icon URL or null if not found
  */
 export function getTechIconUrl(tech: string): string | null {
-  const slug = techSlugs[tech];
-  return slug ? `${SIMPLE_ICONS_CDN}/${slug}` : null;
+  if (!tech) return null;
+
+  // Direct lookup
+  if (techSlugs[tech]) {
+    return `${SIMPLE_ICONS_CDN}/${techSlugs[tech]}`;
+  }
+
+  // Case-insensitive lookup
+  const lower = tech.toLowerCase().trim();
+  const matchedKey = Object.keys(techSlugs).find(
+    (key) => key.toLowerCase() === lower
+  );
+  if (matchedKey) {
+    return `${SIMPLE_ICONS_CDN}/${techSlugs[matchedKey]}`;
+  }
+
+  // Keyword fallback (e.g. Moodle in "Moodle Integration")
+  if (lower.includes('moodle')) {
+    return `${SIMPLE_ICONS_CDN}/moodle`;
+  }
+  if (lower.includes('arcgis') || lower.includes('esri')) {
+    return `${SIMPLE_ICONS_CDN}/esri`;
+  }
+
+  return null;
 }
 
 /**
