@@ -17,13 +17,21 @@ const { title, description = "My Professional Portfolio" } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<!-- FOUC guard: initial hidden animation states only apply when JS runs.
-		     skip-intro: reduced-motion users never see the preloader; everyone else
-		     sees it on every load, including refreshes. -->
+		     skip-intro: reduced-motion AND touch/coarse-pointer devices never see
+		     the preloader. On throttled mobile the full-screen preloader plus the
+		     JS-gated hero reveal were the whole LCP render delay (~4s), and the
+		     letter-by-letter entrance is a desktop-only nicety, so touch devices
+		     paint the hero straight from HTML with no JS on the critical path. -->
 		<script is:inline>
 			document.documentElement.classList.add('js');
 			try {
-				if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+				var coarse = matchMedia('(hover: none), (pointer: coarse)').matches;
+				if (reduce || coarse) {
 					document.documentElement.classList.add('skip-intro');
+				}
+				if (coarse) {
+					document.documentElement.classList.add('no-hero-anim');
 				}
 			} catch (e) {
 				document.documentElement.classList.add('skip-intro');

@@ -95,6 +95,12 @@ function compile(gl: WebGLRenderingContext, type: number, source: string): WebGL
 export function initHeroPortraitGL(): void {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  // Desktop with a real pointer only. The effect is cursor-driven — on a touch
+  // device the ripple never fires, so a WebGL context, a full-res texture
+  // upload and a permanent rAF loop would all be spent for nothing on exactly
+  // the hardware least able to afford them. Touch keeps the plain <img>.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
   const host = document.getElementById('heroPortrait');
   const img = host?.querySelector('img');
   if (!host || !img) return;

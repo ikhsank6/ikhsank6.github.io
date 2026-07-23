@@ -134,6 +134,14 @@ let runHeroEntrance: (() => void) | null = null;
 function revealHero(): void {
   const letters = gsap.utils.toArray<HTMLElement>('.name-letter');
 
+  // Touch devices paint the hero from HTML (html.no-hero-anim) to keep the
+  // GSAP module off the LCP critical path — never arm the hidden state here, or
+  // GSAP's inline opacity would win over the CSS and re-hide the hero.
+  if (document.documentElement.classList.contains('no-hero-anim')) {
+    runHeroEntrance = () => {};
+    return;
+  }
+
   // Crossing a breakpoint makes gsap.matchMedia revert this context and re-run
   // the callback. By then the intro has already played and cannot play again
   // (startHeroTimeline is one-shot), so re-arming the hidden state would strand

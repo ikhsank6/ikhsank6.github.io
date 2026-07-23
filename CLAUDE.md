@@ -160,5 +160,22 @@ Fields: `title`, `client`, `description`, `year`, `status` (`'live'|'dev'|'not-l
 - Animate transform/opacity/clip-path only; pinning uses default `pinSpacing` (zero CLS).
 - Preloader capped ≤ ~2s, first visit per session only; skipped under reduced motion.
 - `@media (prefers-reduced-motion)` + `gsap.matchMedia` disable all motion.
+- **Mobile LCP:** touch/coarse-pointer devices get `html.no-hero-anim` (set inline pre-paint in
+  `Layout.astro`) and `skip-intro`, so the hero paints from HTML with **no GSAP on the critical
+  path** — the letter-by-letter entrance is desktop-only. Without this the preloader + JS-gated
+  hero reveal were the entire LCP render delay (~4.2s → ~30ms on throttled mobile; LCP 5.3s → 1.2s).
+  If you add anything to the hero's opacity-0 reveal set, mirror it in the `.no-hero-anim` and
+  reduced-motion CSS overrides or it will strand invisible on touch.
+- The **WebGL portrait** (`hero-portrait-gl.ts`) runs on `(hover: hover) and (pointer: fine)`
+  only — the effect is cursor-driven, so touch would pay for a GL context + full-res texture +
+  rAF loop with nothing to show.
+- CSS is inlined (`build.inlineStylesheets: 'always'` in `astro.config.mjs`): single page, ~7KB
+  gzip, so first paint needs no stylesheet round-trip (Astro's `auto` externalised it → render-blocking).
+- Project screenshots are capped at **1600px long edge** (`tools/cutout.py` is portrait-only; the
+  screenshots were resized with a one-off Pillow pass). Source photos were 3024px shown in ≤400px
+  cards — that was Lighthouse's "improve image delivery". The `.png` masters are unused by the
+  site (data references `.webp`) but still copied into `dist`; regenerate `.webp` from them if needed.
+- **`efficient cache lifetimes`** in Lighthouse is a GitHub Pages header limitation (10-min default,
+  no config) — not fixable in this repo.
 - Do **not** run Lighthouse against the dev server (`localhost:4321`) — Vite injects unminified
-  tooling JS that skews scores.
+  tooling JS that skews scores. Preview the real build: `astro preview` (port 4322 here).
