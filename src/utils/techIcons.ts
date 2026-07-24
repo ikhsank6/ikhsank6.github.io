@@ -63,13 +63,28 @@ export const techSlugs: Record<string, string> = {
   'Leaflet': 'leaflet',
 };
 
+// Custom icon override URLs for technologies requiring specific icon variants
+export const customTechIcons: Record<string, string> = {
+  'Redis': '/images/redis.svg',
+};
+
 /**
- * Get the SimpleIcons URL for a technology
+ * Get the SimpleIcons or custom URL for a technology
  * @param tech - Technology name
  * @returns Icon URL or null if not found
  */
 export function getTechIconUrl(tech: string): string | null {
   if (!tech) return null;
+
+  const lower = tech.toLowerCase().trim();
+
+  // Custom icon override lookup
+  const matchedCustomKey = Object.keys(customTechIcons).find(
+    (key) => key.toLowerCase() === lower
+  );
+  if (matchedCustomKey) {
+    return customTechIcons[matchedCustomKey];
+  }
 
   // Direct lookup
   if (techSlugs[tech]) {
@@ -77,7 +92,6 @@ export function getTechIconUrl(tech: string): string | null {
   }
 
   // Case-insensitive lookup
-  const lower = tech.toLowerCase().trim();
   const matchedKey = Object.keys(techSlugs).find(
     (key) => key.toLowerCase() === lower
   );
@@ -102,7 +116,12 @@ export function getTechIconUrl(tech: string): string | null {
  * @returns boolean
  */
 export function hasTechIcon(tech: string): boolean {
-  return tech in techSlugs;
+  const lower = tech.toLowerCase().trim();
+  return (
+    Object.keys(customTechIcons).some((k) => k.toLowerCase() === lower) ||
+    tech in techSlugs ||
+    Object.keys(techSlugs).some((k) => k.toLowerCase() === lower)
+  );
 }
 
 /**
@@ -110,5 +129,6 @@ export function hasTechIcon(tech: string): boolean {
  * @returns Array of technology names
  */
 export function getAllTechs(): string[] {
-  return Object.keys(techSlugs);
+  return Array.from(new Set([...Object.keys(techSlugs), ...Object.keys(customTechIcons)]));
 }
+
