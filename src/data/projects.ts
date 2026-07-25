@@ -167,5 +167,5 @@ export const archiveProjects = projects.slice(6);
 export const STATUS_LABEL: Record<ProjectStatus, string> = {
   live: 'Live',
   dev: 'In Development',
-  'not-live': 'Internal',
+  'not-live': 'Not Active',
 };
