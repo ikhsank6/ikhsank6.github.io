@@ -32,7 +32,7 @@ export const projects: Project[] = [
     year: '2025',
     status: 'live',
     tech: ['Laravel Octane', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
-    link: 'https://ngantor.esdm.go.id/',
+    link: 'https://ngantor.esdm.go.id/nadine',
     images: ['/images/nadinev3_2.webp', '/images/nadinev3.webp'],
   },
   {
