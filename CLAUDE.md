@@ -30,6 +30,7 @@ src/
     Skills.astro        # Velocity-reactive dual marquee of tech pills (static)
     ProjectsGallery.astro   # Coverflow carousel (featured) + archive card grid (static)
     ProjectLightbox.tsx     # React island (client:idle) — zoom/pan/gallery + FLIP entrance
+    ProjectDetail.astro     # Detail modal — per-project markup rendered at build, toggled by `project:detail`
     Education.astro     # Experience/education/certs timeline (drawn spine)
     Footer.astro        # Wordmark marquee (black)
   data/
@@ -54,6 +55,13 @@ src/
 
 - **Astro components** for everything static; **React** only for the project lightbox
   (`ProjectLightbox.tsx`, `client:idle`) — it has real state (zoom/pan/index/focus trap).
+- **Detail modal** (`ProjectDetail.astro`): the `Detail` button on featured cards and the whole archive
+  card dispatch `project:detail` (`{ index }`). Every project's detail is rendered statically and toggled
+  with `hidden`. It shows description, optional `role` / `highlights` (hidden when omitted in
+  `projects.ts`) and the tech stack grouped by `groupTechs()` (categories live in `utils/techIcons.ts`;
+  unlisted techs fall to "Other"). Clicking its screenshot opens the lightbox *on top* (z-index
+  100000 vs 100002); `trapFocus` keeps a stack so only the top modal traps Tab. Never use `<section>`
+  inside modals — global `section { padding: 110px var(--gutter) }` applies.
 - Gallery → lightbox is decoupled via a `project:open` CustomEvent (detail carries images,
   title, and the clicked thumbnail rect for the FLIP shared-element expand).
 - Skill/project icons from `https://cdn.simpleicons.org/{slug}` — add slugs to `utils/techIcons.ts`.

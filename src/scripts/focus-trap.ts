@@ -7,6 +7,11 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+// Open traps, innermost last. Only the top one handles Tab, so a modal opened
+// on top of another (project lightbox over the project detail) doesn't have
+// the lower one fight it for focus.
+const trapStack: HTMLElement[] = [];
+
 /**
  * Traps keyboard focus inside `container` and moves focus to its first
  * focusable element. Returns a cleanup function that removes the trap and
@@ -14,6 +19,7 @@ const FOCUSABLE_SELECTOR = [
  */
 export function trapFocus(container: HTMLElement): () => void {
   const previouslyFocused = document.activeElement as HTMLElement | null;
+  trapStack.push(container);
 
   const getFocusable = () =>
     Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
@@ -22,6 +28,7 @@ export function trapFocus(container: HTMLElement): () => void {
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key !== 'Tab') return;
+    if (trapStack[trapStack.length - 1] !== container) return;
 
     const focusable = getFocusable();
     if (focusable.length === 0) return;
@@ -53,6 +60,8 @@ export function trapFocus(container: HTMLElement): () => void {
   }
 
   return () => {
+    const at = trapStack.lastIndexOf(container);
+    if (at !== -1) trapStack.splice(at, 1);
     document.removeEventListener('keydown', handleKeydown, true);
     previouslyFocused?.focus();
   };

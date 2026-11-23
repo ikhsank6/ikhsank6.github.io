@@ -10,6 +10,10 @@ export interface Project {
   tech: string[];
   link: string;
   images: string[];
+  /** Your role on the project, e.g. "Backend Developer". Omit to hide the row in the detail modal. */
+  role?: string;
+  /** 2–5 short bullet points shown in the detail modal. Omit to hide the section. */
+  highlights?: string[];
 }
 
 export const projects: Project[] = [
@@ -22,6 +26,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'MariaDB', 'Leaflet', 'Tailwind CSS'],
     link: 'https://pustakagambut.kemenlh.go.id/',
+    highlights: [
+      'Public portal with village profiles, news, galleries and downloads for the peatland program',
+      'Intervention map covering 13 villages across Riau, Jambi and South Sumatra',
+      'Success stories and best practices managed through a custom CMS back office',
+    ],
     images: ['/images/impli_1.webp', '/images/impli_2.webp', '/images/impli_3.webp'],
   },
   {
@@ -44,6 +53,9 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel Octane', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
     link: 'https://ngantor.esdm.go.id/nadine',
+    highlights: [
+      'Laravel Octane services on Docker and Kubernetes, with Redis and RabbitMQ',
+    ],
     images: ['/images/nadinev3_2.webp', '/images/nadinev3.webp'],
   },
   {

@@ -69,14 +69,24 @@ import { getTechIconUrl } from '../utils/techIcons';
                 {project.tech.length > 5 && <span class="cf-tech-more">+{project.tech.length - 5}</span>}
               </div>
 
-              {project.link && (
-                <a href={project.link} target="_blank" rel="noopener noreferrer" class="cf-link">
-                  Live Preview
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                  </svg>
-                </a>
-              )}
+              <div class="cf-actions">
+                <button
+                  type="button"
+                  class="cf-detail"
+                  data-project-detail={index}
+                  aria-label={`View details and tech stack of ${project.title}`}
+                >
+                  Detail
+                </button>
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" class="cf-link">
+                    Live Preview
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                  </a>
+                )}
+              </div>
             </div>
           </article>
         ))}
@@ -113,8 +123,8 @@ import { getTechIconUrl } from '../utils/techIcons';
           <button
             class="project-card"
             type="button"
-            data-project-index={featuredProjects.length + index}
-            aria-label={`View screenshots of ${project.title} (${project.year})`}
+            data-project-detail={featuredProjects.length + index}
+            aria-label={`View details and tech stack of ${project.title} (${project.year})`}
           >
             <span class="card-media">
               <img src={project.images[0]} alt="" loading="lazy" width="640" height="400" />
@@ -133,7 +143,7 @@ import { getTechIconUrl } from '../utils/techIcons';
               <span class="card-footer">
                 <span class="card-client meta-type">{project.client}</span>
                 <span class="card-action meta-type">
-                  View
+                  Detail
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M7 17L17 7M17 7H7M17 7V17"/>
                   </svg>
@@ -165,6 +175,12 @@ import { getTechIconUrl } from '../utils/techIcons';
         },
       })
     );
+  }
+
+  function openDetail(el: HTMLElement): void {
+    const index = Number(el.dataset.projectDetail);
+    if (Number.isNaN(index)) return;
+    window.dispatchEvent(new CustomEvent('project:detail', { detail: { index } }));
   }
 
   /* ------------------------------ coverflow ------------------------------ */
@@ -263,7 +279,13 @@ import { getTechIconUrl } from '../utils/techIcons';
           goTo(index);
           return;
         }
-        const media = (event.target as Element | null)?.closest?.('[data-project-index]');
+        const target = event.target as Element | null;
+        const detail = target?.closest?.('[data-project-detail]');
+        if (detail) {
+          openDetail(detail as HTMLElement);
+          return;
+        }
+        const media = target?.closest?.('[data-project-index]');
         if (media) openLightbox(media as HTMLElement);
       });
     });
@@ -305,10 +327,10 @@ import { getTechIconUrl } from '../utils/techIcons';
 
   initCoverflow();
 
-  // Archive cards go straight to the lightbox.
+  // Archive cards open the detail modal; its screenshot opens the lightbox.
   document
-    .querySelectorAll<HTMLElement>('.archive [data-project-index]')
-    .forEach((el) => el.addEventListener('click', () => openLightbox(el)));
+    .querySelectorAll<HTMLElement>('.archive [data-project-detail]')
+    .forEach((el) => el.addEventListener('click', () => openDetail(el)));
 </script>
 
 <style>
@@ -452,6 +474,12 @@ import { getTechIconUrl } from '../utils/techIcons';
   .cf-client {
     margin-top: 6px;
     color: var(--c3-green);
+    /* One line, always: a long client name wrapping to two would squeeze the
+       description to nothing in the fixed-height card. The detail modal shows
+       the full name. */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .cf-description {
@@ -494,22 +522,55 @@ import { getTechIconUrl } from '../utils/techIcons';
     color: rgba(206, 233, 253, 0.55);
   }
 
-  .cf-link {
+  .cf-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .cf-link,
+  .cf-detail {
+    flex: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 14px;
-    padding: 12px 20px;
-    background: var(--mm-white);
-    color: var(--c3-dark);
+    padding: 12px 14px;
     border-radius: 100px;
+    font-family: var(--font-main);
     font-weight: 600;
     font-size: 0.85rem;
-    transition: background 0.3s var(--ease-out-expo);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background 0.3s var(--ease-out-expo),
+      border-color 0.3s var(--ease-out-expo),
+      color 0.3s var(--ease-out-expo);
+  }
+
+  .cf-link {
+    background: var(--mm-white);
+    color: var(--c3-dark);
+    border: 1px solid transparent;
   }
 
   .cf-link:hover { background: var(--c3-green); }
+
+  .cf-detail {
+    background: transparent;
+    color: var(--mm-ice);
+    border: 1px solid rgba(206, 233, 253, 0.3);
+  }
+
+  .cf-detail:hover {
+    border-color: var(--c3-green);
+    color: var(--c3-green);
+  }
+
+  .cf-detail:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: 3px;
+  }
 
   /* Stage wrapper — arrows on left and right, coverflow in center */
   .cf-stage-wrapper {

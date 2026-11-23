@@ -111,6 +111,77 @@ export function getTechIconUrl(tech: string): string | null {
   return null;
 }
 
+// Display categories for the project detail modal. Names are matched
+// case-insensitively; anything unlisted lands in "Other" so a new tech never
+// disappears from the modal just because it has no category yet.
+const techCategories: Record<string, string> = {
+  'Laravel': 'Backend',
+  'Laravel Octane': 'Backend',
+  'Laravel Octane + Road Runner': 'Backend',
+  'Codeigniter': 'Backend',
+  'NestJS': 'Backend',
+  'Express': 'Backend',
+  'AdonisJS': 'Backend',
+  'Node.js': 'Backend',
+  'Prisma': 'Backend',
+
+  'Vue 3': 'Frontend',
+  'Vue.js': 'Frontend',
+  'React': 'Frontend',
+  'Next.js': 'Frontend',
+  'NextJS': 'Frontend',
+  'Livewire': 'Frontend',
+  'Tailwind CSS': 'Frontend',
+  'Bootstrap CSS': 'Frontend',
+  'Pinia': 'Frontend',
+  'Element Plus': 'Frontend',
+  'ShadcnUI': 'Frontend',
+
+  'TypeScript': 'Language',
+  'JavaScript': 'Language',
+
+  'PostgreSQL': 'Database',
+  'MySQL': 'Database',
+  'MariaDB': 'Database',
+  'MongoDB': 'Database',
+  'Redis': 'Database',
+
+  'Docker': 'DevOps',
+  'Kubernetes': 'DevOps',
+
+  'RabbitMQ': 'Services & GIS',
+  'Leaflet': 'Services & GIS',
+  'Service ArcGIS': 'Services & GIS',
+  'ArcGIS Service': 'Services & GIS',
+  'Moodle': 'Services & GIS',
+  'Integrasi Moodle': 'Services & GIS',
+  'Moodle Integration': 'Services & GIS',
+};
+
+const CATEGORY_ORDER = ['Backend', 'Frontend', 'Language', 'Database', 'DevOps', 'Services & GIS', 'Other'];
+
+export interface TechGroup {
+  label: string;
+  items: string[];
+}
+
+/**
+ * Group a project's tech list by category, in a fixed display order.
+ * Items keep their original order within a group; empty groups are dropped.
+ */
+export function groupTechs(techs: string[]): TechGroup[] {
+  const lookup = new Map(Object.entries(techCategories).map(([k, v]) => [k.toLowerCase(), v]));
+  const buckets = new Map<string, string[]>();
+  for (const tech of techs) {
+    const category = lookup.get(tech.toLowerCase().trim()) ?? 'Other';
+    buckets.set(category, [...(buckets.get(category) ?? []), tech]);
+  }
+  return CATEGORY_ORDER.filter((label) => buckets.has(label)).map((label) => ({
+    label,
+    items: buckets.get(label)!,
+  }));
+}
+
 /**
  * Check if a technology has an icon available
  * @param tech - Technology name

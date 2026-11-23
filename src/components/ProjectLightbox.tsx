@@ -9,6 +9,8 @@ interface OpenDetail {
   title: string;
   /** Rect of the clicked thumbnail — used for the FLIP shared-element entrance. */
   sourceRect?: DOMRect;
+  /** Image to open on (defaults to the first). */
+  startIndex?: number;
 }
 
 /**
@@ -24,6 +26,9 @@ export default function ProjectLightbox() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const lightboxRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  // Restored on close instead of blanked: the project detail modal may be open
+  // underneath and still needs the page scroll locked.
+  const previousOverflow = useRef('');
 
   // Open on gallery events.
   useEffect(() => {
@@ -31,9 +36,10 @@ export default function ProjectLightbox() {
       const d = (e as CustomEvent<OpenDetail>).detail;
       if (!d?.images?.length) return;
       setDetail(d);
-      setCurrentImageIndex(0);
+      setCurrentImageIndex(d.startIndex && d.startIndex < d.images.length ? d.startIndex : 0);
       setZoomLevel(1);
       setPanPosition({ x: 0, y: 0 });
+      previousOverflow.current = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
     };
     window.addEventListener('project:open', onOpen);
@@ -119,7 +125,7 @@ export default function ProjectLightbox() {
     setCurrentImageIndex(0);
     setZoomLevel(1);
     setPanPosition({ x: 0, y: 0 });
-    document.body.style.overflow = '';
+    document.body.style.overflow = previousOverflow.current;
   };
 
   const zoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.5, 3));

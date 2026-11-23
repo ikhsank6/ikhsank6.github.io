@@ -7,6 +7,7 @@ import ProjectsGallery from '../components/ProjectsGallery.astro';
 import Education from '../components/Education.astro';
 import Footer from '../components/Footer.astro';
 import ProjectLightbox from '../components/ProjectLightbox';
+import ProjectDetail from '../components/ProjectDetail.astro';
 ---
 
 <Layout title="Ikhsan Kurniawan | Fullstack Developer">
@@ -23,6 +24,10 @@ import ProjectLightbox from '../components/ProjectLightbox';
 	<!-- Project lightbox island: real state machine (zoom/pan/index/focus trap +
 	     FLIP shared-element entrance). Idle-hydrated — not needed for first paint. -->
 	<ProjectLightbox client:idle />
+
+	<!-- Project detail modal (static, per-project markup toggled by project:detail).
+	     Outside <main> so its fixed overlay isn't trapped in a stacking context. -->
+	<ProjectDetail />
 
 	<script>
 		import { initAnimations } from '../scripts/animations';

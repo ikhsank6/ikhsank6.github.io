@@ -1,0 +1,587 @@
+---
+import { projects, STATUS_LABEL } from '../data/projects';
+import { getTechIconUrl, groupTechs } from '../utils/techIcons';
+---
+
+<!-- Project detail modal. Every project's detail is rendered at build time and
+     toggled with `hidden`, so there is no data to ship or template at runtime.
+     Opened by a `project:detail` CustomEvent ({ index }) — same decoupled
+     pattern as `project:open` for the screenshot lightbox, which stacks on top
+     of this when a screenshot is clicked. -->
+<div id="project-detail" class="pd-overlay" aria-hidden="true">
+  <div class="pd-dialog" role="dialog" aria-modal="true" id="pd-dialog">
+    <button type="button" class="pd-close" id="pd-close" aria-label="Close project details">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="pd-scroll" id="pd-scroll">
+      {projects.map((project, index) => (
+        <article
+          class="pd-article"
+          data-detail={index}
+          data-title={`${project.title} — ${project.client}`}
+          data-images={JSON.stringify(project.images)}
+          hidden
+        >
+          <div class="pd-media">
+            <button
+              type="button"
+              class="pd-shot"
+              data-pd-shot
+              aria-label={`View ${project.title} screenshot full size`}
+            >
+              <img src={project.images[0]} alt="" loading="lazy" width="1280" height="800" />
+              <span class="pd-shot-hint meta-type">Full size</span>
+            </button>
+
+            {project.images.length > 1 && (
+              <ul class="pd-thumbs">
+                {project.images.map((src, i) => (
+                  <li>
+                    <button
+                      type="button"
+                      class={`pd-thumb${i === 0 ? ' is-active' : ''}`}
+                      data-pd-thumb={i}
+                      aria-label={`Show screenshot ${i + 1} of ${project.images.length}`}
+                      aria-pressed={i === 0 ? 'true' : 'false'}
+                    >
+                      <img src={src} alt="" loading="lazy" width="96" height="60" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div class="pd-info">
+            <div class="pd-meta">
+              <span class="pd-pill meta-type">{project.year}</span>
+              <span class={`pd-pill pd-status meta-type ${project.status}`}>{STATUS_LABEL[project.status]}</span>
+            </div>
+
+            <h2 class="pd-title" id={`pd-title-${index}`}>{project.title}</h2>
+            <p class="pd-client meta-type">{project.client}</p>
+
+            {project.role && (
+              <p class="pd-role">
+                <span class="pd-label meta-type">Role</span>
+                <span>{project.role}</span>
+              </p>
+            )}
+
+            <p class="pd-description">{project.description}</p>
+
+            {project.highlights && project.highlights.length > 0 && (
+              <div class="pd-section" role="group" aria-label="Highlights">
+                <h3 class="pd-label meta-type">Highlights</h3>
+                <ul class="pd-highlights">
+                  {project.highlights.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+            )}
+
+            <div class="pd-section" role="group" aria-label="Tech stack">
+              <h3 class="pd-label meta-type">Tech Stack</h3>
+              {groupTechs(project.tech).map((group) => (
+                <div class="pd-group">
+                  <span class="pd-group-label meta-type">{group.label}</span>
+                  <ul class="pd-chips">
+                    {group.items.map((tech) => {
+                      const icon = getTechIconUrl(tech);
+                      return (
+                        <li class="pd-chip">
+                          {icon && (
+                            <span class="pd-chip-icon">
+                              <img src={icon} alt="" loading="lazy" width="16" height="16" />
+                            </span>
+                          )}
+                          <span>{tech}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {project.link ? (
+              <a href={project.link} target="_blank" rel="noopener noreferrer" class="pd-link">
+                Live Preview
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                </svg>
+              </a>
+            ) : (
+              <p class="pd-offline meta-type">No public link — not currently active</p>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { trapFocus } from '../scripts/focus-trap';
+
+  const overlay = document.getElementById('project-detail');
+  const dialog = document.getElementById('pd-dialog');
+  const scroller = document.getElementById('pd-scroll');
+  const closeBtn = document.getElementById('pd-close');
+
+  if (overlay && dialog && scroller && closeBtn) {
+    const articles = Array.from(scroller.querySelectorAll<HTMLElement>('.pd-article'));
+    let releaseFocus: (() => void) | null = null;
+    let previousOverflow = '';
+    let current: HTMLElement | null = null;
+
+    const isOpen = () => overlay.classList.contains('active');
+
+    function open(index: number): void {
+      const article = articles[index];
+      if (!article) return;
+
+      articles.forEach((a) => { a.hidden = a !== article; });
+      current = article;
+      // Always start on the first screenshot, scrolled to the top.
+      showImage(article, 0);
+      scroller!.scrollTop = 0;
+      dialog!.setAttribute('aria-labelledby', `pd-title-${index}`);
+
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      overlay!.classList.add('active');
+      overlay!.setAttribute('aria-hidden', 'false');
+      releaseFocus = trapFocus(dialog!);
+    }
+
+    function close(): void {
+      if (!isOpen()) return;
+      overlay!.classList.remove('active');
+      overlay!.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = previousOverflow;
+      releaseFocus?.();
+      releaseFocus = null;
+    }
+
+    function showImage(article: HTMLElement, i: number): void {
+      const images: string[] = JSON.parse(article.dataset.images ?? '[]');
+      const main = article.querySelector<HTMLImageElement>('.pd-shot img');
+      if (main && images[i]) main.src = images[i];
+      article.dataset.shot = String(i);
+      article.querySelectorAll<HTMLElement>('[data-pd-thumb]').forEach((thumb) => {
+        const active = Number(thumb.dataset.pdThumb) === i;
+        thumb.classList.toggle('is-active', active);
+        thumb.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    window.addEventListener('project:detail', (event) => {
+      const index = (event as CustomEvent<{ index: number }>).detail?.index;
+      if (typeof index === 'number') open(index);
+    });
+
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) close();
+    });
+
+    scroller.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      if (!current) return;
+
+      const thumb = target.closest<HTMLElement>('[data-pd-thumb]');
+      if (thumb) {
+        showImage(current, Number(thumb.dataset.pdThumb));
+        return;
+      }
+
+      const shot = target.closest<HTMLElement>('[data-pd-shot]');
+      if (shot) {
+        // Hand the screenshot to the zoomable lightbox, which opens on top.
+        const media = shot.querySelector('img') ?? shot;
+        window.dispatchEvent(
+          new CustomEvent('project:open', {
+            detail: {
+              images: JSON.parse(current.dataset.images ?? '[]'),
+              title: current.dataset.title ?? '',
+              sourceRect: media.getBoundingClientRect(),
+              startIndex: Number(current.dataset.shot ?? 0),
+            },
+          })
+        );
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !isOpen()) return;
+      // The lightbox closes itself on Escape; don't also take the detail down.
+      if (document.querySelector('.project-lightbox-overlay')) return;
+      close();
+    });
+  }
+</script>
+
+<style>
+  .pd-overlay {
+    position: fixed;
+    inset: 0;
+    /* Below the screenshot lightbox (100002) so it can open over this. */
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(5, 8, 11, 0.74);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s var(--ease-out-expo), visibility 0s linear 0.35s;
+  }
+
+  .pd-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .pd-dialog {
+    position: relative;
+    width: min(1000px, 100%);
+    max-height: min(760px, 100%);
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #11161b;
+    border: 1px solid rgba(206, 233, 253, 0.16);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+    transform: translateY(18px) scale(0.98);
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+
+  .pd-overlay.active .pd-dialog { transform: none; }
+
+  .pd-scroll {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .pd-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(17, 22, 27, 0.82);
+    border: 1px solid rgba(206, 233, 253, 0.22);
+    color: var(--mm-ice);
+    cursor: pointer;
+    transition: background 0.3s var(--ease-out-expo), color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
+  }
+
+  .pd-close:hover {
+    background: var(--c3-green);
+    border-color: var(--c3-green);
+    color: var(--c3-dark);
+  }
+
+  .pd-close:focus-visible,
+  .pd-shot:focus-visible,
+  .pd-thumb:focus-visible,
+  .pd-link:focus-visible {
+    outline: 2px solid var(--c3-green);
+    outline-offset: 3px;
+  }
+
+  .pd-article {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    min-height: 100%;
+  }
+
+  .pd-article[hidden] { display: none; }
+
+  /* ------------------------------- media ------------------------------- */
+
+  .pd-media {
+    padding: 28px;
+    background: #0b0f13;
+    border-right: 1px solid rgba(206, 233, 253, 0.1);
+  }
+
+  .pd-shot {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    padding: 0;
+    border: 1px solid rgba(206, 233, 253, 0.14);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--c3-dark);
+    cursor: zoom-in;
+  }
+
+  .pd-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .pd-shot:hover img { transform: scale(1.03); }
+
+  .pd-shot-hint {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 100px;
+    background: rgba(11, 15, 19, 0.78);
+    color: var(--mm-ice);
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-out-expo);
+  }
+
+  .pd-shot:hover .pd-shot-hint,
+  .pd-shot:focus-visible .pd-shot-hint { opacity: 1; }
+
+  .pd-thumbs {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pd-thumb {
+    width: 84px;
+    aspect-ratio: 16 / 10;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--c3-dark);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
+  }
+
+  .pd-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  .pd-thumb:hover { opacity: 0.9; }
+  .pd-thumb.is-active { opacity: 1; border-color: var(--c3-green); }
+
+  /* -------------------------------- info -------------------------------- */
+
+  .pd-info {
+    padding: 32px 32px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .pd-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    /* Keep clear of the close button. */
+    padding-right: 48px;
+  }
+
+  .pd-pill {
+    padding: 4px 10px;
+    border-radius: 100px;
+    color: rgba(206, 233, 253, 0.7);
+    background: rgba(206, 233, 253, 0.1);
+  }
+
+  .pd-status {
+    background: transparent;
+    border: 1px solid;
+  }
+
+  .pd-status.live { color: #A5F3B4; border-color: rgba(165, 243, 180, 0.4); }
+  .pd-status.dev,
+  .pd-status.not-live { color: rgba(206, 233, 253, 0.7); border-color: rgba(206, 233, 253, 0.28); }
+
+  .pd-title {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    color: var(--mm-white);
+  }
+
+  .pd-client {
+    margin-top: 8px;
+    color: var(--c3-green);
+  }
+
+  .pd-role {
+    margin-top: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--mm-ice);
+  }
+
+  .pd-description {
+    margin-top: 16px;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: rgba(206, 233, 253, 0.7);
+  }
+
+  .pd-section { margin-top: 24px; }
+
+  .pd-label {
+    color: rgba(206, 233, 253, 0.45);
+    font-weight: 500;
+  }
+
+  .pd-section > .pd-label { margin-bottom: 10px; display: block; }
+
+  .pd-highlights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .pd-highlights li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: rgba(206, 233, 253, 0.78);
+  }
+
+  .pd-highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--c3-green);
+  }
+
+  /* Label left, chips right — one row per category keeps long stacks short. */
+  .pd-group {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+  }
+
+  .pd-group + .pd-group { margin-top: 10px; }
+
+  .pd-group-label {
+    color: rgba(206, 233, 253, 0.5);
+  }
+
+  .pd-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pd-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px 5px 6px;
+    border-radius: 100px;
+    background: rgba(206, 233, 253, 0.07);
+    border: 1px solid rgba(206, 233, 253, 0.14);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--mm-ice);
+  }
+
+  .pd-chip:not(:has(.pd-chip-icon)) { padding-left: 12px; }
+
+  .pd-chip-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+  }
+
+  .pd-chip-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+  .pd-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    align-self: flex-start;
+    margin-top: 28px;
+    padding: 12px 22px;
+    border-radius: 100px;
+    background: var(--mm-white);
+    color: var(--c3-dark);
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: background 0.3s var(--ease-out-expo);
+  }
+
+  .pd-link:hover { background: var(--c3-green); }
+
+  .pd-offline {
+    margin-top: 28px;
+    color: rgba(206, 233, 253, 0.45);
+  }
+
+  /* ------------------------------- mobile ------------------------------- */
+
+  @media (max-width: 820px) {
+    .pd-overlay { padding: 12px; }
+    .pd-dialog { max-height: 100%; }
+
+    .pd-article { grid-template-columns: minmax(0, 1fr); }
+    .pd-media { padding: 16px; border-right: none; border-bottom: 1px solid rgba(206, 233, 253, 0.1); }
+    .pd-info { padding: 22px 20px 28px; }
+    .pd-close { top: 10px; right: 10px; }
+    .pd-meta { padding-right: 0; }
+    .pd-group { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
+    .pd-group + .pd-group { margin-top: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pd-overlay,
+    .pd-dialog,
+    .pd-shot img { transition: none; }
+  }
+</style>
