@@ -35,6 +35,7 @@ export const techSlugs: Record<string, string> = {
   // Databases
   'PostgreSQL': 'postgresql',
   'MySQL': 'mysql',
+  'MariaDB': 'mariadb',
   'MongoDB': 'mongodb',
   'Redis': 'redis',
   

@@ -14,6 +14,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: 'IMPLI Peatland Portal',
+    client: 'Kementerian Lingkungan Hidup/Badan Pengendalian Lingkungan Hidup',
+    description:
+      'Public portal for the Integrated Management of Peatland Landscapes in Indonesia program — village profiles, intervention-area maps, news and best-practice stories for sustainable peatland management.',
+    year: '2026',
+    status: 'live',
+    tech: ['Laravel', 'MariaDB', 'Leaflet', 'Tailwind CSS'],
+    link: 'https://pustakagambut.kemenlh.go.id/',
+    images: ['/images/impli_1.webp', '/images/impli_2.webp', '/images/impli_3.webp'],
+  },
+  {
     title: 'Regional Investment',
     client: 'Kementerian Investasi / BKPM',
     description:
