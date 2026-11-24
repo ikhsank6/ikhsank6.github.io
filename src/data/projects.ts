@@ -26,10 +26,10 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'MariaDB', 'Leaflet', 'Tailwind CSS'],
     link: 'https://pustakagambut.kemenlh.go.id/',
+    role: 'Fullstack Developer',
     highlights: [
-      'Public portal with village profiles, news, galleries and downloads for the peatland program',
-      'Intervention map covering 13 villages across Riau, Jambi and South Sumatra',
-      'Success stories and best practices managed through a custom CMS back office',
+      'Implemented CMS-managed data into the public portal website',
+      'Built CRUD features for the CMS back office',
     ],
     images: ['/images/impli_1.webp', '/images/impli_2.webp', '/images/impli_3.webp'],
   },
@@ -42,6 +42,12 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['AdonisJS', 'Prisma', 'TypeScript', 'PostgreSQL', 'NextJS', 'Tailwind CSS', 'ShadcnUI'],
     link: 'https://regionalinvestment.bkpm.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Fixed bugs in the public data portal',
+      'Fixed bugs in the CMS admin',
+      'Made UI adjustments across the portal and CMS',
+    ],
     images: ['/images/pir_1.webp', '/images/pir_2.webp'],
   },
   {
@@ -53,8 +59,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel Octane', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL', 'RabbitMQ', 'Vue 3', 'TypeScript', 'Pinia', 'Tailwind CSS', 'Element Plus'],
     link: 'https://ngantor.esdm.go.id/nadine',
+    role: 'Fullstack Developer',
     highlights: [
-      'Laravel Octane services on Docker and Kubernetes, with Redis and RabbitMQ',
+      'Built APIs for master data, incoming mail, outgoing mail and documents',
+      'Integrated BSrE digital signatures (TTE) into the mail workflow',
+      'Connected the APIs to the Vue UI',
     ],
     images: ['/images/nadinev3_2.webp', '/images/nadinev3.webp'],
   },
@@ -67,6 +76,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://ahlipers.dewanpers.or.id/register',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Fixed bugs across the platform',
+      'Adjusted the submission form and the approval flow',
+    ],
     images: ['/images/regis_pers.webp', '/images/login_pers.webp'],
   },
   {
@@ -78,6 +92,12 @@ export const projects: Project[] = [
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Re-engineered the existing system',
+      'Built CRUD for master data',
+      'Built the submission form and approval workflow',
+    ],
     images: ['/images/sippdt_1.webp', '/images/sippdt_2.webp'],
   },
   {
@@ -89,6 +109,12 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://lspbpptik.komdigi.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Built master data management',
+      'Adjusted the UI of the APL-01, APL-02, MAPA-01 and MAPA-02 forms, and related forms',
+      'Built the question bank (bank soal)',
+    ],
     images: ['/images/lsp_bpptik.webp'],
   },
   {
@@ -100,6 +126,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Codeigniter', 'PostgreSQL', 'Bootstrap CSS', 'Moodle Integration'],
     link: 'https://smartcampus-seskoal.id/siak/#/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/siak_seskoal.webp'],
   },
   {
@@ -111,6 +142,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS', 'ArcGIS Service'],
     link: 'https://modi.esdm.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/modi_1.webp', '/images/modi.webp'],
   },
   {
@@ -122,6 +158,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://erkab.esdm.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/erkab.webp'],
   },
   {
@@ -133,6 +174,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://mvp.esdm.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/mvp.webp'],
   },
   {
@@ -144,6 +190,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://dasti.kejaksaan.go.id/v5/login',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/dasti.webp'],
   },
   {
@@ -155,6 +206,11 @@ export const projects: Project[] = [
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/noimage.webp'],
   },
   {
@@ -166,6 +222,11 @@ export const projects: Project[] = [
     status: 'not-live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: '',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/miners.webp'],
   },
   {
@@ -177,6 +238,11 @@ export const projects: Project[] = [
     status: 'live',
     tech: ['Laravel', 'PostgreSQL', 'Bootstrap CSS'],
     link: 'https://moms.esdm.go.id/',
+    role: 'Fullstack Developer',
+    highlights: [
+      'Implemented the system from requirements',
+      'Built features such as master data and the dashboard',
+    ],
     images: ['/images/moms.webp'],
   },
 ];
